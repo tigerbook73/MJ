@@ -38,3 +38,9 @@ class CardGame {
 class CardWall {
   // 自行定义
 }
+
+const mj = new CardGame();
+mj.init();
+mj.print();
+mj.shuffle();
+mj.print();
