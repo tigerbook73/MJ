@@ -1,3 +1,5 @@
+//
+
 class CardType {
   constructor(type, number, name) {
     this.type = type;
@@ -90,7 +92,7 @@ class CardTile {
 
   print() {
     console.log(
-      `${this.cardType.name}`, //问gpt的
+      this.cardType.name,
       // `${this.cardType.name} ${this.isFaceUp ? '(Face Up)' : '(Face Down)'}`, //问gpt的
     );
   }
