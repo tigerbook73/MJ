@@ -9,92 +9,88 @@ class CardType {
   }
 
   print() {
-    process.stdout.write(this.name);
+    process.stdout.write(this.name.padStart(4 - this.name.length));
   }
-
 }
 
 class CardTypes {
   constructor() {
     this.types = [
-    new CardType('万', 1, '一万'),
-    new CardType('万', 2, '二万'),
-    new CardType('万', 3, '三万'),
-    new CardType('万', 4, '四万'),
-    new CardType('万', 5, '五万'),
-    new CardType('万', 6, '六万'),
-    new CardType('万', 7, '七万'),
-    new CardType('万', 8, '八万'),
-    new CardType('万', 9, '九万'),
-    new CardType('筒', 1, '一筒'),
-    new CardType('筒', 2, '二筒'),
-    new CardType('筒', 3, '三筒'),
-    new CardType('筒', 4, '四筒'),
-    new CardType('筒', 5, '五筒'),
-    new CardType('筒', 6, '六筒'),
-    new CardType('筒', 7, '七筒'),
-    new CardType('筒', 8, '八筒'),
-    new CardType('筒', 9, '九筒'),
-    new CardType('条', 1, '一条'),
-    new CardType('条', 2, '二条'),
-    new CardType('条', 3, '三条'),
-    new CardType('条', 4, '四条'),
-    new CardType('条', 5, '五条'),
-    new CardType('条', 6, '六条'),
-    new CardType('条', 7, '七条'),
-    new CardType('条', 8, '八条'),
-    new CardType('条', 9, '九条'),
-    new CardType('风', 1, '东'),
-    new CardType('风', 2, '南'),
-    new CardType('风', 3, '西'),
-    new CardType('风', 4, '北'),
-    new CardType('箭', 1, '中'),
-    new CardType('箭', 2, '发'),
-    new CardType('箭', 3, '白')];
+      new CardType('万', 1, '一万'),
+      new CardType('万', 2, '二万'),
+      new CardType('万', 3, '三万'),
+      new CardType('万', 4, '四万'),
+      new CardType('万', 5, '五万'),
+      new CardType('万', 6, '六万'),
+      new CardType('万', 7, '七万'),
+      new CardType('万', 8, '八万'),
+      new CardType('万', 9, '九万'),
+      new CardType('筒', 1, '一筒'),
+      new CardType('筒', 2, '二筒'),
+      new CardType('筒', 3, '三筒'),
+      new CardType('筒', 4, '四筒'),
+      new CardType('筒', 5, '五筒'),
+      new CardType('筒', 6, '六筒'),
+      new CardType('筒', 7, '七筒'),
+      new CardType('筒', 8, '八筒'),
+      new CardType('筒', 9, '九筒'),
+      new CardType('条', 1, '一条'),
+      new CardType('条', 2, '二条'),
+      new CardType('条', 3, '三条'),
+      new CardType('条', 4, '四条'),
+      new CardType('条', 5, '五条'),
+      new CardType('条', 6, '六条'),
+      new CardType('条', 7, '七条'),
+      new CardType('条', 8, '八条'),
+      new CardType('条', 9, '九条'),
+      new CardType('风', 1, '东'),
+      new CardType('风', 2, '南'),
+      new CardType('风', 3, '西'),
+      new CardType('风', 4, '北'),
+      new CardType('箭', 1, '中'),
+      new CardType('箭', 2, '发'),
+      new CardType('箭', 3, '白'),
+    ];
   }
 
   print() {
     // for i
-    for(let i = 0; i < this.types.length-1; i++) {
-      if (this.types[i].type == this.types[i+1].type){
-        this.types[i].print();
-        if (i < this.types.length - 1){
-          process.stdout.write(',');
-        }
-      }
-      else {
-        this.types[i].print();
-        process.stdout.write('\n');
-      }
-
-    }
-    this.types[this.types.length-1].print();
-    process.stdout.write('\n');
-  }
-
+    //   for (let i = 0; i < this.types.length - 1; i++) {
+    //   //   if (this.types[i].type == this.types[i + 1].type) {
+    //   //     this.types[i].print();
+    //   //     if (i < this.types.length - 1) {
+    //   //       process.stdout.write(',');
+    //   //     }
+    //   //   } else {
+    //   //     this.types[i].print();
+    //   //     process.stdout.write('\n');
+    //   //   }
+    //   // }
+    //   // this.types[this.types.length - 1].print();
+    //   // process.stdout.write('\n');
+    // }
     // // for of
     // for(const type of this.types) {
     //   type.print();
-
     //   }
-    // }
+  }
 
-    // // for in
+  // // for in
 
-    // // foreach
-    // this.types.forEach(function (type) {
-    //   type.print();
-    // });
+  // // foreach
+  // this.types.forEach(function (type) {
+  //   type.print();
+  // });
 }
 
-const types = new CardTypes();
-types.print();
+// const types = new CardTypes();
+// types.print();
 /**
  * 代表一副牌中一张牌
-*/
+ */
 class Card {
   constructor(type) {
-    this.type = type
+    this.type = type;
   }
 
   print() {
@@ -124,7 +120,6 @@ class CardGame {
       for (let j = 0; j < type.types.length; j++) {
         this.cards.push(new Card(type.types[j]));
       }
-
     }
   }
 
@@ -142,13 +137,14 @@ class CardGame {
 
   print() {
     // 打印牌
+
     for (let i = 0; i < this.walls.length; i++) {
       this.walls[i].print();
+      process.stdout.write('\n');
     }
   }
 
   // 洗牌
-
 
   // 发牌，函数自行先考虑，暂不做要求
 }
@@ -158,33 +154,35 @@ class CardGame {
  */
 
 class CardWall {
-  constructor(direction){
-    this.card = [];
+  constructor(direction) {
+    this.cards = [];
     this.direction = direction;
   }
 
   init() {
-    this.card = [];
+    this.cards = [];
   }
 
-  add() {
-    this.card.push(card);
+  add(card) {
+    this.cards.push(card);
   }
 
   print() {
-    console.log('Wall direction' + this.direction);
-    for(let i = 0; i < this.card.length; i++) {
-      console.log('Direction' + (i + 1) + ': ');
-      this.card.print();
+    console.log('Wall direction ' + this.direction + ': ');
+    for (let i = 0; i < this.cards.length; i++) {
+      this.cards[i].print();
+      process.stdout.write(',');
+
+      if (i != 0) {
+        if ((i + 1) % 17 == 0) {
+          process.stdout.write('\n');
+        }
+      }
     }
   }
-
 }
 
 const mj = new CardGame();
 mj.init();
-mj.print();
 mj.shuffle();
 mj.print();
-
-
