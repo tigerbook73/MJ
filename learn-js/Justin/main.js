@@ -179,7 +179,7 @@ class CardWall {
   print() {
     console.log();
     console.log(`${this.direction}:`);
-    for (t of this.tiles) {
+    for (let t of this.tiles) {
       t.print();
     }
     console.log();
