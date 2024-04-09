@@ -89,7 +89,10 @@ class CardTile {
   }
 
   print() {
-    process.stdout.write(this.cardType.name);
+    process.stdout.write('|');
+    process.stdout.write(
+      this.cardType.name.padStart(6 - this.cardType.name.length),
+    );
   }
 }
 
@@ -135,6 +138,13 @@ class CardGame {
   }
   init() {
     this.tiles = [];
+    this.walls = [
+      new CardWall('东家'),
+      new CardWall('南家'),
+      new CardWall('西家'),
+      new CardWall('北家'),
+    ];
+
     this.cardTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {
         this.tiles.push(new CardTile(type));
@@ -150,15 +160,15 @@ class CardGame {
     }
   }
 
-  separate(walls) {
+  separate() {
     // walls -> CardWall对象的数组
     this.tiles.forEach((tile, index) => {
-      walls[index % walls.length].add(tile);
+      this.walls[index % this.walls.length].add(tile);
     });
   }
 
   print() {
-    this.tiles.forEach((tile) => tile.print());
+    this.walls.forEach((wall) => wall.print());
   }
 }
 
@@ -179,8 +189,11 @@ class CardWall {
   print() {
     console.log();
     console.log(`${this.direction}:`);
-    for (let t of this.tiles) {
-      t.print();
+    for (const [index, tile] of this.tiles.entries()) {
+      if (index % 8 == 0) {
+        console.log();
+      }
+      tile.print();
     }
     console.log();
   }
@@ -202,5 +215,5 @@ const walls = [
 
 mj.init();
 mj.shuffle();
-mj.separate(walls);
-walls.forEach((wall) => wall.print());
+mj.separate();
+mj.print();
