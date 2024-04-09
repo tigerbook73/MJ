@@ -75,25 +75,20 @@ class CardType {
 //   }
 // }
 
-class CardTile_temp {
-  // 自行定义
-  constructor(held, withdrawl, dora) {
+class CardTile {
+  //基础版本
+  constructor(cardType, faceup = false, held, withdrawl, dora) {
+    this.cardType = cardType;
+    this.faceup = faceup;
     this.held = held;
     this.withdrawl = withdrawl;
     this.dora = dora;
-  }
-}
-class CardTile {
-  //基础版本
-  constructor(cardType, isFaceUp = false) {
-    this.cardType = cardType;
-    this.isFaceUp = isFaceUp;
   }
 
   print() {
     console.log(
       this.cardType.name,
-      // `${this.cardType.name} ${this.isFaceUp ? '(Face Up)' : '(Face Down)'}`, //问gpt的
+      // `${this.cardType.name} ${this.faceup ? '(Face Up)' : '(Face Down)'}`, //问gpt的
     );
   }
 }
