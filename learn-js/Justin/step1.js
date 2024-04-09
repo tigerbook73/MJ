@@ -76,20 +76,20 @@ class CardType {
 // }
 
 class CardTile {
+  // constructor(cardType, faceup = false, held, withdrawl, dora) {
+  //   this.cardType = cardType;
+  //   this.faceup = faceup;
+  //   this.held = held;
+  //   this.withdrawl = withdrawl;
+  //   this.dora = dora;
+  // }
   //基础版本
-  constructor(cardType, faceup = false, held, withdrawl, dora) {
+  constructor(cardType) {
     this.cardType = cardType;
-    this.faceup = faceup;
-    this.held = held;
-    this.withdrawl = withdrawl;
-    this.dora = dora;
   }
 
   print() {
-    console.log(
-      this.cardType.name,
-      // `${this.cardType.name} ${this.faceup ? '(Face Up)' : '(Face Down)'}`, //问gpt的
-    );
+    process.stdout.write(this.cardType.name);
   }
 }
 
@@ -134,6 +134,7 @@ class CardGame {
     ];
   }
   init() {
+    this.tiles = [];
     this.cardTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {
         this.tiles.push(new CardTile(type));
@@ -176,8 +177,12 @@ class CardWall {
   }
 
   print() {
-    console.log(`Wall ${this.direction}:`);
-    this.tiles.forEach((tile) => tile.print());
+    console.log();
+    console.log(`${this.direction}:`);
+    for (t of this.tiles) {
+      t.print();
+    }
+    console.log();
   }
 }
 
@@ -189,16 +194,13 @@ class CardWall {
 
 const mj = new CardGame();
 const walls = [
-  new CardWall('East'),
-  new CardWall('South'),
-  new CardWall('West'),
-  new CardWall('North'),
+  new CardWall('东家'),
+  new CardWall('南家'),
+  new CardWall('西家'),
+  new CardWall('北家'),
 ];
 
 mj.init();
-mj.print();
 mj.shuffle();
-mj.print();
 mj.separate(walls);
-
 walls.forEach((wall) => wall.print());
