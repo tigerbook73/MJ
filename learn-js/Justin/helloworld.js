@@ -1,8 +1,14 @@
-console.log('Hello1, World!');
-console.log('Hello2, World!');
-console.log('Hello3, World!');
-console.log('Hello4, World!');
-console.log('Hello5, World!');
-console.log('Hello6, World!');
-console.log('Hello7, World!');
-console.log('Hello8, World!');
+let text = '';
+
+// const fruits = ['apple', 'orange', 'cherry'];
+// fruits.forEach(myFunction);
+
+// function myFunction(item, index) {
+//   text += index + ': ' + item;
+// }
+const fruitss = ['apple', 'orange', 'cherry'];
+fruits.forEach((item, index) => {
+  text += index + ': ' + item + ' ';
+});
+
+console.log(text);
