@@ -59,17 +59,17 @@ class CardTypes {
       if (this.types[i].type == this.types[i+1].type){
         this.types[i].print();
         if (i < this.types.length - 1){
-          process.stdout.write(",");
+          process.stdout.write(',');
         }
       }
       else {
         this.types[i].print();
-        process.stdout.write("\n");
+        process.stdout.write('\n');
       }
 
     }
     this.types[this.types.length-1].print();
-    process.stdout.write("\n");
+    process.stdout.write('\n');
   }
 
     // // for of
