@@ -8,20 +8,25 @@ import { computed } from 'vue';
 interface Props {
   id?: number;
   title: string;
-  top: string;
-  left: string;
+  rotate?: boolean;
+  // top: string;
+  // left: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   id: 0,
   title: '',
-  top: '10px',
-  left: '10px',
+  rotate: false,
+  // top: '10px',
+  // left: '10px',
 });
 
+const width = '2.5vh';
+const height = '4vh';
+
 const position = computed(() => ({
-  top: props.top,
-  left: props.left,
+  width: props.rotate ? height : width,
+  height: props.rotate ? width : height,
 }));
 </script>
 
@@ -45,9 +50,7 @@ const position = computed(() => ({
     background-color: #000;
     color: #f0f0f0;
   }
-  width: 30px;
-  height: 50px;
 
-  position: absolute;
+  // position: absolute;
 }
 </style>

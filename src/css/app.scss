@@ -1,1 +1,13 @@
 // app global css in SCSS form
+
+@for $i from 1 through 100 {
+  .w-#{$i} {
+    width: #{$i}vh;
+  }
+}
+
+@for $i from 1 through 100 {
+  .h-#{$i} {
+    height: #{$i}vh;
+  }
+}
