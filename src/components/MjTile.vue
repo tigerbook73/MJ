@@ -9,16 +9,12 @@ interface Props {
   id?: string;
   title: string;
   rotate?: boolean;
-  // top: string;
-  // left: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
   title: "",
   rotate: false,
-  // top: '10px',
-  // left: '10px',
 });
 
 const width = "2.5vh";
@@ -50,7 +46,5 @@ const position = computed(() => ({
     background-color: #000;
     color: #f0f0f0;
   }
-
-  // position: absolute;
 }
 </style>
