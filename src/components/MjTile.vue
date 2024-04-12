@@ -3,10 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed } from "vue";
 
 interface Props {
-  id?: number;
+  id?: string;
   title: string;
   rotate?: boolean;
   // top: string;
@@ -14,15 +14,15 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  id: 0,
-  title: '',
+  id: "",
+  title: "",
   rotate: false,
   // top: '10px',
   // left: '10px',
 });
 
-const width = '2.5vh';
-const height = '4vh';
+const width = "2.5vh";
+const height = "4vh";
 
 const position = computed(() => ({
   width: props.rotate ? height : width,

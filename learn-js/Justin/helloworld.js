@@ -1,4 +1,4 @@
-let text = '';
+let text = "";
 
 // const fruits = ['apple', 'orange', 'cherry'];
 // fruits.forEach(myFunction);
@@ -6,9 +6,9 @@ let text = '';
 // function myFunction(item, index) {
 //   text += index + ': ' + item;
 // }
-const fruitss = ['apple', 'orange', 'cherry'];
+const fruitss = ["apple", "orange", "cherry"];
 fruits.forEach((item, index) => {
-  text += index + ': ' + item + ' ';
+  text += index + ": " + item + " ";
 });
 
 console.log(text);
