@@ -4,7 +4,7 @@
       <div class="row h-10">
         <div class="w-10">T1:L1</div>
         <div class="w-70 bg-blue-4">T1:L2-8</div>
-        <div class="w-10"></div>
+        <div class="w-10">T1L9</div>
       </div>
       <div class="row h-70">
         <div class="w-10 bg-blue-4">T2-8:L1</div>
@@ -84,7 +84,7 @@
             <mj-tile v-for="i in 13" :key="i" :title="i.toString()"></mj-tile>
           </div>
         </div>
-        <div class="w-10"></div>
+        <div class="w-10">T9:L9</div>
       </div>
     </div>
   </q-page>
