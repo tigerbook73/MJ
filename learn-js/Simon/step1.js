@@ -16,40 +16,40 @@ class CardType {
 class CardTypes {
   constructor() {
     this.types = [
-      new CardType('万', 1, '一万'),
-      new CardType('万', 2, '二万'),
-      new CardType('万', 3, '三万'),
-      new CardType('万', 4, '四万'),
-      new CardType('万', 5, '五万'),
-      new CardType('万', 6, '六万'),
-      new CardType('万', 7, '七万'),
-      new CardType('万', 8, '八万'),
-      new CardType('万', 9, '九万'),
-      new CardType('筒', 1, '一筒'),
-      new CardType('筒', 2, '二筒'),
-      new CardType('筒', 3, '三筒'),
-      new CardType('筒', 4, '四筒'),
-      new CardType('筒', 5, '五筒'),
-      new CardType('筒', 6, '六筒'),
-      new CardType('筒', 7, '七筒'),
-      new CardType('筒', 8, '八筒'),
-      new CardType('筒', 9, '九筒'),
-      new CardType('条', 1, '一条'),
-      new CardType('条', 2, '二条'),
-      new CardType('条', 3, '三条'),
-      new CardType('条', 4, '四条'),
-      new CardType('条', 5, '五条'),
-      new CardType('条', 6, '六条'),
-      new CardType('条', 7, '七条'),
-      new CardType('条', 8, '八条'),
-      new CardType('条', 9, '九条'),
-      new CardType('风', 1, '东'),
-      new CardType('风', 2, '南'),
-      new CardType('风', 3, '西'),
-      new CardType('风', 4, '北'),
-      new CardType('箭', 1, '中'),
-      new CardType('箭', 2, '发'),
-      new CardType('箭', 3, '白'),
+      new CardType("万", 1, "一万"),
+      new CardType("万", 2, "二万"),
+      new CardType("万", 3, "三万"),
+      new CardType("万", 4, "四万"),
+      new CardType("万", 5, "五万"),
+      new CardType("万", 6, "六万"),
+      new CardType("万", 7, "七万"),
+      new CardType("万", 8, "八万"),
+      new CardType("万", 9, "九万"),
+      new CardType("筒", 1, "一筒"),
+      new CardType("筒", 2, "二筒"),
+      new CardType("筒", 3, "三筒"),
+      new CardType("筒", 4, "四筒"),
+      new CardType("筒", 5, "五筒"),
+      new CardType("筒", 6, "六筒"),
+      new CardType("筒", 7, "七筒"),
+      new CardType("筒", 8, "八筒"),
+      new CardType("筒", 9, "九筒"),
+      new CardType("条", 1, "一条"),
+      new CardType("条", 2, "二条"),
+      new CardType("条", 3, "三条"),
+      new CardType("条", 4, "四条"),
+      new CardType("条", 5, "五条"),
+      new CardType("条", 6, "六条"),
+      new CardType("条", 7, "七条"),
+      new CardType("条", 8, "八条"),
+      new CardType("条", 9, "九条"),
+      new CardType("风", 1, "东"),
+      new CardType("风", 2, "南"),
+      new CardType("风", 3, "西"),
+      new CardType("风", 4, "北"),
+      new CardType("箭", 1, "中"),
+      new CardType("箭", 2, "发"),
+      new CardType("箭", 3, "白"),
     ];
   }
 
@@ -106,12 +106,7 @@ class Card {
 class CardGame {
   constructor() {
     this.cards = [];
-    this.walls = [
-      new CardWall('East'),
-      new CardWall('South'),
-      new CardWall('West'),
-      new CardWall('North'),
-    ];
+    this.walls = [new CardWall("East"), new CardWall("South"), new CardWall("West"), new CardWall("North")];
   }
   // 初始化牌，选择合适的牌，加入到游戏中（第一步只需要最基本的牌型）
   init() {
@@ -140,7 +135,7 @@ class CardGame {
 
     for (let i = 0; i < this.walls.length; i++) {
       this.walls[i].print();
-      process.stdout.write('\n');
+      process.stdout.write("\n");
     }
   }
 
@@ -168,14 +163,14 @@ class CardWall {
   }
 
   print() {
-    console.log('Wall direction ' + this.direction + ': ');
+    console.log("Wall direction " + this.direction + ": ");
     for (let i = 0; i < this.cards.length; i++) {
       this.cards[i].print();
-      process.stdout.write(',');
+      process.stdout.write(",");
 
       if (i != 0) {
         if ((i + 1) % 17 == 0) {
-          process.stdout.write('\n');
+          process.stdout.write("\n");
         }
       }
     }

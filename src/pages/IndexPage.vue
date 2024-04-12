@@ -25,39 +25,19 @@
           <div class="row h-50">
             <div class="row justify-center items-center w-10">
               <div class="column">
-                <mj-tile
-                  v-for="i in 18"
-                  :key="i"
-                  title=""
-                  :rotate="true"
-                ></mj-tile>
+                <mj-tile v-for="i in 18" :key="i" title="" :rotate="true"></mj-tile>
               </div>
               <div class="column">
-                <mj-tile
-                  v-for="i in 18"
-                  :key="i"
-                  title=""
-                  :rotate="true"
-                ></mj-tile>
+                <mj-tile v-for="i in 18" :key="i" title="" :rotate="true"></mj-tile>
               </div>
             </div>
             <div class="w-50 bg-green-4">T3-7:L3-7</div>
             <div class="row justify-center items-center w-10">
               <div class="column">
-                <mj-tile
-                  v-for="i in 18"
-                  :key="i"
-                  title=""
-                  :rotate="true"
-                ></mj-tile>
+                <mj-tile v-for="i in 18" :key="i" title="" :rotate="true"></mj-tile>
               </div>
               <div class="column">
-                <mj-tile
-                  v-for="i in 18"
-                  :key="i"
-                  title=""
-                  :rotate="true"
-                ></mj-tile>
+                <mj-tile v-for="i in 18" :key="i" title="" :rotate="true"></mj-tile>
               </div>
             </div>
           </div>
@@ -91,10 +71,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import MjTile from 'components/MjTile.vue';
+import { ref } from "vue";
+import MjTile from "components/MjTile.vue";
 
 defineOptions({
-  name: 'IndexPage',
+  name: "IndexPage",
 });
 </script>
