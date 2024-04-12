@@ -71,7 +71,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import MjTile from "components/MjTile.vue";
 
 defineOptions({
