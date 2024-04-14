@@ -61,7 +61,7 @@
         <div class="column bg-blue-4">
           <div class="h-5">T9:L2-8</div>
           <div class="row justify-center items-center w-70">
-            <comp-tile v-for="i in 13" :key="i" type=""></comp-tile>
+            <comp-tile v-for="i in 13" :key="i" type="" size="large"></comp-tile>
           </div>
         </div>
         <div class="w-10">T9:L9</div>

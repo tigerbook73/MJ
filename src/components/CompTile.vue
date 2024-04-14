@@ -11,12 +11,14 @@ interface Props {
   id?: string;
   type: string;
   position?: string;
+  size?: "small" | "large";
 }
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
   type: "",
   position: "bottom",
+  size: "small",
 });
 
 const imageNames: Record<string, string> = {
@@ -68,8 +70,8 @@ const src = computed(() => {
 
 console.log(src.value);
 
-const width = "3vh";
-const height = "4.2vh";
+const width = props.size == "small" ? "3vh" : "3.5vh";
+const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
 const tileStyle = computed(() =>
   props.position == "left" || props.position == "right"
