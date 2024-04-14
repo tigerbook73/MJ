@@ -1,13 +1,37 @@
 // app global css in SCSS form
 
+// define width class w-1 to w-100
 @for $i from 1 through 100 {
   .w-#{$i} {
     width: #{$i * 1.1}vh;
   }
 }
 
+// define height class h-1 to h-100
 @for $i from 1 through 100 {
   .h-#{$i} {
     height: #{$i * 1.1}vh;
   }
+}
+
+// define system area
+.area-game {
+  background-color: $blue-2;
+}
+
+// define system area
+.area-player {
+  background-color: $blue-7;
+}
+
+.area-board {
+  background-color: $brown-2;
+}
+
+.area-wall {
+  background-color: $brown-4;
+}
+
+.area-field {
+  background-color: $green-2;
 }

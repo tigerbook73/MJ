@@ -1,6 +1,17 @@
 <template>
-  <div class="mj-tile flex justify-center items-center" :style="tileStyle">
-    <q-img :src="src" :ratio="1 / 1" fit="scale-down" :width="width" :style="imgStyle"></q-img>
+  <div
+    class="flex justify-center items-center"
+    :class="props.type == '' ? 'mj-tile-empty' : 'mj-tile'"
+    :style="tileStyle"
+  >
+    <q-img
+      v-if="props.type"
+      :src="src"
+      :ratio="1 / 1"
+      fit="scale-down"
+      :width="width"
+      :style="imgStyle"
+    ></q-img>
   </div>
 </template>
 
@@ -54,7 +65,7 @@ const imageNames: Record<string, string> = {
   西: "Shaa.svg",
   北: "Pei.svg",
   中: "Chun.svg",
-  發: "Hatsu.svg",
+  发: "Hatsu.svg",
   白: "Haku.svg",
 };
 
@@ -67,8 +78,6 @@ const src = computed(() => {
   const type = imageNames[props.type] ? props.type : randomType();
   return `/svgs/Regular/${imageNames[type]}`;
 });
-
-console.log(src.value);
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";

@@ -6,7 +6,7 @@ export class MjGame {
   //
   constructor(
     public tiles: MjTile[] = [],
-    public cardTypesList: MjTileType[] = [],
+    public tileTypesList: MjTileType[] = [],
     public walls: MjTileWall[] = []
   ) {
     this.walls = [
@@ -15,13 +15,13 @@ export class MjGame {
       new MjTileWall("West"),
       new MjTileWall("North"),
     ];
-    this.cardTypesList = mjTileTypes;
+    this.tileTypesList = mjTileTypes;
   }
 
   init() {
     this.tiles = [];
 
-    this.cardTypesList.forEach((type) => {
+    this.tileTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {
         this.tiles.push(new MjTile(type));
       }
@@ -47,3 +47,5 @@ export class MjGame {
     this.walls.forEach((wall) => wall.print());
   }
 }
+
+export const mjGame = new MjGame();

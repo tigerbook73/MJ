@@ -2,12 +2,12 @@ import { MjTileType } from "./mjTileType";
 
 export class MjTile {
   //
-  constructor(public cardType: MjTileType) {
+  constructor(public type: MjTileType) {
     //
   }
 
   print() {
     process.stdout.write("|");
-    process.stdout.write(this.cardType.name.padStart(6 - this.cardType.name.length));
+    process.stdout.write(this.type.name.padStart(6 - this.type.name.length));
   }
 }
