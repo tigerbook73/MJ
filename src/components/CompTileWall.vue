@@ -6,6 +6,7 @@
         :key="index"
         :type="tile"
         :position="props.position"
+        back
       ></comp-tile>
     </div>
     <div :class="flex2">
@@ -14,6 +15,7 @@
         :key="index"
         :type="tile"
         :position="props.position"
+        back
       ></comp-tile>
     </div>
   </div>

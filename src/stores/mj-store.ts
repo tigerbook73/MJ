@@ -3,36 +3,23 @@ import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
+  const open = ref(false);
+
   const topWall = ref([] as string[]);
   const bottomWall = ref([] as string[]);
   const rightWall = ref([] as string[]);
   const leftWall = ref([] as string[]);
+
   const myTiles = ref([] as string[]);
 
-  function fetch() {
+  function refresh() {
     topWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
     rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.type.name);
     bottomWall.value = mjGame.walls[2].tiles.map((tile) => tile.type.name);
     leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.type.name);
   }
 
-  return {
-    // state
-    topWall,
-    rightWall,
-    bottomWall,
-    leftWall,
-    myTiles,
-
-    // actions
-    fetch,
-  };
-});
-
-const mjStore = useMjStore();
-
-function test() {
-  mjStore.myTiles = [
+  myTiles.value = [
     // test data
     "东",
     "东",
@@ -49,7 +36,23 @@ function test() {
     "中",
     "",
     "中",
+    "?",
   ];
-}
 
-test();
+  mjGame.init();
+  mjGame.separate();
+  refresh();
+
+  return {
+    // state
+    open,
+    topWall,
+    rightWall,
+    bottomWall,
+    leftWall,
+    myTiles,
+
+    // actions
+    refresh,
+  };
+});

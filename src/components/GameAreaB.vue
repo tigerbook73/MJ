@@ -19,12 +19,13 @@ function reset() {
   //
   mjGame.init();
   mjGame.separate();
-  mjStore.fetch();
+  mjStore.refresh();
 }
 
 function shuffle() {
   //
+  mjGame.init();
   mjGame.separate();
-  mjStore.fetch();
+  mjStore.refresh();
 }
 </script>

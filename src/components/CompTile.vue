@@ -1,28 +1,28 @@
 <template>
-  <div
-    class="flex justify-center items-center"
-    :class="props.type == '' ? 'mj-tile-empty' : 'mj-tile'"
-    :style="tileStyle"
-  >
-    <q-img
-      v-if="props.type"
-      :src="src"
-      :ratio="1 / 1"
-      fit="scale-down"
-      :width="width"
-      :style="imgStyle"
-    ></q-img>
+  <div>
+    <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
+      <q-img
+        v-if="props.type && (!props.back || mjStore.open)"
+        :src="imgSrc"
+        :ratio="1 / 1"
+        fit="scale-down"
+        :width="width"
+        :style="imgStyle"
+      ></q-img>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useMjStore } from "src/stores/mj-store";
 
 interface Props {
   id?: string;
   type: string;
   position?: string;
   size?: "small" | "large";
+  back?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,6 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   position: "bottom",
   size: "small",
 });
+
+const mjStore = useMjStore();
 
 const imageNames: Record<string, string> = {
   一条: "Sou1.svg",
@@ -69,19 +71,18 @@ const imageNames: Record<string, string> = {
   白: "Haku.svg",
 };
 
-const randomType = () => {
-  const keys = Object.keys(imageNames);
-  return keys[Math.floor(Math.random() * keys.length)];
-};
-
-const src = computed(() => {
-  const type = imageNames[props.type] ? props.type : randomType();
-  return `/svgs/Regular/${imageNames[type]}`;
+const imgSrc = computed(() => {
+  return imageNames[props.type]
+    ? `/svgs/Regular/${imageNames[props.type]}`
+    : "/svgs/Black/Blank.svg";
 });
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
+const tileClass = computed(() =>
+  props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""
+);
 const tileStyle = computed(() =>
   props.position == "left" || props.position == "right"
     ? { width: height, height: width }
@@ -112,5 +113,12 @@ const imgStyle = ref({
     background-color: #000;
     color: #f0f0f0;
   }
+}
+
+.mj-tile-back {
+  background-color: gray;
+  border: 1px solid #000;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #000;
 }
 </style>
