@@ -2,7 +2,7 @@
   "extends": "@quasar/app-vite/tsconfig-preset",
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "CommonJS"
+    // "module": "CommonJS"
   },
   "exclude": [
     "./dist",
@@ -11,6 +11,6 @@
     "./src-capacitor",
     "./src-cordova",
     "./quasar.config.*.temporary.compiled*",
-    "./learn-js",
+    "./learn-js"
   ]
 }
