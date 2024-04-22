@@ -36,12 +36,19 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects
   - Card内部有以下Method
     - print（）
 
-# Lesson 4
+# Lesson 4 2024/04/23
 
 ## 学习任务：
 
-自学语言
-https://developer.mozilla.org/en-US/docs/Learn/JavaScript
+学习HTML基础知识（0.5-1小时）
+https://developer.mozilla.org/zh-CN/docs/Learn/HTML/Introduction_to_HTML
+
+学习CSS基础知识（0.5-1小时）
+https://developer.mozilla.org/zh-CN/docs/Learn/Getting_started_with_the_web/CSS_basics
+
+自学JavaScript语言（长期）
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Introduction
+这部分内容比较多，可以从初级开始学习，可以慢慢看。不清楚的时候可以自行温习一遍相关章节。
 
 
 ## 编程任务
@@ -53,14 +60,13 @@ https://developer.mozilla.org/en-US/docs/Learn/JavaScript
 + 讲解并示范
   + 重构原先代码，基于module实现
   + 和UI结合，实现Model/View/Control的分离
-  
+
 + 编程
   + 修改并完善MjGame的init()/shuffle()功能，确保在图形界面下正确
   + 实现start button
     + 增加一个start按钮，点击后，掷骰子（随机两个数字，显示出来）
     + 然后根据骰子的结果，确定取牌的位置
   + 实现next button
-    + 点击后，1）TileWall中的牌被取走；2）新去的牌防止在自己的牌的最后面（加一个空位）
+    + 点击后，1）TileWall中的牌被取走；2）新去的牌放置在自己的牌的最后面（加一个空位）
   + 实现sort button
-    + 点击后，整理自己的牌，去掉空外
-    
+    + 点击后，整理自己的牌，去掉空位
