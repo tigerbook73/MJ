@@ -1,7 +1,10 @@
 import { MjTile } from "./mjTile";
 
 export class MjTileWall {
-  constructor(public position: string, public tiles: MjTile[] = []) {
+  constructor(
+    public position: string,
+    public tiles: MjTile[] = [],
+  ) {
     //
   }
 

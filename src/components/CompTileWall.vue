@@ -46,9 +46,9 @@ const tiles = computed(() =>
   props.position == "top"
     ? mjStore.topWall
     : props.position == "left"
-    ? mjStore.leftWall
-    : props.position == "right"
-    ? mjStore.rightWall
-    : mjStore.bottomWall
+      ? mjStore.leftWall
+      : props.position == "right"
+        ? mjStore.rightWall
+        : mjStore.bottomWall,
 );
 </script>

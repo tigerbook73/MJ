@@ -19,9 +19,7 @@ class CardTile {
 
   print() {
     process.stdout.write("|");
-    process.stdout.write(
-      this.cardType.name.padStart(6 - this.cardType.name.length)
-    );
+    process.stdout.write(this.cardType.name.padStart(6 - this.cardType.name.length));
   }
 }
 
@@ -68,12 +66,7 @@ class CardGame {
 
   init() {
     this.tiles = [];
-    this.walls = [
-      new CardWall("东家"),
-      new CardWall("南家"),
-      new CardWall("西家"),
-      new CardWall("北家"),
-    ];
+    this.walls = [new CardWall("东家"), new CardWall("南家"), new CardWall("西家"), new CardWall("北家")];
 
     this.cardTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {

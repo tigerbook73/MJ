@@ -7,14 +7,9 @@ export class MjGame {
   constructor(
     public tiles: MjTile[] = [],
     public tileTypesList: MjTileType[] = [],
-    public walls: MjTileWall[] = []
+    public walls: MjTileWall[] = [],
   ) {
-    this.walls = [
-      new MjTileWall("East"),
-      new MjTileWall("South"),
-      new MjTileWall("West"),
-      new MjTileWall("North"),
-    ];
+    this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
     this.tileTypesList = mjTileTypes;
   }
 

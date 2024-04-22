@@ -1,6 +1,10 @@
 export class MjTileType {
   //
-  constructor(public type: string, public number: number, public name: string) {
+  constructor(
+    public type: string,
+    public number: number,
+    public name: string,
+  ) {
     //
   }
 

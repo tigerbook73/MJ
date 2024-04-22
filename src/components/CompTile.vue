@@ -72,21 +72,15 @@ const imageNames: Record<string, string> = {
 };
 
 const imgSrc = computed(() => {
-  return imageNames[props.type]
-    ? `/svgs/Regular/${imageNames[props.type]}`
-    : "/svgs/Black/Blank.svg";
+  return imageNames[props.type] ? `/svgs/Regular/${imageNames[props.type]}` : "/svgs/Black/Blank.svg";
 });
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
-const tileClass = computed(() =>
-  props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""
-);
+const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
 const tileStyle = computed(() =>
-  props.position == "left" || props.position == "right"
-    ? { width: height, height: width }
-    : { width, height }
+  props.position == "left" || props.position == "right" ? { width: height, height: width } : { width, height },
 );
 
 const imgStyle = ref({
@@ -95,10 +89,10 @@ const imgStyle = ref({
     props.position == "top"
       ? "rotate(180deg)"
       : props.position == "right"
-      ? "rotate(-90deg)"
-      : props.position == "left"
-      ? "rotate(90deg)"
-      : "none",
+        ? "rotate(-90deg)"
+        : props.position == "left"
+          ? "rotate(90deg)"
+          : "none",
 });
 </script>
 
