@@ -1,4 +1,5 @@
 # Table of Content
+
 - [Table of Content](#markdown-header-table-of-content)
 - [My MaJiang (mj-proj)](#markdown-header-my-majiang-mj-proj)
   - [Install the dependencies](#markdown-header-install-the-dependencies)
@@ -12,10 +13,9 @@
     - [Install npm global package](#markdown-header-install-npm-global-package)
     - [Run ts file](#markdown-header-run-ts-file)
 
-
 # My MaJiang (mj-proj)
 
-A MJ Project
+This is MJ Project
 
 ## Install the dependencies
 
@@ -51,10 +51,10 @@ yarn build
 
 See [Configuring quasar.config.js](https://v2.quasar.dev/quasar-cli-vite/quasar-config-js).
 
-
 ## Install .ts running support
 
 ### Remove yarn global package
+
 ```bash
 yarn global list
 ```
@@ -63,7 +63,6 @@ yarn global list
 # remove
 yarn global remove [package-names]
 ```
-
 
 ### Install npm global package
 
@@ -77,6 +76,7 @@ npm install -g @quasar/cli \
 ```
 
 ### Run ts file
+
 ```
 # either of the following commands will work
 tsx file.ts
