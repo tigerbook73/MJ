@@ -24,15 +24,23 @@ export class MjGame {
   }
 
   shuffle() {
+    for (const wall of this.walls) {
+      wall.init();
+    }
     // 随机洗牌
     for (let i = this.tiles.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.tiles[i], this.tiles[j]] = [this.tiles[j], this.tiles[i]];
     }
+    this.tiles.forEach((tile, index) => {
+      this.walls[index % this.walls.length].add(tile);
+    });
   }
 
   separate() {
-    // walls -> CardWall对象的数组
+    for (const wall of this.walls) {
+      wall.init();
+    }
     this.tiles.forEach((tile, index) => {
       this.walls[index % this.walls.length].add(tile);
     });

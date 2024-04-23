@@ -2,6 +2,7 @@
   <div>
     <q-btn flat @click="reset">reset</q-btn>
     <q-btn flat @click="shuffle">shuffle</q-btn>
+    <!-- <q-btn flat @click="getTile">get tile</q-btn> -->
   </div>
 </template>
 
@@ -25,7 +26,13 @@ function reset() {
 function shuffle() {
   //
   mjGame.init();
-  mjGame.separate();
+  mjGame.shuffle();
+  // mjGame.separate();
   mjStore.refresh();
 }
+
+// function getTile() {
+//   //
+//   mjStore.myTiles.values
+// }
 </script>
