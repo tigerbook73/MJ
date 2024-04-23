@@ -1,7 +1,11 @@
 //
 
 class CardType {
-  constructor(public type: string, public number: number, public name: string) {
+  constructor(
+    public type: string,
+    public number: number,
+    public name: string,
+  ) {
     this.type = type;
     this.number = number;
     this.name = name;
@@ -90,9 +94,7 @@ class CardTile {
 
   print() {
     process.stdout.write("|");
-    process.stdout.write(
-      this.cardType.name.padStart(6 - this.cardType.name.length)
-    );
+    process.stdout.write(this.cardType.name.padStart(6 - this.cardType.name.length));
   }
 }
 
@@ -102,12 +104,7 @@ class CardGame {
   public walls: CardWall[];
   constructor() {
     this.tiles = [];
-    this.walls = [
-      new CardWall("东家"),
-      new CardWall("南家"),
-      new CardWall("西家"),
-      new CardWall("北家"),
-    ];
+    this.walls = [new CardWall("东家"), new CardWall("南家"), new CardWall("西家"), new CardWall("北家")];
     this.cardTypesList = [
       new CardType("m", 1, "一万"),
       new CardType("m", 2, "二万"),
