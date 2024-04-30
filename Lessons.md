@@ -1,3 +1,17 @@
+- [Lesson 1](#markdown-header-lesson-1)
+- [Lesson 2](#markdown-header-lesson-2)
+- [Lesson 3](#markdown-header-lesson-3)
+  - [学习任务：](#markdown-header-学习任务)
+  - [编程任务：](#markdown-header-编程任务)
+- [Lesson 4 2024/04/23](#markdown-header-lesson-4-20240423)
+  - [学习任务：](#markdown-header-学习任务-1)
+  - [编程任务](#markdown-header-编程任务-1)
+  - [例会](#markdown-header-例会)
+- [Lesson 5 2024/04/30](#markdown-header-lesson-5-20240430)
+  - [学习任务：](#markdown-header-学习任务-2)
+  - [编程任务:](#markdown-header-编程任务-2)
+  - [例会](#markdown-header-例会-1)
+
 # Lesson 1
 
 # Lesson 2
@@ -68,11 +82,57 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Introduction
   - 和UI结合，实现Model/View/Control的分离
 
 - 编程
-  - 修改并完善MjGame的init()/shuffle()功能，确保在图形界面下正确
-  - 实现start button
-    - 增加一个start按钮，点击后，掷骰子（随机两个数字，显示出来）
-    - 然后根据骰子的结果，确定取牌的位置
-  - 实现next button
-    - 点击后，1）TileWall中的牌被取走；2）新去的牌放置在自己的牌的最后面（加一个空位）
-  - 实现sort button
-    - 点击后，整理自己的牌，去掉空位
+  - 完善Reset、Shuffle Button的功能
+
+# Lesson 5 2024/04/30
+
+## 学习任务：
+
+- 自学JavaScript语言（长期）
+  https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Introduction
+  这部分内容比较多，可以从初级开始学习，可以慢慢看。不清楚的时候可以自行温习一遍相关章节。
+
+## 编程任务:
+
+- 增加游戏的状态属性
+
+  - ready (按shuffle后的状态)
+  - start (在ready状态后，按button后的状态)
+
+- 增加游戏的当前取牌位置属性
+
+  - 当前的wall/tile位置
+
+- 增加玩家的手牌属性
+
+  - 可以用一个数组（或其他方式表示）表示，表明玩家（自己）当前的牌
+
+- 实现start button
+
+  - 增加一个start按钮，表明开始游戏
+    - 点击后，掷骰子（随机两个数字，显示出来）(游戏进入start状态)
+    - 注意：骰子的结果，确定了取牌的位置
+  - start button只有在ready状态才能点击，在start状态下，不可点击（或无效）
+
+- 实现pick button
+
+  - 点击后，从当前位置取一张牌，放到自己的手牌中
+  - 新取的牌从wall中去掉
+  - 新取的牌放置在自己的牌的最后面（加一个空位 用于区分）
+  - pick button只在start状态下有效
+
+- 实现sort button
+  - 点击后，整理自己的牌，去掉空位
+
+## 例会
+
+- 学习测试
+
+  - 什么是测试、什么事调试，测试的重要性
+  - 讲解并解释jest样例
+  - 各自完成各个类的测试的测试
+
+- 编程
+
+  - 完成编程任务
+  - 讲解
