@@ -6,8 +6,8 @@ export class MjTile {
     //
   }
 
-  print() {
-    process.stdout.write("|");
-    process.stdout.write(this.type.name.padStart(6 - this.type.name.length));
-  }
+  // print() {
+  //   process.stdout.write("|");
+  //   process.stdout.write(this.type.name.padStart(6 - this.type.name.length));
+  // }
 }

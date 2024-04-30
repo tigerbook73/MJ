@@ -8,6 +8,7 @@ export class MjGame {
     public tiles: MjTile[] = [],
     public tileTypesList: MjTileType[] = [],
     public walls: MjTileWall[] = [],
+    public status: boolean = false,
   ) {
     this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
     this.tileTypesList = mjTileTypes;
@@ -15,6 +16,7 @@ export class MjGame {
 
   init() {
     this.tiles = [];
+    this.status = false;
 
     this.tileTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {
@@ -35,6 +37,7 @@ export class MjGame {
     this.tiles.forEach((tile, index) => {
       this.walls[index % this.walls.length].add(tile);
     });
+    this.status = true;
   }
 
   separate() {
@@ -46,9 +49,20 @@ export class MjGame {
     });
   }
 
-  print() {
-    this.walls.forEach((wall) => wall.print());
+  start() {
+    //;
   }
+
+  sort() {
+    //;
+  }
+  myTiles() {
+    //;
+  }
+
+  // print() {
+  //   this.walls.forEach((wall) => wall.print());
+  // }
 }
 
 export const mjGame = new MjGame();

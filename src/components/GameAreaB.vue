@@ -2,6 +2,9 @@
   <div>
     <q-btn flat @click="reset">reset</q-btn>
     <q-btn flat @click="shuffle">shuffle</q-btn>
+    <q-input v-model="checkStatus" outlined readonly />
+    <q-btn flat @click="start">start</q-btn>
+
     <!-- <q-btn flat @click="getTile">get tile</q-btn> -->
   </div>
 </template>
@@ -23,11 +26,21 @@ function reset() {
   mjStore.refresh();
 }
 
+function checkStatus() {
+  if (mjGame.status == true) {
+    return "Ready";
+  }
+  return "Awaiting Shuffle";
+}
+
+function start() {
+  //;
+}
 function shuffle() {
   //
   mjGame.init();
   mjGame.shuffle();
-  // mjGame.separate();
+
   mjStore.refresh();
 }
 
