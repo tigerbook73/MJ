@@ -18,14 +18,12 @@ const mjStore = useMjStore();
 function reset() {
   //
   mjGame.init();
-  mjGame.separate();
   mjStore.refresh();
 }
 
 function shuffle() {
   //
-  mjGame.init();
-  mjGame.separate();
+  mjGame.shuffle();
   mjStore.refresh();
 }
 </script>

@@ -3,7 +3,8 @@ import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
-  const open = ref(false);
+  const open = ref(true);
+  const status = ref(Boolean);
 
   const topWall = ref([] as string[]);
   const bottomWall = ref([] as string[]);
@@ -13,10 +14,10 @@ export const useMjStore = defineStore("mj", () => {
   const myTiles = ref([] as string[]);
 
   function refresh() {
-    topWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
-    rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.type.name);
-    bottomWall.value = mjGame.walls[2].tiles.map((tile) => tile.type.name);
-    leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.type.name);
+    topWall.value = mjGame.walls[0].cards.map((tile) => tile.type.name);
+    rightWall.value = mjGame.walls[1].cards.map((tile) => tile.type.name);
+    bottomWall.value = mjGame.walls[2].cards.map((tile) => tile.type.name);
+    leftWall.value = mjGame.walls[3].cards.map((tile) => tile.type.name);
   }
 
   myTiles.value = [
@@ -40,7 +41,7 @@ export const useMjStore = defineStore("mj", () => {
   ];
 
   mjGame.init();
-  mjGame.separate();
+  mjGame.shuffle();
   refresh();
 
   return {
@@ -51,7 +52,7 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall,
     leftWall,
     myTiles,
-
+    status,
     // actions
     refresh,
   };
