@@ -11,6 +11,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "jest",
+    "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
     "dev": "quasar dev",
     "build": "quasar build"
   },

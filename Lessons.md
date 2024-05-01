@@ -11,6 +11,7 @@
   - [学习任务：](#markdown-header-学习任务-2)
   - [编程任务:](#markdown-header-编程任务-2)
   - [例会](#markdown-header-例会-1)
+- [Lesson 6 2024/05/07](#markdown-header-lesson-6-20240507)
 
 # Lesson 1
 
@@ -136,3 +137,5 @@ https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Introduction
 
   - 完成编程任务
   - 讲解
+
+# Lesson 6 2024/05/07
