@@ -42,13 +42,13 @@ const flex1 = props.position === "top" || props.position === "bottom" ? "column"
 const flex2 = props.position === "top" || props.position === "bottom" ? "row" : "column";
 
 const mjStore = useMjStore();
-const tiles = computed(() =>
-  props.position == "top"
-    ? mjStore.topWall
-    : props.position == "left"
-      ? mjStore.leftWall
-      : props.position == "right"
-        ? mjStore.rightWall
-        : mjStore.bottomWall,
-);
+const tiles = computed(() => {
+  const positions: Record<string, typeof mjStore.topWall> = {
+    top: mjStore.topWall,
+    left: mjStore.leftWall,
+    right: mjStore.rightWall,
+    bottom: mjStore.bottomWall,
+  };
+  return positions[props.position] || positions.bottom;
+});
 </script>
