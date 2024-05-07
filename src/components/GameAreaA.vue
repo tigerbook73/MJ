@@ -17,6 +17,7 @@ const mjStore = useMjStore();
 function start() {
   //
   mjGame.shuffle();
+  mjGame.startGame();
   mjStore.refresh();
 }
 </script>

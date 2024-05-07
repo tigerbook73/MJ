@@ -1,22 +1,10 @@
 <template>
   <div class="flex-center" :class="flex1">
     <div :class="flex2">
-      <comp-tile
-        v-for="(tile, index) in tiles.slice(0, 17)"
-        :key="index"
-        :type="tile"
-        :position="props.position"
-        back
-      ></comp-tile>
+      <comp-tile v-for="(tile, index) in tiles1" :key="index" :type="tile" :position="props.position" back></comp-tile>
     </div>
     <div :class="flex2">
-      <comp-tile
-        v-for="(tile, index) in tiles.slice(17, 34)"
-        :key="index"
-        :type="tile"
-        :position="props.position"
-        back
-      ></comp-tile>
+      <comp-tile v-for="(tile, index) in tiles2" :key="index" :type="tile" :position="props.position" back></comp-tile>
     </div>
   </div>
 </template>
@@ -51,4 +39,7 @@ const tiles = computed(() => {
   };
   return positions[props.position] || positions.bottom;
 });
+
+const tiles1 = computed(() => tiles.value.filter((tile, index) => index % 2));
+const tiles2 = computed(() => tiles.value.filter((tile, index) => (index + 1) % 2));
 </script>

@@ -11,6 +11,7 @@ export class MjGame {
   state: State = State.Ready;
   wallIndex: number = 0;
   hand: MjCard[] = [];
+  pickIndex: number = 0;
 
   constructor(
     public cards: MjCard[] = [],
@@ -53,28 +54,47 @@ export class MjGame {
 
   startGame() {
     if (this.state != State.Ready) {
-      console.log("Game is not ready to start. Please shuffle first.");
       return;
     }
     const diceOne = Math.floor(Math.random() * 6) + 1;
     const diceTwo = Math.floor(Math.random() * 6) + 1;
     this.wallIndex = (diceOne + diceTwo - 2) % 4;
     this.state = State.Start;
+    this.hand = [];
   }
 
   pickCard() {
     if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0) {
-      const card = this.walls[this.wallIndex].cards[0]; // Get the first card
-      if (card && card.type.name !== "") {
-        // Check if the card is not a void card
-        this.hand.push(card); // Add the card to the hand
-        this.walls[this.wallIndex].cards[0] = new MjCard(voidCardTypes[0]); // Replace with a void card
+      if (this.pickIndex < this.walls[this.wallIndex].cards.length && this.pickIndex <= 13) {
+        const card = this.walls[this.wallIndex].cards[this.pickIndex]; // Get the first card
+        if (card.type.name !== "") {
+          // Check if the card is not a void card
+          this.hand.push(card); // Add the card to the hand
+          this.walls[this.wallIndex].cards[this.pickIndex] = new MjCard(voidCardTypes[0]);
+          // Replace with a void card
+        }
+        this.pickIndex++;
+      }
+      if (this.pickIndex == this.walls[this.wallIndex].cards.length) {
+        this.pickIndex = 0;
+        this.wallIndex++;
+        if (this.wallIndex > this.walls.length) {
+          console.log("Game over");
+        }
       }
     }
   }
 
   sortHand() {
-    this.hand = this.hand.filter((card) => card !== null);
+    this.hand.sort((first, next) => {
+      if (first.type.type == next.type.type) {
+        return first.type.value - next.type.value;
+      } else if (first.type.type > next.type.type) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   }
 
   print() {

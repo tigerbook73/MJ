@@ -11,34 +11,17 @@ export const useMjStore = defineStore("mj", () => {
   const rightWall = ref([] as string[]);
   const leftWall = ref([] as string[]);
 
-  const myTiles = ref([] as string[]);
+  const myCards = ref([] as string[]);
 
   function refresh() {
     topWall.value = mjGame.walls[0].cards.map((tile) => tile.type.name);
     rightWall.value = mjGame.walls[1].cards.map((tile) => tile.type.name);
     bottomWall.value = mjGame.walls[2].cards.map((tile) => tile.type.name);
     leftWall.value = mjGame.walls[3].cards.map((tile) => tile.type.name);
+    myCards.value = mjGame.hand.map((tile) => tile.type.name);
   }
 
-  myTiles.value = [
-    // test data
-    "东",
-    "东",
-    "东",
-    "南",
-    "南",
-    "南",
-    "西",
-    "西",
-    "西",
-    "北",
-    "北",
-    "北",
-    "中",
-    "",
-    "中",
-    "?",
-  ];
+  myCards.value = [];
 
   mjGame.init();
   mjGame.shuffle();
@@ -51,7 +34,7 @@ export const useMjStore = defineStore("mj", () => {
     rightWall,
     bottomWall,
     leftWall,
-    myTiles,
+    myCards,
     status,
     // actions
     refresh,
