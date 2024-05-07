@@ -23,6 +23,6 @@ describe("mjTileType", () => {
   });
 
   test("empty tile exist", () => {
-    expect(typeof emptyTile).toBe(MjTileType);
+    expect(emptyTile instanceof MjTileType).toBe(true);
   });
 });
