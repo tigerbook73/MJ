@@ -83,16 +83,15 @@ const tileStyle = computed(() =>
   props.position == "left" || props.position == "right" ? { width: height, height: width } : { width, height },
 );
 
+const rotate: Record<string, string> = {
+  top: "rotate(180deg)",
+  right: "rotate(-90deg)",
+  left: "rotate(90deg)",
+  bottom: "none",
+};
 const imgStyle = ref({
   width: width,
-  transform:
-    props.position == "top"
-      ? "rotate(180deg)"
-      : props.position == "right"
-        ? "rotate(-90deg)"
-        : props.position == "left"
-          ? "rotate(90deg)"
-          : "none",
+  transform: rotate[props.position] || "none",
 });
 </script>
 
