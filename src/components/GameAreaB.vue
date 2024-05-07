@@ -1,10 +1,8 @@
 <template>
   <div>
-    <q-btn flat @click="reset">reset</q-btn>
-    <q-btn flat @click="shuffle">shuffle</q-btn>
-    <q-input v-model="checkStatus" outlined readonly />
-    <q-btn flat @click="start">start</q-btn>
-
+    <!-- <q-btn flat @click="reset">reset</q-btn> -->
+    <center><q-btn flat @click="start">start</q-btn></center>
+    <center>{{ checkStatus() }}</center>
     <!-- <q-btn flat @click="getTile">get tile</q-btn> -->
   </div>
 </template>
@@ -19,28 +17,25 @@ defineOptions({
 
 const mjStore = useMjStore();
 
-function reset() {
-  //
-  mjGame.init();
-  mjGame.separate();
-  mjStore.refresh();
-}
+// function reset() {
+
+//   mjGame.init();
+//   mjGame.separate();
+//   mjStore.refresh();
+// }
 
 function checkStatus() {
-  if (mjGame.status == true) {
-    return "Ready";
+  if (mjGame.status == "ready") {
+    return "Started";
   }
-  return "Awaiting Shuffle";
+  return "Ready";
 }
 
 function start() {
-  //;
-}
-function shuffle() {
   //
   mjGame.init();
   mjGame.shuffle();
-
+  mjGame.start();
   mjStore.refresh();
 }
 

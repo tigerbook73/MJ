@@ -51,4 +51,4 @@ export const mjTileTypes = [
   new MjTileType("z", 7, "发"),
 ];
 
-export const emptyTile = new MjTileType("", -1, "");
+export const emptyTileType = new MjTileType("", -1, "");

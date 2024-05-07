@@ -1,4 +1,4 @@
-import { MjTileType } from "./mjTileType";
+import { MjTileType, emptyTileType } from "./mjTileType";
 
 export class MjTile {
   //
@@ -6,3 +6,5 @@ export class MjTile {
     //
   }
 }
+
+export const emptyTile = new MjTile(emptyTileType);

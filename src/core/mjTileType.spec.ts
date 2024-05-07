@@ -1,5 +1,4 @@
-import { MjTileType, mjTileTypes } from "./mjTileType";
-import { emptyTile } from "./mjTileType";
+import { mjTileTypes } from "./mjTileType";
 
 describe("mjTileType", () => {
   test("mjTileTypes length", () => {
@@ -20,9 +19,5 @@ describe("mjTileType", () => {
       set.add(`${type.type}|${type.number}`);
     }
     expect(set.size).toBe(mjTileTypes.length);
-  });
-
-  test("empty tile exist", () => {
-    expect(emptyTile instanceof MjTileType).toBe(true);
   });
 });

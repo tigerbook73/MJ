@@ -1,15 +1,18 @@
-import { MjTile } from "./mjTile";
+import { MjTile, emptyTile } from "./mjTile";
 import { MjTileType, mjTileTypes } from "./mjTileType";
 import { MjTileWall } from "./mjTileWall";
 
 export class MjGame {
   //
-  constructor(
-    public tiles: MjTile[] = [],
-    public tileTypesList: MjTileType[] = [],
-    public walls: MjTileWall[] = [],
-    public status: string = "",
-  ) {
+  public tiles: MjTile[] = [];
+  public tileTypesList: MjTileType[] = [];
+  public walls: MjTileWall[] = [];
+  public status: string = "";
+  public myTiles: MjTile[] = [];
+  public wallIndex: number = 0;
+  public posIndex: number = 0;
+  wallLength: number = 0;
+  constructor() {
     this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
     this.tileTypesList = mjTileTypes;
   }
@@ -17,6 +20,8 @@ export class MjGame {
   init() {
     this.tiles = [];
     this.status = "";
+    this.myTiles = [];
+    this.wallLength = this.walls[0].tiles.length;
 
     this.tileTypesList.forEach((type) => {
       for (let i = 0; i < 4; i++) {
@@ -51,19 +56,32 @@ export class MjGame {
   }
 
   start() {
+    const dice1 = Math.floor(Math.random() * 6) + 1;
+    const dice2 = Math.floor(Math.random() * 6) + 1;
+    this.wallIndex = (dice1 + dice2 - 1) % 4;
+    this.posIndex = this.wallLength - (dice1 + dice2) * 2;
     //;
   }
 
   sort() {
     //;
   }
-  myTiles() {
-    //;
-  }
 
-  // print() {
-  //   this.walls.forEach((wall) => wall.print());
-  // }
+  addTile() {
+    if (this.myTiles.length < 14) {
+      const tempTile = this.walls[this.wallIndex].tiles[this.posIndex];
+      this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
+      this.myTiles.push(tempTile);
+      this.posIndex += 1;
+      if (this.posIndex == this.wallLength) {
+        this.wallIndex += 1;
+        this.posIndex = 0;
+        if (this.wallIndex == 4) {
+          this.wallIndex = 0;
+        }
+      }
+    }
+  }
 }
 
 export const mjGame = new MjGame();
