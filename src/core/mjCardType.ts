@@ -51,3 +51,5 @@ export const mjCardTypes = [
   new MjCardType("箭", 2, "发"),
   new MjCardType("箭", 3, "白"),
 ];
+
+export const voidCardTypes = [new MjCardType("", 1, "")];
