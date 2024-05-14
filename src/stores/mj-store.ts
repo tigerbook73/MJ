@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { mjGame } from "src/core/mjGame";
+import { MjPlayer } from "src/core/mjPlayer";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
@@ -10,7 +11,14 @@ export const useMjStore = defineStore("mj", () => {
   const bottomWall = ref([] as string[]);
   const rightWall = ref([] as string[]);
   const leftWall = ref([] as string[]);
+
   const myTiles = ref([] as string[]);
+  const players = ref([] as MjPlayer[]);
+
+  const p1 = ref([] as string[]);
+  const p2 = ref([] as string[]);
+  const p3 = ref([] as string[]);
+  const p4 = ref([] as string[]);
 
   function refresh() {
     topWall.value = mjGame.walls[2].tiles.map((tile) => tile.type.name);
@@ -18,6 +26,10 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
     leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.type.name);
     myTiles.value = mjGame.myTiles.map((tile) => tile.type.name);
+    p1.value = mjGame.players[0].hand.map((tile) => tile.type.name);
+    p2.value = mjGame.players[1].hand.map((tile) => tile.type.name);
+    p3.value = mjGame.players[2].hand.map((tile) => tile.type.name);
+    p4.value = mjGame.players[3].hand.map((tile) => tile.type.name);
   }
 
   mjGame.init();
@@ -31,8 +43,16 @@ export const useMjStore = defineStore("mj", () => {
     rightWall,
     bottomWall,
     leftWall,
+
     myTiles,
+    p1,
+    p2,
+    p3,
+    p4,
+
+    players,
     status,
+
     // actions
     refresh,
   };

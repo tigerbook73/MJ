@@ -1,3 +1,4 @@
+import { MjPlayer } from "./mjPlayer";
 import { MjTile, emptyTile } from "./mjTile";
 import { MjTileType, mjTileTypes } from "./mjTileType";
 import { MjTileWall } from "./mjTileWall";
@@ -11,10 +12,14 @@ export class MjGame {
   public myTiles: MjTile[] = [];
   public wallIndex: number = 0;
   public posIndex: number = 0;
+  public playerIndex: number = 0;
+  public players: MjPlayer[] = [];
   wallLength: number = 0;
+
   constructor() {
     this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
     this.tileTypesList = mjTileTypes;
+    this.players = [new MjPlayer("P1"), new MjPlayer("P2"), new MjPlayer("P3"), new MjPlayer("P4")];
   }
 
   init() {
@@ -60,27 +65,38 @@ export class MjGame {
     const dice2 = Math.floor(Math.random() * 6) + 1;
     this.wallIndex = (dice1 + dice2 - 1) % 4;
     this.posIndex = this.wallLength - (dice1 + dice2) * 2;
+    this.status = "started";
     //;
   }
 
   sort() {
-    //;
+    //
   }
 
   addTile() {
-    if (this.myTiles.length < 14) {
-      const tempTile = this.walls[this.wallIndex].tiles[this.posIndex];
-      this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
-      this.myTiles.push(tempTile);
-      this.posIndex += 1;
-      if (this.posIndex == this.wallLength) {
-        this.wallIndex += 1;
-        this.posIndex = 0;
-        if (this.wallIndex == 4) {
-          this.wallIndex = 0;
-        }
-      }
+    const player = this.players[this.playerIndex];
+    if (player.hand.length >= 14) {
+      return;
     }
+    // temp tiles = current tile
+    const tempTile = this.walls[this.wallIndex].tiles[this.posIndex];
+    // current tile = empty tile
+    this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
+    // temp tile assign to player tile
+    // player.newtile = tempTile;
+    player.hand.push(tempTile);
+    player.sorthand();
+
+    this.updateIndex();
+  }
+
+  updateIndex() {
+    this.posIndex++;
+    if (this.posIndex == this.wallLength) {
+      this.posIndex = 0;
+      this.wallIndex = (this.wallIndex + 1) % 4;
+    }
+    this.playerIndex = (this.playerIndex + 1) % 4;
   }
 }
 

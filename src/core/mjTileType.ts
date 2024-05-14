@@ -7,10 +7,6 @@ export class MjTileType {
   ) {
     //
   }
-
-  print() {
-    process.stdout.write(this.name);
-  }
 }
 
 export const mjTileTypes = [
@@ -51,4 +47,4 @@ export const mjTileTypes = [
   new MjTileType("z", 7, "发"),
 ];
 
-export const emptyTileType = new MjTileType("", -1, "");
+export const emptyTileType = new MjTileType("z", 9, "");
