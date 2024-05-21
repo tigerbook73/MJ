@@ -51,13 +51,12 @@ export class MjGame {
   }
 
   separate() {
-    for (const wall of this.walls) {
-      wall.init();
+    //
+    for (let i = 0; i < 3; i++) {
+      for (const player of this.players) {
+        player.hand.push();
+      }
     }
-
-    this.tiles.forEach((tile, index) => {
-      this.walls[index % this.walls.length].add(tile);
-    });
   }
 
   start() {
@@ -83,9 +82,9 @@ export class MjGame {
     // current tile = empty tile
     this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
     // temp tile assign to player tile
-    // player.newtile = tempTile;
-    player.hand.push(tempTile);
+
     player.sorthand();
+    player.newtile = tempTile;
 
     this.updateIndex();
   }

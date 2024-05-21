@@ -1,33 +1,23 @@
-//;
+const customOrder = ["m", "s", "t", "z"];
 
-import axios from "axios";
+const array = [
+  { first: "t", second: 5 },
+  { first: "m", second: 1 },
+  { first: "s", second: 3 },
+  { first: "z", second: 2 },
+  { first: "m", second: 4 },
+  // add more objects as needed
+];
 
-// console.log("start");
+array.sort((a, b) => {
+  const orderA = customOrder.indexOf(a.first);
+  const orderB = customOrder.indexOf(b.first);
 
-// const timerId = setTimeout(() => {
-//   console.log("1 sec timeout");
-// }, 1000);
+  if (orderA !== orderB) {
+    return orderA - orderB;
+  } else {
+    return a.second - b.second;
+  }
+});
 
-// console.log("end");
-
-// const timerId2 = setTimeout(() => {
-//   console.log("2 sec timeout");
-// }, 2000);
-
-// clearTimeout(timerId);
-// clearTimeout(timerId2);
-
-axios
-  .get("https://timeapi.io/api/time/current/zone", {
-    params: {
-      timezone: "Australia/Melbourne",
-    },
-  })
-  .then((response) => {
-    console.log(response.data);
-  })
-  .catch((error) => {
-    console.log(error);
-  });
-
-console.log("end of call axios");
+console.log(array);

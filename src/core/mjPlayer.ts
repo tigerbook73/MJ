@@ -5,10 +5,13 @@ export class MjPlayer {
   public hand: MjTile[] = [];
   public openhand: MjTile[] = [];
   public newtile: MjTile = emptyTile;
+  public display: MjTile[] = [];
   //
   public played: MjTile[] = [];
   public turn: boolean = false;
   //
+  typeOrder = ["m", "s", "t", "z"];
+
   constructor(public position: string) {
     //
   }
@@ -20,9 +23,21 @@ export class MjPlayer {
     this.played = [];
   }
   sorthand() {
-    // this.hand.push(this.newtile);
-    this.hand.sort((a, b) => a.type.name.localeCompare(b.type.name) || a.type.number - b.type.number);
-    // this.newtile = emptyTile;
+    this.hand.push(this.newtile);
+    this.newtile = emptyTile;
+    this.hand.sort((a, b) => {
+      const typeA = this.typeOrder.indexOf(a.type.type);
+      const typeB = this.typeOrder.indexOf(b.type.type);
+
+      if (typeA !== typeB) {
+        return typeA - typeB;
+      } else {
+        return a.type.number - b.type.number;
+      }
+    });
+    this.display = this.hand.slice();
+    this.display.push(emptyTile);
+    this.display.push(this.newtile);
   }
 }
 
