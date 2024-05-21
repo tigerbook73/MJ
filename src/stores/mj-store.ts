@@ -12,7 +12,6 @@ export const useMjStore = defineStore("mj", () => {
   const rightWall = ref([] as string[]);
   const leftWall = ref([] as string[]);
 
-  const myTiles = ref([] as string[]);
   const players = ref([] as MjPlayer[]);
 
   const p1 = ref([] as string[]);
@@ -31,8 +30,7 @@ export const useMjStore = defineStore("mj", () => {
 
   function playerRefresh() {
     for (let i = 0; i < 4; i++) {
-      const tempList = mjGame.players[i].display;
-      plist[i].value = tempList.map((tile) => tile.type.name);
+      plist[i].value = mjGame.players[i].display.map((tile) => tile.type.name);
     }
   }
 
@@ -48,7 +46,6 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall,
     leftWall,
 
-    myTiles,
     p1,
     p2,
     p3,

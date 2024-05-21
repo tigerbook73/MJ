@@ -1,6 +1,7 @@
 <template>
   <div>
     <q-btn flat @click="start">start</q-btn>
+    <q-btn flat @click="reset">reset</q-btn>
     <!-- {{ checkStatus() }} -->
   </div>
 </template>
@@ -15,19 +16,11 @@ defineOptions({
 
 const mjStore = useMjStore();
 
-// function reset() {
-
-//   mjGame.init();
-//   mjGame.separate();
-//   mjStore.refresh();
-// }
-
-// function checkStatus() {
-//   if (mjGame.status == "ready") {
-//     return "Started";
-//   }
-//   return "Ready";
-// }
+function reset() {
+  mjGame.init();
+  mjGame.separate();
+  mjStore.refresh();
+}
 
 function start() {
   //

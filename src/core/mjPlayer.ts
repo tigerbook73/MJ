@@ -23,7 +23,9 @@ export class MjPlayer {
     this.played = [];
   }
   sorthand() {
-    this.hand.push(this.newtile);
+    if (this.newtile != emptyTile) {
+      this.hand.push(this.newtile);
+    }
     this.newtile = emptyTile;
     this.hand.sort((a, b) => {
       const typeA = this.typeOrder.indexOf(a.type.type);
@@ -35,9 +37,8 @@ export class MjPlayer {
         return a.type.number - b.type.number;
       }
     });
-    this.display = this.hand.slice();
+    this.display = this.hand.slice(0);
     this.display.push(emptyTile);
-    this.display.push(this.newtile);
   }
 }
 

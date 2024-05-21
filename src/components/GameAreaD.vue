@@ -16,7 +16,6 @@ defineOptions({
 const mjStore = useMjStore();
 
 function get() {
-  mjGame.sort();
   mjGame.addTile();
   mjStore.refresh();
   //;
