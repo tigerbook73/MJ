@@ -1,5 +1,8 @@
 <template>
-  <div><q-btn flat @click="pick">pick</q-btn></div>
+  <div>
+    <q-btn flat @click="pick">pick</q-btn>
+    <!-- <q-btn flat @click="discard">discard</q-btn> -->
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -13,8 +16,18 @@ const mjStore = useMjStore();
 
 function pick() {
   //
-  mjGame.pickCard();
-  mjGame.sortHand();
+  mjGame.pick();
+  mjStore.refresh();
+  mjGame.discard();
   mjStore.refresh();
 }
+
+/*
+function discard() {
+  //
+  mjGame.discard();
+  //mjGame.nextPlayer();
+  mjStore.refresh();
+}
+*/
 </script>

@@ -4,4 +4,3 @@ const mj = new MjGame();
 
 mj.init();
 mj.shuffle();
-mj.print();

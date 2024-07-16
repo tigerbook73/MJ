@@ -1,6 +1,10 @@
-import { MjCard } from "./mjCard";
-import { mjCardTypes, voidCardTypes } from "./mjCardType";
+import { MjCard, voidMjCard } from "./mjCard";
+import { mjCardTypes } from "./mjCardType";
 import { MjCardWall } from "./mjCardWall";
+import { MjPlayer } from "./mjPlayer";
+import { MjHuPai } from "./mjHuPai";
+import { MjDaPai } from "./mjDaPai";
+
 export enum State {
   Ready,
   Start,
@@ -10,27 +14,38 @@ export class MjGame {
   //
   state: State = State.Ready;
   wallIndex: number = 0;
-  hand: MjCard[] = [];
+  players: MjPlayer[] = [];
   pickIndex: number = 0;
+  currentPlayer: number = 0;
 
   constructor(
     public cards: MjCard[] = [],
     public walls: MjCardWall[] = [],
   ) {
     this.walls = [new MjCardWall("East"), new MjCardWall("South"), new MjCardWall("West"), new MjCardWall("North")];
+    this.players = [new MjPlayer("East"), new MjPlayer("South"), new MjPlayer("West"), new MjPlayer("North")];
   }
   // 初始化牌，选择合适的牌，加入到游戏中（第一步只需要最基本的牌型）
   init() {
+    this.currentPlayer = 0;
     this.cards = [];
     this.cards.length = mjCardTypes.length * 4;
+    this.wallIndex = 0;
+    this.pickIndex = 0;
+    this.state = State.Ready;
+
     const type = mjCardTypes;
     for (let j = 0; j < type.length; j++) {
       for (let i = 0; i < 4; i++) {
         // this.cards.push(new MjCard(type[j]));
-        this.cards[j * 4 + i] = new MjCard(type[j]);
+        this.cards[j * 4 + i] = new MjCard(type[j], i + 1);
       }
     }
     this.split();
+
+    for (const player of this.players) {
+      player.init();
+    }
   }
 
   shuffle() {
@@ -46,9 +61,14 @@ export class MjGame {
     for (const wall of this.walls) {
       wall.init();
     }
+
     for (let i = 0; i < this.cards.length; i++) {
       const wall = i % 4;
       this.walls[wall].add(this.cards[i]);
+    }
+
+    for (const player of this.players) {
+      player.init();
     }
   }
 
@@ -59,52 +79,104 @@ export class MjGame {
     const diceOne = Math.floor(Math.random() * 6) + 1;
     const diceTwo = Math.floor(Math.random() * 6) + 1;
     this.wallIndex = (diceOne + diceTwo - 2) % 4;
+    this.pickIndex = Math.min(diceOne, diceTwo);
     this.state = State.Start;
-    this.hand = [];
+    this.distributeInitialCard();
+  }
+
+  distributeInitialCard() {
+    for (let round = 0; round < 3; round++) {
+      for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
+        for (let i = 0; i < 4; i++) {
+          this.players[playerIndex].hand.push(this.pickCard());
+        }
+      }
+    }
+    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
+      this.players[playerIndex].hand.push(this.pickCard());
+    }
+
+    this.players[0].hand.push(this.pickCard());
+
+    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
+      this.players[playerIndex].sortHand();
+    }
   }
 
   pickCard() {
+    if (this.state != State.Start) {
+      throw new Error("Game not started");
+    }
+
+    // get a card from position (wallIndex, pickIndex)
+    // replace the card with a void card
+    // return the got card
+
+    const card = this.walls[this.wallIndex].cards[this.pickIndex];
+    this.walls[this.wallIndex].cards[this.pickIndex] = voidMjCard;
+
+    this.pickIndex++;
+
+    if (this.pickIndex >= this.walls[this.wallIndex].cards.length) {
+      this.pickIndex = 0;
+      this.wallIndex = (this.wallIndex + 1) % 4;
+    }
+
+    return card;
+  }
+
+  pick() {
+    if (
+      this.state === State.Start &&
+      this.walls[this.wallIndex].cards.length > 0 &&
+      this.players[this.currentPlayer].hand.length < 14
+    ) {
+      const card = this.pickCard();
+      if (card.type.name !== "") {
+        this.players[this.currentPlayer].hand.push(card);
+      }
+    }
+    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
+      this.players[playerIndex].sortHand();
+    }
+  }
+
+  discardCard() {
+    // selectthrow a card
+    // replace the card with a void card
+    // return the thrown card
+    const player = this.players[this.currentPlayer];
+    if (player.hand.length <= 13) {
+      throw new Error("No card to discard");
+    }
+
+    const strategy = new MjDaPai(player.hand);
+    const discardedCard = strategy.discardTile() as MjCard; // Discard the last card in the hand
+    return discardedCard;
+  }
+
+  discard() {
     if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0) {
-      if (this.pickIndex < this.walls[this.wallIndex].cards.length && this.pickIndex <= 13) {
-        const card = this.walls[this.wallIndex].cards[this.pickIndex]; // Get the first card
-        if (card.type.name !== "") {
-          // Check if the card is not a void card
-          this.hand.push(card); // Add the card to the hand
-          this.walls[this.wallIndex].cards[this.pickIndex] = new MjCard(voidCardTypes[0]);
-          // Replace with a void card
-        }
-        this.pickIndex++;
+      const card = this.discardCard();
+      if (card.type.name !== "") {
+        this.players[this.currentPlayer].discard.push(card);
       }
-      if (this.pickIndex == this.walls[this.wallIndex].cards.length) {
-        this.pickIndex = 0;
-        this.wallIndex++;
-        if (this.wallIndex > this.walls.length) {
-          console.log("Game over");
-        }
-      }
+    }
+    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
+      this.players[playerIndex].sortHand();
     }
   }
 
-  sortHand() {
-    this.hand.sort((first, next) => {
-      if (first.type.type == next.type.type) {
-        return first.type.value - next.type.value;
-      } else if (first.type.type > next.type.type) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
+  canHu() {
+    // every time I pick up a card
+    // I check if I can hu Pai
+    // if I can hu Pai, I can hu
+    const hand = this.players[this.currentPlayer].hand;
+    const huPaiChecker = new MjHuPai(hand);
+    return huPaiChecker.isHuPai();
   }
-
-  print() {
-    // 打印牌
-
-    for (let i = 0; i < this.walls.length; i++) {
-      this.walls[i].print();
-      process.stdout.write("\n");
-    }
+  nextPlayer() {
+    this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
   }
 }
-
 export const mjGame = new MjGame();

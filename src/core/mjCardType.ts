@@ -52,4 +52,15 @@ export const mjCardTypes = [
   new MjCardType("箭", 3, "白"),
 ];
 
-export const voidCardTypes = [new MjCardType("", 1, "")];
+export function typeFromName(name: string): MjCardType {
+  //
+  for (const t of mjCardTypes) {
+    if (t.name === name) {
+      return t;
+    }
+  }
+
+  return mjCardTypes[0];
+}
+
+export const voidCardType = new MjCardType("", 1, "");

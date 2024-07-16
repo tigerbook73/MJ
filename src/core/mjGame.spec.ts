@@ -43,7 +43,7 @@ describe("mjGame", () => {
     myGame.split();
     myGame.startGame();
     myGame.pickCard();
-    expect(myGame.hand.length).toBe(1);
+    expect(myGame.players.length).toBe(1);
     expect(myGame.walls[myGame.wallIndex].cards[0].type.name).toBe("");
   });
 });

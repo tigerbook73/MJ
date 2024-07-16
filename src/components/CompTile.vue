@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div @click="select">
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
       <q-img
-        v-if="props.type && (!props.back || mjStore.open)"
+        v-if="props.type.name && (!props.back || mjStore.open)"
         :src="imgSrc"
         :ratio="1 / 1"
         fit="scale-down"
@@ -19,7 +19,7 @@ import { useMjStore } from "src/stores/mj-store";
 
 interface Props {
   id?: string;
-  type: string;
+  type: { name: string; options: { selected: boolean } };
   position?: string;
   size?: "small" | "large";
   back?: boolean;
@@ -27,7 +27,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
-  type: "",
+  type: () => ({ name: "", options: { selected: false } }),
   position: "bottom",
   size: "small",
 });
@@ -72,13 +72,24 @@ const imageNames: Record<string, string> = {
 };
 
 const imgSrc = computed(() => {
-  return imageNames[props.type] ? `/svgs/Regular/${imageNames[props.type]}` : "/svgs/Black/Blank.svg";
+  return imageNames[props.type.name] ? `/svgs/Regular/${imageNames[props.type.name]}` : "/svgs/Black/Blank.svg";
 });
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
-const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
+const tileClass = computed(() => {
+  if (props.back && !mjStore.open) {
+    return "mj-tile-back";
+  }
+  if (!props.type.name) {
+    return "";
+  }
+  if (props.type.options.selected) {
+    return "mj-tile-selected";
+  }
+  return "mj-tile";
+});
 const tileStyle = computed(() =>
   props.position == "left" || props.position == "right" ? { width: height, height: width } : { width, height },
 );
@@ -93,6 +104,8 @@ const imgStyle = ref({
   width: width,
   transform: rotate[props.position] || "none",
 });
+
+function select() {}
 </script>
 
 <style lang="scss">
@@ -104,6 +117,18 @@ const imgStyle = ref({
   box-shadow: 1px 1px 1px #000;
   &:hover {
     background-color: #000;
+    color: #f0f0f0;
+  }
+}
+
+.mj-tile-selected {
+  // margin: 1px;
+  background-color: #f0f000;
+  border: 1px solid #000;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px #000;
+  &:hover {
+    background-color: #f0f000;
     color: #f0f0f0;
   }
 }
