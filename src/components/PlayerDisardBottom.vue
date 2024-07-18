@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "PlayerAreaBottom",
+  name: "PlayerDiscardBottom",
 });
 
 import CompTile from "components/CompTile.vue";

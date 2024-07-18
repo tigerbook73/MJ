@@ -11,6 +11,9 @@ export const useMjStore = defineStore("mj", () => {
   const leftWall = ref([] as string[]);
 
   const myTiles = ref([] as string[]);
+  const myDiscardTiles = ref([] as string[]);
+
+  const canHu = ref(false);
 
   function refresh() {
     topWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
@@ -51,6 +54,9 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall,
     leftWall,
     myTiles,
+    myDiscardTiles,
+
+    canHu,
 
     // actions
     refresh,
