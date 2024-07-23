@@ -1,20 +1,14 @@
 <template>
   <div class="column flex-center area-player">
     <div class="row flex-center">
-      <comp-tile
-        v-for="(tile, index) in userMj.p1"
-        :key="index"
-        :type="tile"
-        :selected="false"
-        size="large"
-      ></comp-tile>
+      <comp-tile v-for="(tile, index) in userMj.p1_discard" :key="index" :type="tile" size="small"></comp-tile>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: "PlayerAreaBottom",
+  name: "PlayerDiscardBottom",
 });
 
 import CompTile from "components/CompTile.vue";

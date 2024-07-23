@@ -5,7 +5,7 @@ import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
   const open = ref(false);
-  const status = ref(String);
+  const status = ref(false);
 
   const topWall = ref([] as string[]);
   const bottomWall = ref([] as string[]);
@@ -20,17 +20,21 @@ export const useMjStore = defineStore("mj", () => {
   const p4 = ref([] as string[]);
   const plist = [p1, p2, p3, p4];
 
+  const p1_discard = ref([] as string[]);
+
   function refresh() {
-    topWall.value = mjGame.walls[2].tiles.map((tile) => tile.type.name);
-    rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.type.name);
-    bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
-    leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.type.name);
+    topWall.value = mjGame.walls[2].tiles.map((tile) => tile.name);
+    rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.name);
+    bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.name);
+    leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.name);
+    status.value = mjGame.is_started();
     playerRefresh();
   }
 
   function playerRefresh() {
     for (let i = 0; i < 4; i++) {
-      plist[i].value = mjGame.players[i].display.map((tile) => tile.type.name);
+      plist[i].value = mjGame.players[i].display.map((tile) => tile.name);
+      p1_discard.value = mjGame.players[0].played.map((tile) => tile.name);
     }
   }
 
@@ -50,6 +54,8 @@ export const useMjStore = defineStore("mj", () => {
     p2,
     p3,
     p4,
+
+    p1_discard,
 
     players,
     status,

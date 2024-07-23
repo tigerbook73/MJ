@@ -2,6 +2,7 @@
   <div>
     <q-btn flat @click="start">start</q-btn>
     <q-btn flat @click="reset">reset</q-btn>
+    <q-btn flat @click="singletest">single</q-btn>
     <!-- {{ checkStatus() }} -->
   </div>
 </template>
@@ -27,6 +28,13 @@ function start() {
   mjGame.init();
   mjGame.shuffle();
   mjGame.start();
+  mjStore.refresh();
+}
+
+function singletest() {
+  mjGame.init;
+  mjGame.shuffle();
+  mjGame.singleTest();
   mjStore.refresh();
 }
 </script>

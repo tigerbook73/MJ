@@ -1,12 +1,18 @@
 import { MjPlayer } from "./mjPlayer";
-import { MjTile, emptyTile } from "./mjTile";
-import { MjTileType, mjTileTypes } from "./mjTileType";
-import { MjTileWall } from "./mjTileWall";
+import { MjTile, MjTileList, emptyTile } from "./mjTile";
+import { discard } from "./mjDiscard";
+
+class MjTileWall {
+  public position: string = "";
+  public tiles: MjTile[] = [];
+  constructor(position: string) {
+    this.position = position;
+  }
+}
 
 export class MjGame {
   //
   public tiles: MjTile[] = [];
-  public tileTypesList: MjTileType[] = [];
   public walls: MjTileWall[] = [];
   public status: string = "";
   public wallIndex: number = 0;
@@ -18,87 +24,103 @@ export class MjGame {
   init() {
     this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
     this.players = [new MjPlayer("P1"), new MjPlayer("P2"), new MjPlayer("P3"), new MjPlayer("P4")];
-    this.tileTypesList = mjTileTypes;
     this.tiles = [];
-    this.status = "";
-
-    this.tileTypesList.forEach((type) => {
-      for (let i = 0; i < 4; i++) {
-        this.tiles.push(new MjTile(type));
-      }
-    });
+    this.status = "Not Started";
+    this.wallIndex = 0;
+    this.posIndex = 0;
+    this.tiles = MjTileList;
   }
 
   shuffle() {
     for (const wall of this.walls) {
-      wall.init();
+      wall.tiles = [];
     }
-    // 随机洗牌
     for (let i = this.tiles.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [this.tiles[i], this.tiles[j]] = [this.tiles[j], this.tiles[i]];
     }
     this.tiles.forEach((tile, index) => {
-      this.walls[index % this.walls.length].add(tile);
+      this.walls[index % this.walls.length].tiles.push(tile);
     });
     this.status = "ready";
   }
 
   separate() {
     for (const wall of this.walls) {
-      wall.init();
+      wall.tiles = [];
     }
     this.tiles.forEach((tile, index) => {
-      this.walls[index % this.walls.length].add(tile);
+      this.walls[index % this.walls.length].tiles.push(tile);
     });
   }
 
   initPlayer() {
     for (let i = 0; i < 3; i++) {
       for (const player of this.players) {
-        this.getTile(player);
-        this.playerIndex = (this.playerIndex + 1) % 4;
-        player.sorthand();
-        player.display = player.hand;
+        for (let j = 0; j < 4; j++) {
+          player.hand.push(this.getOneTile());
+        }
       }
     }
-    for (let i = 0; i < this.players.length; i++) {
-      this.addTile();
-      this.players[i].hand.push(this.players[i].newtile);
-      this.players[i].newtile = emptyTile;
-      this.players[i].sorthand();
+    for (const player of this.players) {
+      player.newtile = this.getOneTile();
+      player.sorthand();
+      player.displayHand();
     }
-    this.addTile();
+    this.players[this.playerIndex].newtile = this.getOneTile();
+    this.players[this.playerIndex].displayHand();
   }
 
-  getTile(player: MjPlayer) {
-    for (let i = 0; i < 4; i++) {
-      player.hand.push(this.walls[this.wallIndex].tiles[this.posIndex]);
-      this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
-      this.updateIndex();
+  singlePlayer() {
+    for (let i = 0; i < 14; i++) {
+      this.players[0].hand.push(this.getOneTile());
     }
+    this.players[0].sorthand();
+    this.players[0].newtile = this.getOneTile();
+    this.players[0].displayHand();
   }
 
-  addTile() {
+  getOneTile() {
+    const tempTile = this.walls[this.wallIndex].tiles[this.posIndex];
+    this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
+    this.updateIndex();
+    return tempTile;
+  }
+
+  getTile() {
+    //
     const player = this.players[this.playerIndex];
-    if (player.display.length >= 15) {
+    if (player.display.length < 14) {
+      player.newtile = this.getOneTile();
+      player.displayHand();
+    }
+  }
+
+  discardTile() {
+    const player = this.players[this.playerIndex];
+    if (player.display.length < 14) {
       return;
     }
-    // temp tiles = current tile
-    const tempTile = this.walls[this.wallIndex].tiles[this.posIndex];
-    // current tile = empty tile
-    this.walls[this.wallIndex].tiles[this.posIndex] = emptyTile;
-    // temp tile assign to player tile
-
+    const temp = player.hand.slice();
+    temp.push(player.newtile);
+    const td = discard(temp);
+    for (const tile of player.display) {
+      if (tile.name === td) {
+        player.played.push(tile);
+        // player.display.splice(player.display.indexOf(tile), 1);
+        player.sorthand();
+        player.hand.splice(player.hand.indexOf(tile), 1);
+        player.displayHand();
+        break;
+      }
+    }
+    // const temp = player.hand.shift() as MjTile;
+    // const temp = player.hand.pop() as MjTile;
+    // player.played.push(temp);
     player.sorthand();
-    player.newtile = tempTile;
-    player.display.push(tempTile);
-
-    this.updateIndex();
-    this.playerIndex = (this.playerIndex + 1) % 4;
+    player.displayHand();
+    this.updatePlayer();
   }
-
-  discard() {}
 
   updateIndex() {
     this.posIndex++;
@@ -107,6 +129,20 @@ export class MjGame {
       this.wallIndex = (this.wallIndex + 1) % 4;
     }
   }
+
+  updatePlayer() {
+    if (this.status === "started") {
+      this.playerIndex = (this.playerIndex + 1) % 4;
+    }
+  }
+
+  is_started() {
+    if (this.status === "started" || this.status === "single") {
+      return true;
+    }
+    return false;
+  }
+
   start() {
     const dice1 = Math.floor(Math.random() * 6) + 1;
     const dice2 = Math.floor(Math.random() * 6) + 1;
@@ -116,6 +152,15 @@ export class MjGame {
     this.status = "started";
 
     //;
+  }
+
+  singleTest() {
+    const dice1 = Math.floor(Math.random() * 6) + 1;
+    const dice2 = Math.floor(Math.random() * 6) + 1;
+    this.wallIndex = (dice1 + dice2 - 1) % 4;
+    this.posIndex = this.wallLength - (dice1 + dice2) * 2;
+    this.singlePlayer();
+    this.status = "single";
   }
 }
 

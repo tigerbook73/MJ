@@ -20,25 +20,39 @@ export class MjPlayer {
     this.hand = [];
     this.openhand = [];
     this.newtile = emptyTile;
+    this.display = [];
     this.played = [];
   }
-  sorthand() {
+
+  pushTile() {
+    //
     if (this.newtile != emptyTile) {
       this.hand.push(this.newtile);
+      this.newtile = emptyTile;
     }
-    this.newtile = emptyTile;
-    this.hand.sort((a, b) => {
-      const typeA = this.typeOrder.indexOf(a.type.type);
-      const typeB = this.typeOrder.indexOf(b.type.type);
+  }
 
-      if (typeA !== typeB) {
-        return typeA - typeB;
-      } else {
-        return a.type.number - b.type.number;
+  sorthand() {
+    this.pushTile();
+    this.hand.sort((a, b) => {
+      if (a.name > b.name) {
+        return 1;
       }
+      if (a.name < b.name) {
+        return -1;
+      }
+
+      return a.id - b.id;
     });
+  }
+
+  displayHand() {
+    //
     this.display = this.hand.slice(0);
-    this.display.push(emptyTile);
+    if (this.newtile != emptyTile) {
+      this.display.push(emptyTile);
+      this.display.push(this.newtile);
+    }
   }
 }
 

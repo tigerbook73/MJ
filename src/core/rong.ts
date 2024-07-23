@@ -1,4 +1,4 @@
-const Tile_IDs = {
+const Tile_IDs: { [key: string]: number } = {
   p1: 0,
   p2: 1,
   p3: 2,
@@ -75,7 +75,7 @@ function is_winning(tile_count: number[]) {
 }
 
 function convert_ID(hand: string[]): number[] {
-  return hand.map((tile) => TILE_IDS[tile]);
+  return hand.map((tile) => Tile_IDs[tile]);
 }
 
 const handStr = ["p1", "p1", "p1", "s2", "s3", "s4", "m5", "m6", "m7", "z1", "z1", "m9", "m9", "m9"];
