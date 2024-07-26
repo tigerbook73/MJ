@@ -8,6 +8,7 @@
 
 <script setup lang="ts">
 import { mjGame } from "src/core/mjGame";
+import { wait } from "src/core/timer";
 import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
@@ -15,15 +16,17 @@ defineOptions({
 });
 const mjStore = useMjStore();
 
-function pick() {
+async function pick() {
   mjGame.getTile();
   mjStore.refresh();
+  await wait(1000);
   //;
 }
 
-function discard() {
-  pick();
+async function discard() {
+  await pick();
   mjGame.discardTile();
   mjStore.refresh();
+  await wait(1000);
 }
 </script>

@@ -95,7 +95,7 @@ export class MjGame {
 
   discardTile() {
     const player = this.players[this.playerIndex];
-    if (player.hand.length >= 14 && player.newtile !== emptyTile) {
+    if (player.hand.length < 13 && player.newtile !== emptyTile) {
       return;
     }
     // const temp = player.hand.slice();
