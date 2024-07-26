@@ -1,4 +1,4 @@
-import { MjCard } from "./mjCard";
+import { MjCard, TileType } from "./mjCard";
 
 export class MjDaPai {
   constructor(private hand: MjCard[]) {}
@@ -13,28 +13,24 @@ export class MjDaPai {
       this.removeFromHand(handCopy, shunzi);
     }
 
-    // 2. 保留所有的刻子（3张相同的牌）
+    // 2. 保留所有的刻子（3张相同的牌），如果有4张只保留3张
     const kes = this.findAllKe(handCopy);
     for (const ke of kes) {
       this.removeFromHand(handCopy, ke);
     }
 
-    // 3. 保留一个对子（2张相同的牌）
-    const dui = this.findDui(handCopy);
-    if (dui) {
-      this.removeFromHand(handCopy, dui);
+    // 3. 保留所有的对子（2张相同的牌）
+    const duis = this.findAllDui(handCopy);
+    if (duis.length > 0) {
+      for (const dui of duis) {
+        this.removeFromHand(handCopy, dui);
+      }
     }
 
     // 4. 保留所有2顺子直到最后一组（2张连续的牌）
-    const shunzi2 = this.findShunzi(handCopy, 2);
-    if (shunzi2) {
+    const shunzi2s = this.findAllShunzi(handCopy, 2);
+    for (const shunzi2 of shunzi2s) {
       this.removeFromHand(handCopy, shunzi2);
-    }
-
-    // 5. 保留所有对子直到最后一组
-    const duis = this.findAllDui(handCopy);
-    if (duis.length > 1) {
-      this.removeFromHand(handCopy, duis[0]);
     }
 
     // 根据优先级选择要打出的牌
@@ -44,11 +40,15 @@ export class MjDaPai {
       this.removeFromHand(this.hand, [priorityTile]);
       return priorityTile;
     }
+
+    // 如果没有其他选择，则打出最后一张牌
+    const lastTile = this.hand.pop();
+    return lastTile;
   }
 
   // 根据优先级顺序寻找要打出的牌
   private findPriorityTile(hand: MjCard[]) {
-    // 优先级1：单个箭牌和风牌
+    // 优先级1：单个箭牌
     const singleJian = this.findSingleJian(hand);
     if (singleJian) {
       return singleJian;
@@ -71,40 +71,48 @@ export class MjDaPai {
 
   // 查找单个箭牌和风牌
   private findSingleJian(hand: MjCard[]) {
-    return hand.find((tile) => tile.type.type === "箭" || tile.type.type === "风");
+    return hand.find((tile) => tile.type === TileType.JIAN);
   }
 
   // 查找单个万、筒、条
   private findSingleTile(hand: MjCard[]) {
-    return hand.find((tile) => tile.type.type === "万" || tile.type.type === "筒" || tile.type.type === "条");
+    return hand.find(
+      (tile) => tile.type === TileType.WAN || tile.type === TileType.TONG || tile.type === TileType.TIAO,
+    );
   }
 
   // 查找最后的对子或顺子
   private findLastPairOrShunzi(hand: MjCard[]) {
-    const lastPair = this.findDui(hand);
-    if (lastPair) {
-      return lastPair[0];
+    const lastPair = this.findAllDui(hand);
+    if (lastPair.length > 0) {
+      return lastPair[lastPair.length - 1][0];
     }
 
-    const lastShunzi = this.findShunzi(hand, 3);
-    if (lastShunzi) {
-      return lastShunzi[0];
+    const lastShunzi = this.findAllShunzi(hand, 3);
+    if (lastShunzi.length > 0) {
+      return lastShunzi[lastShunzi.length - 1][0];
     }
 
     return undefined;
   }
 
-  // 查找刻子（3张相同的牌）
+  // 查找所有刻子（3张相同的牌），如果有4张只保留3张
   private findAllKe(hand: MjCard[]) {
     const kes: MjCard[][] = [];
     for (let i = 0; i < hand.length - 2; i++) {
       if (
-        hand[i].type.value === hand[i + 1].type.value &&
-        hand[i].type.value === hand[i + 2].type.value &&
-        hand[i].type.type === hand[i + 1].type.type &&
-        hand[i].type.type === hand[i + 2].type.type
+        hand[i].index === hand[i + 1].index &&
+        hand[i].index === hand[i + 2].index &&
+        hand[i].type === hand[i + 1].type &&
+        hand[i].type === hand[i + 2].type
       ) {
-        kes.push([hand[i], hand[i + 1], hand[i + 2]]);
+        if (i + 3 < hand.length && hand[i].index === hand[i + 3].index && hand[i].type === hand[i + 3].type) {
+          kes.push([hand[i], hand[i + 1], hand[i + 2]]); // 如果有4张，只保留3张
+          i += 3; // 跳过4张中的前3张
+        } else {
+          kes.push([hand[i], hand[i + 1], hand[i + 2]]);
+          i += 2; // 跳过这3张
+        }
       }
     }
     return kes;
@@ -114,24 +122,24 @@ export class MjDaPai {
   private findAllShunzi(hand: MjCard[], count: number) {
     const shunzis: MjCard[][] = [];
     // 分别处理万、筒、条类型的牌
-    const types = ["万", "筒", "条"];
+    const types = [TileType.WAN, TileType.TONG, TileType.TIAO];
     for (const type of types) {
       // 过滤出当前类型的牌
-      const filteredHand = hand.filter((card) => card.type.type === type);
+      const filteredHand = hand.filter((card) => card.type === type);
       if (filteredHand.length < count) {
         continue; // 当前类型牌数量不足，跳过
       }
       // 移除重复牌
       const uniqueHand: MjCard[] = [];
       for (const card of filteredHand) {
-        if (!uniqueHand.some((c) => c.type.value === card.type.value)) {
+        if (!uniqueHand.some((c) => c.index === card.index)) {
           uniqueHand.push(card);
         }
       }
       for (let i = 0; i < uniqueHand.length - count + 1; i++) {
         let isShunzi = true;
         for (let j = 0; j < count - 1; j++) {
-          if (uniqueHand[i + j].type.value + 1 !== uniqueHand[i + j + 1].type.value) {
+          if (uniqueHand[i + j].index + 1 !== uniqueHand[i + j + 1].index) {
             isShunzi = false;
             break;
           }
@@ -139,7 +147,7 @@ export class MjDaPai {
         if (isShunzi) {
           const shunzi: MjCard[] = [];
           for (let j = 0; j < count; j++) {
-            const card = hand.find((c) => c.type.type === type && c.type.value === uniqueHand[i + j].type.value);
+            const card = hand.find((c) => c.type === type && c.index === uniqueHand[i + j].index);
             if (card) {
               shunzi.push(card);
             }
@@ -151,20 +159,11 @@ export class MjDaPai {
     return shunzis;
   }
 
-  // 查找对子（2张相同的牌）
-  private findDui(hand: MjCard[]) {
-    for (let i = 0; i < hand.length - 1; i++) {
-      if (hand[i].type.value === hand[i + 1].type.value && hand[i].type.type === hand[i + 1].type.type) {
-        return [hand[i], hand[i + 1]];
-      }
-    }
-  }
-
   // 查找所有对子
   private findAllDui(hand: MjCard[]): MjCard[][] {
     const duis: MjCard[][] = [];
     for (let i = 0; i < hand.length - 1; i++) {
-      if (hand[i].type.value === hand[i + 1].type.value && hand[i].type.type === hand[i + 1].type.type) {
+      if (hand[i].index === hand[i + 1].index && hand[i].type === hand[i + 1].type) {
         duis.push([hand[i], hand[i + 1]]);
       }
     }

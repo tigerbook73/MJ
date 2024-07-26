@@ -1,5 +1,4 @@
-import { MjCard, voidMjCard } from "./mjCard";
-import { mjCardTypes } from "./mjCardType";
+import { allTiles, MjCard, voidCard } from "./mjCard";
 import { MjCardWall } from "./mjCardWall";
 import { MjPlayer } from "./mjPlayer";
 import { MjHuPai } from "./mjHuPai";
@@ -28,19 +27,10 @@ export class MjGame {
   // 初始化牌，选择合适的牌，加入到游戏中（第一步只需要最基本的牌型）
   init() {
     this.currentPlayer = 0;
-    this.cards = [];
-    this.cards.length = mjCardTypes.length * 4;
+    this.cards = allTiles;
     this.wallIndex = 0;
     this.pickIndex = 0;
     this.state = State.Ready;
-
-    const type = mjCardTypes;
-    for (let j = 0; j < type.length; j++) {
-      for (let i = 0; i < 4; i++) {
-        // this.cards.push(new MjCard(type[j]));
-        this.cards[j * 4 + i] = new MjCard(type[j], i + 1);
-      }
-    }
     this.split();
 
     for (const player of this.players) {
@@ -96,11 +86,15 @@ export class MjGame {
       this.players[playerIndex].hand.push(this.pickCard());
     }
 
-    this.players[0].hand.push(this.pickCard());
-
     for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
       this.players[playerIndex].sortHand();
     }
+
+    this.players[0].hand.push(this.pickCard());
+  }
+
+  sort() {
+    this.players[this.currentPlayer].sortHand();
   }
 
   pickCard() {
@@ -113,7 +107,7 @@ export class MjGame {
     // return the got card
 
     const card = this.walls[this.wallIndex].cards[this.pickIndex];
-    this.walls[this.wallIndex].cards[this.pickIndex] = voidMjCard;
+    this.walls[this.wallIndex].cards[this.pickIndex] = voidCard;
 
     this.pickIndex++;
 
@@ -132,12 +126,10 @@ export class MjGame {
       this.players[this.currentPlayer].hand.length < 14
     ) {
       const card = this.pickCard();
-      if (card.type.name !== "") {
+      if (card.name !== "") {
         this.players[this.currentPlayer].hand.push(card);
+        this.players[this.currentPlayer].pick = card;
       }
-    }
-    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
-      this.players[playerIndex].sortHand();
     }
   }
 
@@ -156,14 +148,11 @@ export class MjGame {
   }
 
   discard() {
-    if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0) {
+    if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0 && !this.canHu()) {
       const card = this.discardCard();
-      if (card.type.name !== "") {
+      if (card.name !== "") {
         this.players[this.currentPlayer].discard.push(card);
       }
-    }
-    for (let playerIndex = 0; playerIndex < this.players.length; playerIndex++) {
-      this.players[playerIndex].sortHand();
     }
   }
 
@@ -179,4 +168,5 @@ export class MjGame {
     this.currentPlayer = (this.currentPlayer + 1) % this.players.length;
   }
 }
+
 export const mjGame = new MjGame();

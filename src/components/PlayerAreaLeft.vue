@@ -1,7 +1,13 @@
 <template>
   <div class="column flex-center area-player">
-    <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.p1Cards" :key="index" :type="tile" size="large"></comp-tile>
+    <div class="row flex-center w-5">
+      <comp-tile
+        v-for="(tile, index) in userMj.p1Cards"
+        :key="index"
+        :type="tile"
+        position="left"
+        size="large"
+      ></comp-tile>
     </div>
   </div>
 </template>

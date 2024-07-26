@@ -2,9 +2,9 @@
  * 代表麻将中牌的类型信息，如二万
  */
 class CardType {
-  constructor(type, value, name) {
+  constructor(type, index, name) {
     this.type = type;
-    this.value = value;
+    this.index = index;
     this.name = name;
   }
 
@@ -16,40 +16,40 @@ class CardType {
 class CardTypes {
   constructor() {
     this.types = [
-      new CardType("万", 1, "一万"),
-      new CardType("万", 2, "二万"),
-      new CardType("万", 3, "三万"),
-      new CardType("万", 4, "四万"),
-      new CardType("万", 5, "五万"),
-      new CardType("万", 6, "六万"),
-      new CardType("万", 7, "七万"),
-      new CardType("万", 8, "八万"),
-      new CardType("万", 9, "九万"),
-      new CardType("筒", 1, "一筒"),
-      new CardType("筒", 2, "二筒"),
-      new CardType("筒", 3, "三筒"),
-      new CardType("筒", 4, "四筒"),
-      new CardType("筒", 5, "五筒"),
-      new CardType("筒", 6, "六筒"),
-      new CardType("筒", 7, "七筒"),
-      new CardType("筒", 8, "八筒"),
-      new CardType("筒", 9, "九筒"),
-      new CardType("条", 1, "一条"),
-      new CardType("条", 2, "二条"),
-      new CardType("条", 3, "三条"),
-      new CardType("条", 4, "四条"),
-      new CardType("条", 5, "五条"),
-      new CardType("条", 6, "六条"),
-      new CardType("条", 7, "七条"),
-      new CardType("条", 8, "八条"),
-      new CardType("条", 9, "九条"),
-      new CardType("风", 1, "东"),
-      new CardType("风", 2, "南"),
-      new CardType("风", 3, "西"),
-      new CardType("风", 4, "北"),
-      new CardType("箭", 1, "中"),
-      new CardType("箭", 2, "发"),
-      new CardType("箭", 3, "白"),
+      new CardType(TileType.JIAN, 1, "一万"),
+      new CardType(TileType.JIAN, 2, "二万"),
+      new CardType(TileType.JIAN, 3, "三万"),
+      new CardType(TileType.JIAN, 4, "四万"),
+      new CardType(TileType.JIAN, 5, "五万"),
+      new CardType(TileType.JIAN, 6, "六万"),
+      new CardType(TileType.JIAN, 7, "七万"),
+      new CardType(TileType.JIAN, 8, "八万"),
+      new CardType(TileType.JIAN, 9, "九万"),
+      new CardType(TileType.TONG, 1, "一筒"),
+      new CardType(TileType.TONG, 2, "二筒"),
+      new CardType(TileType.TONG, 3, "三筒"),
+      new CardType(TileType.TONG, 4, "四筒"),
+      new CardType(TileType.TONG, 5, "五筒"),
+      new CardType(TileType.TONG, 6, "六筒"),
+      new CardType(TileType.TONG, 7, "七筒"),
+      new CardType(TileType.TONG, 8, "八筒"),
+      new CardType(TileType.TONG, 9, "九筒"),
+      new CardType(TileType.TIAO, 1, "一条"),
+      new CardType(TileType.TIAO, 2, "二条"),
+      new CardType(TileType.TIAO, 3, "三条"),
+      new CardType(TileType.TIAO, 4, "四条"),
+      new CardType(TileType.TIAO, 5, "五条"),
+      new CardType(TileType.TIAO, 6, "六条"),
+      new CardType(TileType.TIAO, 7, "七条"),
+      new CardType(TileType.TIAO, 8, "八条"),
+      new CardType(TileType.TIAO, 9, "九条"),
+      new CardType(TileType.JIAN, 1, "东"),
+      new CardType(TileType.JIAN, 2, "南"),
+      new CardType(TileType.JIAN, 3, "西"),
+      new CardType(TileType.JIAN, 4, "北"),
+      new CardType(TileType.Jian, 1, "中"),
+      new CardType(TileType.Jian, 2, "发"),
+      new CardType(TileType.Jian, 3, "白"),
     ];
   }
 

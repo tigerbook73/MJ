@@ -1,23 +1,173 @@
-import { MjCardType } from "./mjCardType";
-import { voidCardType } from "./mjCardType";
-
 export class MjCard {
   //
-  public type: string;
-  public value: number;
-  public name: string;
-  public id: string;
 
-  constructor(type: MjCardType, index: number) {
-    this.type = type.type;
-    this.value = type.value;
-    this.name = type.name;
-    this.id = `${this.type}-${this.value}-${index}`;
-  }
-
-  print() {
-    this.type.print();
-  }
+  constructor(
+    public id: number,
+    public type: string,
+    public index: number,
+    public name: string,
+  ) {}
 }
 
-export const voidMjCard = new MjCard(voidCardType);
+export enum TileType {
+  WAN = "万",
+  TONG = "筒",
+  TIAO = "条",
+  JIAN = "箭",
+  KONG = "空",
+}
+
+// 未知牌，用于表示未知牌
+export const unknownTileId = 999;
+export const unknownTile = new MjCard(unknownTileId, TileType.KONG, 0, "");
+
+// void牌，表示没有牌
+export const voidTileId = -1;
+export const voidCard = new MjCard(voidTileId, TileType.KONG, 0, "");
+
+export const allTiles = [
+  new MjCard(0, TileType.WAN, 1, "一万"),
+  new MjCard(1, TileType.WAN, 1, "一万"),
+  new MjCard(2, TileType.WAN, 1, "一万"),
+  new MjCard(3, TileType.WAN, 1, "一万"),
+  new MjCard(4, TileType.WAN, 2, "二万"),
+  new MjCard(5, TileType.WAN, 2, "二万"),
+  new MjCard(6, TileType.WAN, 2, "二万"),
+  new MjCard(7, TileType.WAN, 2, "二万"),
+  new MjCard(8, TileType.WAN, 3, "三万"),
+  new MjCard(9, TileType.WAN, 3, "三万"),
+  new MjCard(10, TileType.WAN, 3, "三万"),
+  new MjCard(11, TileType.WAN, 3, "三万"),
+  new MjCard(12, TileType.WAN, 4, "四万"),
+  new MjCard(13, TileType.WAN, 4, "四万"),
+  new MjCard(14, TileType.WAN, 4, "四万"),
+  new MjCard(15, TileType.WAN, 4, "四万"),
+  new MjCard(16, TileType.WAN, 5, "五万"),
+  new MjCard(17, TileType.WAN, 5, "五万"),
+  new MjCard(18, TileType.WAN, 5, "五万"),
+  new MjCard(19, TileType.WAN, 5, "五万"),
+  new MjCard(20, TileType.WAN, 6, "六万"),
+  new MjCard(21, TileType.WAN, 6, "六万"),
+  new MjCard(22, TileType.WAN, 6, "六万"),
+  new MjCard(23, TileType.WAN, 6, "六万"),
+  new MjCard(24, TileType.WAN, 7, "七万"),
+  new MjCard(25, TileType.WAN, 7, "七万"),
+  new MjCard(26, TileType.WAN, 7, "七万"),
+  new MjCard(27, TileType.WAN, 7, "七万"),
+  new MjCard(28, TileType.WAN, 8, "八万"),
+  new MjCard(29, TileType.WAN, 8, "八万"),
+  new MjCard(30, TileType.WAN, 8, "八万"),
+  new MjCard(31, TileType.WAN, 8, "八万"),
+  new MjCard(32, TileType.WAN, 9, "九万"),
+  new MjCard(33, TileType.WAN, 9, "九万"),
+  new MjCard(34, TileType.WAN, 9, "九万"),
+  new MjCard(35, TileType.WAN, 9, "九万"),
+  new MjCard(36, TileType.TONG, 1, "一筒"),
+  new MjCard(37, TileType.TONG, 1, "一筒"),
+  new MjCard(38, TileType.TONG, 1, "一筒"),
+  new MjCard(39, TileType.TONG, 1, "一筒"),
+  new MjCard(40, TileType.TONG, 2, "二筒"),
+  new MjCard(41, TileType.TONG, 2, "二筒"),
+  new MjCard(42, TileType.TONG, 2, "二筒"),
+  new MjCard(43, TileType.TONG, 2, "二筒"),
+  new MjCard(44, TileType.TONG, 3, "三筒"),
+  new MjCard(45, TileType.TONG, 3, "三筒"),
+  new MjCard(46, TileType.TONG, 3, "三筒"),
+  new MjCard(47, TileType.TONG, 3, "三筒"),
+  new MjCard(48, TileType.TONG, 4, "四筒"),
+  new MjCard(49, TileType.TONG, 4, "四筒"),
+  new MjCard(50, TileType.TONG, 4, "四筒"),
+  new MjCard(51, TileType.TONG, 4, "四筒"),
+  new MjCard(52, TileType.TONG, 5, "五筒"),
+  new MjCard(53, TileType.TONG, 5, "五筒"),
+  new MjCard(54, TileType.TONG, 5, "五筒"),
+  new MjCard(55, TileType.TONG, 5, "五筒"),
+  new MjCard(56, TileType.TONG, 6, "六筒"),
+  new MjCard(57, TileType.TONG, 6, "六筒"),
+  new MjCard(58, TileType.TONG, 6, "六筒"),
+  new MjCard(59, TileType.TONG, 6, "六筒"),
+  new MjCard(60, TileType.TONG, 7, "七筒"),
+  new MjCard(61, TileType.TONG, 7, "七筒"),
+  new MjCard(62, TileType.TONG, 7, "七筒"),
+  new MjCard(63, TileType.TONG, 7, "七筒"),
+  new MjCard(64, TileType.TONG, 8, "八筒"),
+  new MjCard(65, TileType.TONG, 8, "八筒"),
+  new MjCard(66, TileType.TONG, 8, "八筒"),
+  new MjCard(67, TileType.TONG, 8, "八筒"),
+  new MjCard(68, TileType.TONG, 9, "九筒"),
+  new MjCard(69, TileType.TONG, 9, "九筒"),
+  new MjCard(70, TileType.TONG, 9, "九筒"),
+  new MjCard(71, TileType.TONG, 9, "九筒"),
+  new MjCard(72, TileType.TIAO, 1, "一条"),
+  new MjCard(73, TileType.TIAO, 1, "一条"),
+  new MjCard(74, TileType.TIAO, 1, "一条"),
+  new MjCard(75, TileType.TIAO, 1, "一条"),
+  new MjCard(76, TileType.TIAO, 2, "二条"),
+  new MjCard(77, TileType.TIAO, 2, "二条"),
+  new MjCard(78, TileType.TIAO, 2, "二条"),
+  new MjCard(79, TileType.TIAO, 2, "二条"),
+  new MjCard(80, TileType.TIAO, 3, "三条"),
+  new MjCard(81, TileType.TIAO, 3, "三条"),
+  new MjCard(82, TileType.TIAO, 3, "三条"),
+  new MjCard(83, TileType.TIAO, 3, "三条"),
+  new MjCard(84, TileType.TIAO, 4, "四条"),
+  new MjCard(85, TileType.TIAO, 4, "四条"),
+  new MjCard(86, TileType.TIAO, 4, "四条"),
+  new MjCard(87, TileType.TIAO, 4, "四条"),
+  new MjCard(88, TileType.TIAO, 5, "五条"),
+  new MjCard(89, TileType.TIAO, 5, "五条"),
+  new MjCard(90, TileType.TIAO, 5, "五条"),
+  new MjCard(91, TileType.TIAO, 5, "五条"),
+  new MjCard(92, TileType.TIAO, 6, "六条"),
+  new MjCard(93, TileType.TIAO, 6, "六条"),
+  new MjCard(94, TileType.TIAO, 6, "六条"),
+  new MjCard(95, TileType.TIAO, 6, "六条"),
+  new MjCard(96, TileType.TIAO, 7, "七条"),
+  new MjCard(97, TileType.TIAO, 7, "七条"),
+  new MjCard(98, TileType.TIAO, 7, "七条"),
+  new MjCard(99, TileType.TIAO, 7, "七条"),
+  new MjCard(100, TileType.TIAO, 8, "八条"),
+  new MjCard(101, TileType.TIAO, 8, "八条"),
+  new MjCard(102, TileType.TIAO, 8, "八条"),
+  new MjCard(103, TileType.TIAO, 8, "八条"),
+  new MjCard(104, TileType.TIAO, 9, "九条"),
+  new MjCard(105, TileType.TIAO, 9, "九条"),
+  new MjCard(106, TileType.TIAO, 9, "九条"),
+  new MjCard(107, TileType.TIAO, 9, "九条"),
+  new MjCard(108, TileType.JIAN, 1, "东"),
+  new MjCard(109, TileType.JIAN, 1, "东"),
+  new MjCard(110, TileType.JIAN, 1, "东"),
+  new MjCard(111, TileType.JIAN, 1, "东"),
+  new MjCard(112, TileType.JIAN, 2, "南"),
+  new MjCard(113, TileType.JIAN, 2, "南"),
+  new MjCard(114, TileType.JIAN, 2, "南"),
+  new MjCard(115, TileType.JIAN, 2, "南"),
+  new MjCard(116, TileType.JIAN, 3, "西"),
+  new MjCard(117, TileType.JIAN, 3, "西"),
+  new MjCard(118, TileType.JIAN, 3, "西"),
+  new MjCard(119, TileType.JIAN, 3, "西"),
+  new MjCard(120, TileType.JIAN, 4, "北"),
+  new MjCard(121, TileType.JIAN, 4, "北"),
+  new MjCard(122, TileType.JIAN, 4, "北"),
+  new MjCard(123, TileType.JIAN, 4, "北"),
+  new MjCard(124, TileType.JIAN, 5, "中"),
+  new MjCard(125, TileType.JIAN, 5, "中"),
+  new MjCard(126, TileType.JIAN, 5, "中"),
+  new MjCard(127, TileType.JIAN, 5, "中"),
+  new MjCard(128, TileType.JIAN, 6, "发"),
+  new MjCard(129, TileType.JIAN, 6, "发"),
+  new MjCard(130, TileType.JIAN, 6, "发"),
+  new MjCard(131, TileType.JIAN, 6, "发"),
+  new MjCard(132, TileType.JIAN, 7, "白"),
+  new MjCard(133, TileType.JIAN, 7, "白"),
+  new MjCard(134, TileType.JIAN, 7, "白"),
+  new MjCard(135, TileType.JIAN, 7, "白"),
+  // new MjCard( 136, TileType.HUA, 1, "春" ),
+  // new MjCard( 137, TileType.HUA, 2, "夏" ),
+  // new MjCard( 138, TileType.HUA, 3, "秋" ),
+  // new MjCard( 139, TileType.HUA, 4, "东" ),
+  // new MjCard( 140, TileType.HUA, 5, "梅" ),
+  // new MjCard( 141, TileType.HUA, 6, "兰" ),
+  // new MjCard( 142, TileType.HUA, 7, "竹" ),
+  // new MjCard( 143, TileType.HUA, 8, "菊" ),
+];

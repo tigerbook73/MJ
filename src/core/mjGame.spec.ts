@@ -44,6 +44,6 @@ describe("mjGame", () => {
     myGame.startGame();
     myGame.pickCard();
     expect(myGame.players.length).toBe(1);
-    expect(myGame.walls[myGame.wallIndex].cards[0].type.name).toBe("");
+    expect(myGame.walls[myGame.wallIndex].cards[0].name).toBe("");
   });
 });

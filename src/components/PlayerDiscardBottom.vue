@@ -1,7 +1,7 @@
 <template>
   <div class="column flex-center area-player">
     <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.myDiscardCards" :key="index" :type="tile" size="large"></comp-tile>
+      <comp-tile v-for="(tile, index) in userMj.myDiscardCards" :key="index" :type="tile" size="small"></comp-tile>
     </div>
   </div>
 </template>

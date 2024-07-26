@@ -1,14 +1,54 @@
 import { defineStore } from "pinia";
+import { voidCard, voidTileId } from "src/core/mjCard";
 import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
 interface HandCard {
   name: string;
+  id: number;
   options: {
     selected: boolean;
   };
 }
 
+function copy(playerIndex: number) {
+  const cards = mjGame.players[playerIndex].hand.map((tile) => ({
+    name: tile.name,
+    id: tile.id,
+    options: { selected: false },
+  }));
+  cards[14] = cards[13] ?? {
+    name: "",
+    id: voidCard.id,
+    options: { selected: false },
+  };
+  cards[13] = {
+    name: "",
+    id: voidCard.id,
+    options: { selected: false },
+  };
+
+  // if (cards.length == 13){
+  //   cards.push({
+  //     name: "",
+  //     id: voidCard.id,
+  //     options: { selected: false },
+  //   });
+  //   cards.push({
+  //     name: "",
+  //     id: voidCard.id,
+  //     options: { selected: false },
+  //   });
+  // } else if (cards.length == 14) {
+  //   cards.splice(13,0,{
+  //     name: "",
+  //     id: voidCard.id,
+  //     options: { selected: false },
+  //   });
+  // }
+
+  return cards;
+}
 export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const status = ref(Boolean);
@@ -29,32 +69,61 @@ export const useMjStore = defineStore("mj", () => {
   const p3DiscardCards = ref([] as HandCard[]);
   const myDiscardCards = ref([] as HandCard[]);
 
-  function refresh() {
-    topWall.value = mjGame.walls[0].cards.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    rightWall.value = mjGame.walls[1].cards.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    bottomWall.value = mjGame.walls[2].cards.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    leftWall.value = mjGame.walls[3].cards.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    myCards.value = mjGame.players[0].hand.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    p1Cards.value = mjGame.players[1].hand.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    p2Cards.value = mjGame.players[2].hand.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
-    p3Cards.value = mjGame.players[3].hand.map((tile) => ({ name: tile.type.name, options: { selected: false } }));
+  const myLatestPickCard = ref({ name: "", id: voidTileId, options: { selected: false } });
+  const mySelectedCard = ref({ name: "", id: voidTileId, options: { selected: false } });
 
+  function refresh() {
+    topWall.value = mjGame.walls[0].cards.map((tile) => ({
+      name: tile.name,
+      id: tile.id,
+      options: { selected: false },
+    }));
+    rightWall.value = mjGame.walls[1].cards.map((tile) => ({
+      name: tile.name,
+      id: tile.id,
+      options: { selected: false },
+    }));
+    bottomWall.value = mjGame.walls[2].cards.map((tile) => ({
+      name: tile.name,
+      id: tile.id,
+      options: { selected: false },
+    }));
+    leftWall.value = mjGame.walls[3].cards.map((tile) => ({
+      name: tile.name,
+      id: tile.id,
+      options: { selected: false },
+    }));
+    myCards.value = copy(0);
+    p1Cards.value = copy(1);
+
+    p2Cards.value = copy(2);
+    p3Cards.value = copy(3);
     myDiscardCards.value = mjGame.players[0].discard.map((tile) => ({
-      name: tile.type.name,
+      name: tile.name,
+      id: tile.id,
       options: { selected: false },
     }));
     p1DiscardCards.value = mjGame.players[1].discard.map((tile) => ({
-      name: tile.type.name,
+      name: tile.name,
+      id: tile.id,
       options: { selected: false },
     }));
     p2DiscardCards.value = mjGame.players[2].discard.map((tile) => ({
-      name: tile.type.name,
+      name: tile.name,
+      id: tile.id,
       options: { selected: false },
     }));
     p3DiscardCards.value = mjGame.players[3].discard.map((tile) => ({
-      name: tile.type.name,
+      name: tile.name,
+      id: tile.id,
       options: { selected: false },
     }));
+
+    myLatestPickCard.value = {
+      name: mjGame.players[0].pick.name,
+      id: mjGame.players[0].pick.id,
+      options: { selected: false },
+    };
     canHu.value = mjGame.canHu();
   }
 
@@ -75,8 +144,10 @@ export const useMjStore = defineStore("mj", () => {
     p3DiscardCards,
     myCards,
     myDiscardCards,
+    myLatestPickCard,
     status,
     canHu,
+    mySelectedCard,
     // actions
     refresh,
   };

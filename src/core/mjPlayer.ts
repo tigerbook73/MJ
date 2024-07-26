@@ -1,23 +1,23 @@
-import { MjCard, voidMjCard } from "./mjCard";
+import { MjCard, voidCard } from "./mjCard";
 
 export class MjPlayer {
   constructor(
     public position: string,
     public hand: MjCard[] = [],
-    public catchCard: MjCard = voidMjCard,
+    public pick: MjCard = voidCard,
     public discard: MjCard[] = [],
   ) {}
 
   init() {
     this.hand = [];
-    this.catchCard = voidMjCard;
+    this.pick = voidCard;
   }
 
   sortHand() {
     this.hand.sort((first, next) => {
-      if (first.type.type == next.type.type) {
-        return first.type.value - next.type.value;
-      } else if (first.type.type > next.type.type) {
+      if (first.type == next.type) {
+        return first.index - next.index;
+      } else if (first.type > next.type) {
         return 1;
       } else {
         return -1;

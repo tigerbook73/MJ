@@ -17,8 +17,8 @@ export class MjHuPai {
     // 遍历寻找对子并去除
     for (let i = 0; i < this.sortedHand.length - 1; i++) {
       if (
-        this.sortedHand[i].type.value === this.sortedHand[i + 1].type.value &&
-        this.sortedHand[i].type.type === this.sortedHand[i + 1].type.type
+        this.sortedHand[i].index === this.sortedHand[i + 1].index &&
+        this.sortedHand[i].type === this.sortedHand[i + 1].type
       ) {
         const newHand = this.sortedHand.slice();
         newHand.splice(i, 2);
@@ -36,16 +36,12 @@ export class MjHuPai {
   private is3N(hand: MjCard[]): boolean {
     while (hand.length > 0) {
       const first = hand[0];
-      const count = hand.filter((x) => x.type.value === first.type.value && x.type.type === first.type.type).length;
+      const count = hand.filter((x) => x.index === first.index && x.type === first.type).length;
 
       if (count === 1 || count === 2) {
         // 尝试去除顺子
-        const secondIndex = hand.findIndex(
-          (x) => x.type.value === first.type.value + 1 && x.type.type === first.type.type,
-        );
-        const thirdIndex = hand.findIndex(
-          (x) => x.type.value === first.type.value + 2 && x.type.type === first.type.type,
-        );
+        const secondIndex = hand.findIndex((x) => x.index === first.index + 1 && x.type === first.type);
+        const thirdIndex = hand.findIndex((x) => x.index === first.index + 2 && x.type === first.type);
 
         if (secondIndex !== -1 && thirdIndex !== -1) {
           hand.splice(thirdIndex, 1);

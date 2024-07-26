@@ -9,7 +9,7 @@
     <div class="row h-30">
       <div class="w-10 bg-blue"></div>
       <div class="w-30 bg-red column flex-center"><div>text</div></div>
-      <div class="w-10 bg-purple"></div>
+      <div class="w-10 bg-blue"></div>
     </div>
 
     <div class="row h-10">

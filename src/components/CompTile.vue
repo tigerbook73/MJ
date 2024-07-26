@@ -14,22 +14,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, StyleValue } from "vue";
 import { useMjStore } from "src/stores/mj-store";
+import { voidTileId } from "src/core/mjCard";
 
 interface Props {
   id?: string;
-  type: { name: string; options: { selected: boolean } };
+  type: { name: string; id: number; options: { selected: boolean } };
   position?: string;
   size?: "small" | "large";
   back?: boolean;
+  selected?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
-  type: () => ({ name: "", options: { selected: false } }),
+  type: () => ({ name: "", id: voidTileId, options: { selected: false } }),
   position: "bottom",
   size: "small",
+  back: false,
+  selected: false,
 });
 
 const mjStore = useMjStore();
@@ -90,8 +94,14 @@ const tileClass = computed(() => {
   }
   return "mj-tile";
 });
-const tileStyle = computed(() =>
-  props.position == "left" || props.position == "right" ? { width: height, height: width } : { width, height },
+const tileStyle = computed(
+  () =>
+    ({
+      width: props.position == "left" || props.position == "right" ? height : width,
+      height: props.position == "left" || props.position == "right" ? width : height,
+      position: "relative",
+      top: props.selected ? "-20px" : "0px",
+    }) as StyleValue,
 );
 
 const rotate: Record<string, string> = {
