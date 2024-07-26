@@ -64,20 +64,18 @@ export class MjGame {
     }
     for (const player of this.players) {
       player.newtile = this.getOneTile();
+      player.pushTile();
       player.sorthand();
-      player.displayHand();
     }
     this.players[this.playerIndex].newtile = this.getOneTile();
-    this.players[this.playerIndex].displayHand();
   }
 
   singlePlayer() {
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 13; i++) {
       this.players[0].hand.push(this.getOneTile());
     }
-    this.players[0].sorthand();
     this.players[0].newtile = this.getOneTile();
-    this.players[0].displayHand();
+    this.players[0].sorthand();
   }
 
   getOneTile() {
@@ -90,35 +88,29 @@ export class MjGame {
   getTile() {
     //
     const player = this.players[this.playerIndex];
-    if (player.display.length < 14) {
+    if (player.hand.length <= 13) {
       player.newtile = this.getOneTile();
-      player.displayHand();
     }
   }
 
   discardTile() {
     const player = this.players[this.playerIndex];
-    if (player.display.length < 14) {
+    if (player.hand.length >= 14 && player.newtile !== emptyTile) {
       return;
     }
-    const temp = player.hand.slice();
-    temp.push(player.newtile);
-    const td = discard(temp);
-    for (const tile of player.display) {
+    // const temp = player.hand.slice();
+    // temp.push(player.newtile);
+    // const td = discard(temp);
+    player.pushTile();
+    const td = discard(player.hand);
+    for (const tile of player.hand) {
       if (tile.name === td) {
         player.played.push(tile);
-        // player.display.splice(player.display.indexOf(tile), 1);
-        player.sorthand();
         player.hand.splice(player.hand.indexOf(tile), 1);
-        player.displayHand();
+        player.sorthand();
         break;
       }
     }
-    // const temp = player.hand.shift() as MjTile;
-    // const temp = player.hand.pop() as MjTile;
-    // player.played.push(temp);
-    player.sorthand();
-    player.displayHand();
     this.updatePlayer();
   }
 

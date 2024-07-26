@@ -5,7 +5,6 @@ export class MjPlayer {
   public hand: MjTile[] = [];
   public openhand: MjTile[] = [];
   public newtile: MjTile = emptyTile;
-  public display: MjTile[] = [];
   //
   public played: MjTile[] = [];
   public turn: boolean = false;
@@ -20,7 +19,6 @@ export class MjPlayer {
     this.hand = [];
     this.openhand = [];
     this.newtile = emptyTile;
-    this.display = [];
     this.played = [];
   }
 
@@ -33,7 +31,7 @@ export class MjPlayer {
   }
 
   sorthand() {
-    this.pushTile();
+    // this.pushTile();
     this.hand.sort((a, b) => {
       if (a.name > b.name) {
         return 1;
@@ -44,15 +42,6 @@ export class MjPlayer {
 
       return a.id - b.id;
     });
-  }
-
-  displayHand() {
-    //
-    this.display = this.hand.slice(0);
-    if (this.newtile != emptyTile) {
-      this.display.push(emptyTile);
-      this.display.push(this.newtile);
-    }
   }
 }
 

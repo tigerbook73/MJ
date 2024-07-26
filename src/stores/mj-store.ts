@@ -18,28 +18,44 @@ export const useMjStore = defineStore("mj", () => {
   const p2 = ref([] as string[]);
   const p3 = ref([] as string[]);
   const p4 = ref([] as string[]);
-  const plist = [p1, p2, p3, p4];
+  const handList = [p1, p2, p3, p4];
 
   const p1_discard = ref([] as string[]);
+  const p2_discard = ref([] as string[]);
+  const p3_discard = ref([] as string[]);
+  const p4_discard = ref([] as string[]);
+  const discardList = [p1_discard, p2_discard, p3_discard, p4_discard];
+
   const p1_new = ref("" as string);
+  const p2_new = ref("" as string);
+  const p3_new = ref("" as string);
+  const p4_new = ref("" as string);
+  const newList = [p1_new, p2_new, p3_new, p4_new];
 
   function refresh() {
-    topWall.value = mjGame.walls[2].tiles.map((tile) => tile.name);
-    rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.name);
     bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.name);
+    rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.name);
+    topWall.value = mjGame.walls[2].tiles.map((tile) => tile.name);
     leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.name);
+
     status.value = mjGame.is_started();
 
     if (mjGame.players[0].newtile.name !== "") {
       p1_new.value = mjGame.players[0].newtile.name;
     }
-    p1_discard.value = mjGame.players[0].played.map((tile) => tile.name);
-    playerRefresh();
+    discardList[0].value = mjGame.players[0].played.map((tile) => tile.name);
+    playerHandRefresh();
   }
 
-  function playerRefresh() {
+  function playerHandRefresh() {
     for (let i = 0; i < 4; i++) {
-      plist[i].value = mjGame.players[i].display.map((tile) => tile.name);
+      handList[i].value = mjGame.players[i].hand.map((tile) => tile.name);
+    }
+    for (let i = 0; i < 4; i++) {
+      if (mjGame.players[i].newtile.name !== "") {
+        handList[i].value.push("");
+        handList[i].value.push(newList[i].value);
+      }
     }
   }
 
