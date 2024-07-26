@@ -112,7 +112,7 @@ const imgStyle = ref({
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
   &:hover {
-    background-color: #000;
+    background-color: #8f8f8f;
     color: #f0f0f0;
   }
 }

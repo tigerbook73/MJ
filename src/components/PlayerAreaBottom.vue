@@ -1,13 +1,7 @@
 <template>
   <div class="column flex-center area-player">
     <div class="row flex-center">
-      <comp-tile
-        v-for="(tile, index) in userMj.p1"
-        :key="index"
-        :type="tile"
-        :selected="false"
-        size="large"
-      ></comp-tile>
+      <comp-tile v-for="(tile, index) in userMj.p1" :key="index" :type="tile" size="large"></comp-tile>
     </div>
   </div>
 </template>
@@ -18,7 +12,6 @@ defineOptions({
 });
 
 import CompTile from "components/CompTile.vue";
-
 import { useMjStore } from "src/stores/mj-store";
 
 const userMj = useMjStore();

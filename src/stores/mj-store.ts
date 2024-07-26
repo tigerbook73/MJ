@@ -4,8 +4,8 @@ import { MjPlayer } from "src/core/mjPlayer";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
-  const open = ref(false);
-  const status = ref(false);
+  const open = ref(false as boolean);
+  const status = ref(false as boolean);
 
   const topWall = ref([] as string[]);
   const bottomWall = ref([] as string[]);
@@ -21,6 +21,7 @@ export const useMjStore = defineStore("mj", () => {
   const plist = [p1, p2, p3, p4];
 
   const p1_discard = ref([] as string[]);
+  const p1_new = ref("" as string);
 
   function refresh() {
     topWall.value = mjGame.walls[2].tiles.map((tile) => tile.name);
@@ -28,13 +29,17 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.name);
     leftWall.value = mjGame.walls[3].tiles.map((tile) => tile.name);
     status.value = mjGame.is_started();
+
+    if (mjGame.players[0].newtile.name !== "") {
+      p1_new.value = mjGame.players[0].newtile.name;
+    }
+    p1_discard.value = mjGame.players[0].played.map((tile) => tile.name);
     playerRefresh();
   }
 
   function playerRefresh() {
     for (let i = 0; i < 4; i++) {
       plist[i].value = mjGame.players[i].display.map((tile) => tile.name);
-      p1_discard.value = mjGame.players[0].played.map((tile) => tile.name);
     }
   }
 
@@ -56,6 +61,7 @@ export const useMjStore = defineStore("mj", () => {
     p4,
 
     p1_discard,
+    p1_new,
 
     players,
     status,
