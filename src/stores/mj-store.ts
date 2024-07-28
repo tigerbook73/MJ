@@ -13,6 +13,8 @@ export const useMjStore = defineStore("mj", () => {
   const myTiles = ref([] as string[]);
   const myDiscardTiles = ref([] as string[]);
 
+  const mySelected = ref([] as string[]);
+
   const canHu = ref(false);
 
   function refresh() {
@@ -42,6 +44,8 @@ export const useMjStore = defineStore("mj", () => {
     "?",
   ];
 
+  mySelected.value = ["西"];
+
   mjGame.init();
   mjGame.separate();
   refresh();
@@ -55,7 +59,7 @@ export const useMjStore = defineStore("mj", () => {
     leftWall,
     myTiles,
     myDiscardTiles,
-
+    mySelected,
     canHu,
 
     // actions

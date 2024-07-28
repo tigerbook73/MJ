@@ -208,7 +208,7 @@ export class Game {
     this.current = dealer;
   }
 
-  dice() {
+  dice(): this {
     if (!this.dealer) {
       throw new Error("dealer is not assigned");
     }
@@ -221,13 +221,15 @@ export class Game {
 
     this.reversePickPosition = this.pickPosition;
     this.reversePickIndex = this.pickIndex - 1;
+
+    return this;
   }
 
-  getDealer() {
-    return this.dealer;
+  getDealer(): Player {
+    return this.dealer as Player;
   }
 
-  pickTile(from: "start" | "end" = "start") {
+  pickTile(from: "start" | "end" = "start"): TileId {
     if (from === "start") {
       const wall = this.walls[this.pickPosition];
       const taken = wall.tiles[this.pickIndex];
@@ -255,7 +257,7 @@ export class Game {
     }
   }
 
-  dispatch() {
+  dispatch(): this {
     // dispatch tiles to players
     // rules
     // 1. players start from the dealer, then the next valid player
@@ -313,9 +315,11 @@ export class Game {
     {
       this.dealer.picked = this.dealer.handTiles.pop() as TileId;
     }
+
+    return this;
   }
 
-  pick(player: Player) {
+  pick(player: Player): this {
     /**
      * check player is current player
      * check player's picked is voidTile
@@ -330,9 +334,11 @@ export class Game {
     }
 
     player.picked = this.pickTile();
+
+    return this;
   }
 
-  discard(player: Player, tile: TileId) {
+  discard(player: Player, tile: TileId): this {
     /**
      * check player is current player
      * check the tile is in player's handTiles or picked
@@ -356,11 +362,15 @@ export class Game {
     }
 
     this.discards[player.position].tiles.push(tile);
+
+    return this;
   }
 
-  pass(player: Player) {
+  pass(player: Player): this {
     // player passes, do not peng, chi, gang or hu
     player;
+
+    return this;
   }
 
   canChi(player: Player, tiles: number[]) {
@@ -509,5 +519,35 @@ export class Game {
       }
     }
     return tiles;
+  }
+
+  /**
+   *
+   */
+  allOnePatterns(tiles: TileId[], patternType: string) {
+    const patterns: TileId[][] = [];
+
+    if (patternType === "same-3") {
+      const tids = tiles.slice();
+
+      for (let i = 0; i < tids.length; i++) {}
+    }
+
+    for (let i = 0; i < tiles.length; i++) {
+      patterns.push([tiles[i]]);
+    }
+
+    return patterns;
+  }
+
+  /**
+   * find all possible combination
+   */
+  allPatterns(tiles: TileId[], patternType: string) {
+    if (patternType === "same-3") {
+      return this.allOnePatterns(tiles, patternType);
+    }
+
+    return [];
   }
 }
