@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="area-board">
+    {{ $options.name }}
     <q-btn flat @click="start">start</q-btn>
     <q-btn flat @click="reset">reset</q-btn>
-    <q-btn flat @click="singletest">single</q-btn>
     <!-- {{ checkStatus() }} -->
   </div>
 </template>
@@ -19,8 +19,9 @@ const mjStore = useMjStore();
 
 function reset() {
   mjGame.init();
-  mjGame.separate();
+  // mjGame.separate();
   mjStore.refresh();
+  mjStore.init();
 }
 
 function start() {
@@ -28,13 +29,6 @@ function start() {
   mjGame.init();
   mjGame.shuffle();
   mjGame.start();
-  mjStore.refresh();
-}
-
-function singletest() {
-  mjGame.init;
-  mjGame.shuffle();
-  mjGame.singleTest();
   mjStore.refresh();
 }
 </script>

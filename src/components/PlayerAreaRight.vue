@@ -1,7 +1,13 @@
 <template>
   <div class="column flex-center area-player">
     <div class="row flex-center w-5">
-      <comp-tile v-for="(tile, index) in userMj.p2" :key="index" :type="tile" position="right" size="large"></comp-tile>
+      <comp-tile
+        v-for="(tile, index) in userMj.p2"
+        :key="index"
+        :type="tile.name"
+        position="right"
+        size="large"
+      ></comp-tile>
     </div>
   </div>
 </template>
