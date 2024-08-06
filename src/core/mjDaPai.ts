@@ -37,7 +37,6 @@ export class MjDaPai {
     const priorityTile = this.findPriorityTile(handCopy);
     if (priorityTile) {
       // 从原手牌中移除选中的牌
-      this.removeFromHand(this.hand, [priorityTile]);
       return priorityTile;
     }
 

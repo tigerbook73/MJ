@@ -17,6 +17,9 @@ function copy(playerIndex: number) {
     id: tile.id,
     options: { selected: false },
   }));
+  if (cards.length == 0) {
+    return cards;
+  }
   cards[14] = cards[13] ?? {
     name: "",
     id: voidCard.id,
@@ -53,6 +56,7 @@ export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const status = ref(Boolean);
   const canHu = ref(false);
+  const currentPlayer = ref(mjGame.currentPlayer);
 
   const topWall = ref([] as HandCard[]);
   const bottomWall = ref([] as HandCard[]);
@@ -70,7 +74,7 @@ export const useMjStore = defineStore("mj", () => {
   const myDiscardCards = ref([] as HandCard[]);
 
   const myLatestPickCard = ref({ name: "", id: voidTileId, options: { selected: false } });
-  const mySelectedCard = ref({ name: "", id: voidTileId, options: { selected: false } });
+  const selectedCard = ref({ name: "", id: voidTileId, options: { selected: false } });
 
   function refresh() {
     topWall.value = mjGame.walls[0].cards.map((tile) => ({
@@ -125,6 +129,7 @@ export const useMjStore = defineStore("mj", () => {
       options: { selected: false },
     };
     canHu.value = mjGame.canHu();
+    currentPlayer.value = mjGame.currentPlayer;
   }
 
   mjGame.init();
@@ -147,7 +152,8 @@ export const useMjStore = defineStore("mj", () => {
     myLatestPickCard,
     status,
     canHu,
-    mySelectedCard,
+    selectedCard,
+    currentPlayer,
     // actions
     refresh,
   };

@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn flat @click="reset">reset</q-btn>
-    <q-btn flat @click="shuffle">shuffle</q-btn>
+    <q-btn flat @click="pause">pause</q-btn>
   </div>
 </template>
 
@@ -21,9 +21,9 @@ function reset() {
   mjStore.refresh();
 }
 
-function shuffle() {
+function pause() {
   //
-  mjGame.shuffle();
+  mjGame.pause();
   mjStore.refresh();
 }
 </script>

@@ -7,6 +7,7 @@ import { MjDaPai } from "./mjDaPai";
 export enum State {
   Ready,
   Start,
+  Pause,
 }
 
 export class MjGame {
@@ -31,10 +32,13 @@ export class MjGame {
     this.wallIndex = 0;
     this.pickIndex = 0;
     this.state = State.Ready;
-    this.split();
 
     for (const player of this.players) {
       player.init();
+    }
+
+    for (const wall of this.walls) {
+      wall.init();
     }
   }
 
@@ -97,6 +101,18 @@ export class MjGame {
     this.players[this.currentPlayer].sortHand();
   }
 
+  pause() {
+    if (this.state === State.Start) {
+      this.state = State.Pause;
+    }
+  }
+
+  resume() {
+    if (this.state === State.Pause) {
+      this.state = State.Start;
+    }
+  }
+
   pickCard() {
     if (this.state != State.Start) {
       throw new Error("Game not started");
@@ -151,7 +167,12 @@ export class MjGame {
     if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0 && !this.canHu()) {
       const card = this.discardCard();
       if (card.name !== "") {
-        this.players[this.currentPlayer].discard.push(card);
+        const player = this.players[this.currentPlayer];
+        const cardIndex = player.hand.indexOf(card);
+        if (cardIndex !== -1) {
+          player.discard.push(card);
+          player.hand.splice(cardIndex, 1);
+        }
       }
     }
   }

@@ -6,11 +6,14 @@ export class MjPlayer {
     public hand: MjCard[] = [],
     public pick: MjCard = voidCard,
     public discard: MjCard[] = [],
+    public discardCard: MjCard = voidCard,
   ) {}
 
   init() {
     this.hand = [];
+    this.discard = [];
     this.pick = voidCard;
+    this.discardCard = voidCard;
   }
 
   sortHand() {

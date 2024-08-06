@@ -94,15 +94,36 @@ const tileClass = computed(() => {
   }
   return "mj-tile";
 });
-const tileStyle = computed(
-  () =>
-    ({
-      width: props.position == "left" || props.position == "right" ? height : width,
-      height: props.position == "left" || props.position == "right" ? width : height,
+const tileStyle = computed(() => {
+  if (props.position == "top") {
+    return {
+      width: width,
+      height: height,
       position: "relative",
-      top: props.selected ? "-20px" : "0px",
-    }) as StyleValue,
-);
+      top: props.selected ? "20px" : "0px",
+    } as StyleValue;
+  } else if (props.position == "bottom") {
+    return {
+      width: width,
+      height: height,
+      position: "relative",
+      bottom: props.selected ? "20px" : "0px",
+    } as StyleValue;
+  } else if (props.position == "left") {
+    return {
+      width: props.position == "left" ? height : width,
+      height: props.position == "left" ? width : height,
+      position: "relative",
+      left: props.selected ? "20px" : "0px",
+    } as StyleValue;
+  }
+  return {
+    width: props.position == "right" ? height : width,
+    height: props.position == "right" ? width : height,
+    position: "relative",
+    right: props.selected ? "20px" : "0px",
+  } as StyleValue;
+});
 
 const rotate: Record<string, string> = {
   top: "rotate(180deg)",

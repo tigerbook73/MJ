@@ -1,13 +1,12 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.currentPlayer !== 1 ? 'bg-blue' : 'bg-red']">
+  <div class="column flex-center area-player">
     <div class="row flex-center w-5">
       <comp-tile
-        v-for="(tile, index) in userMj.p1Cards"
+        v-for="(tile, index) in userMj.p3DiscardCards"
         :key="index"
         :type="tile"
-        size="large"
-        position="left"
-        :selected="userMj.selectedCard.id == tile.id"
+        size="small"
+        position="right"
       ></comp-tile>
     </div>
   </div>
@@ -15,7 +14,7 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "PlayerAreaLeft",
+  name: "PlayerDiscardRight",
 });
 
 import CompTile from "components/CompTile.vue";

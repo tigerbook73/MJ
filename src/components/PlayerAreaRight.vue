@@ -1,12 +1,13 @@
 <template>
-  <div class="column flex-center area-player">
+  <div :class="['column flex-center area-player', userMj.currentPlayer !== 3 ? 'bg-blue' : 'bg-red']">
     <div class="row flex-center w-5">
       <comp-tile
         v-for="(tile, index) in userMj.p3Cards"
         :key="index"
         :type="tile"
-        position="right"
         size="large"
+        position="right"
+        :selected="userMj.selectedCard.id == tile.id"
       ></comp-tile>
     </div>
   </div>
