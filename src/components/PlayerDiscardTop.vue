@@ -1,6 +1,6 @@
 <template>
-  <div class="column flex-center area-player">
-    <div class="row flex-center">
+  <div class="column justify-end area-player">
+    <div class="row justify-end">
       <comp-tile
         v-for="(tile, index) in userMj.p3_discard"
         :key="index"

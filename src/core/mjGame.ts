@@ -129,7 +129,10 @@ export class MjGame {
   }
 
   is_started() {
-    if (this.status === "started" || this.status === "single") {
+    if (this.status == "started") {
+      return true;
+    }
+    if (this.status == "single") {
       return true;
     }
     return false;

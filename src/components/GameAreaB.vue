@@ -21,6 +21,7 @@ const mjStore = useMjStore();
 function reset() {
   mjGame.init();
   mjGame.separate();
+  mjGame.playerIndex = 0;
   mjStore.clearNewtile();
   mjStore.refresh();
 }
@@ -36,7 +37,7 @@ function start() {
 function single() {
   mjGame.init();
   mjGame.shuffle();
-  mjGame.singlePlayer();
+  mjGame.singleTest();
   mjStore.refresh();
 }
 </script>

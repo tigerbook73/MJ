@@ -1,8 +1,10 @@
 <template>
   <div>
     {{ $options.name }}
-    <q-btn :disabled="!mjStore.status" flat @click="pick">add</q-btn>
-    <q-btn :disabled="!mjStore.status" flat @click="discard">discard</q-btn>
+    <q-btn :disabled="!userMj.status" flat @click="pick">add</q-btn>
+    <q-btn :disabled="!userMj.status" flat @click="discard">discard</q-btn>
+    <!-- <q-btn flat @click="pick">add</q-btn> -->
+    <!-- <q-btn flat @click="discard">discard</q-btn> -->
   </div>
 </template>
 
@@ -14,11 +16,11 @@ import { useMjStore } from "src/stores/mj-store";
 defineOptions({
   name: "GameAreaD",
 });
-const mjStore = useMjStore();
+const userMj = useMjStore();
 
 async function pick() {
   mjGame.getTile();
-  mjStore.refresh();
+  userMj.refresh();
   // await wait(1000);
   //;
 }
@@ -26,7 +28,7 @@ async function pick() {
 async function discard() {
   // await pick();
   mjGame.discardTile();
-  mjStore.refresh();
+  userMj.refresh();
   // await wait(1000);
 }
 </script>
