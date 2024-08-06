@@ -1,5 +1,5 @@
 <template>
-  <div class="column flex-center area-player">
+  <div :class="['column flex-center area-player', userMj.isCurrentPlayer(0) ? 'bg-green-4' : 'bg-green-0']">
     <div class="row flex-center">
       <comp-tile
         v-for="(tile, index) in userMj.p1"
@@ -7,6 +7,7 @@
         :type="tile.name"
         :selected="tile === userMj.selectedTile"
         @click="onClick(tile)"
+        position="bottom"
         size="large"
       ></comp-tile>
     </div>

@@ -34,13 +34,6 @@ export const useMjStore = defineStore("mj", () => {
   const p4_new = ref(emptyTile as MjTile);
   const newList = [p1_new, p2_new, p3_new, p4_new];
 
-  function init() {
-    p1_new.value = emptyTile;
-    p2_new.value = emptyTile;
-    p3_new.value = emptyTile;
-    p4_new.value = emptyTile;
-  }
-
   function refresh() {
     bottomWall.value = mjGame.walls[0].tiles.map((tile) => tile.name);
     rightWall.value = mjGame.walls[1].tiles.map((tile) => tile.name);
@@ -49,11 +42,29 @@ export const useMjStore = defineStore("mj", () => {
 
     status.value = mjGame.is_started();
 
-    if (mjGame.players[0].newtile.name !== "") {
-      p1_new.value = mjGame.players[0].newtile;
-    }
-    discardList[0].value = mjGame.players[0].played.map((tile) => tile.name);
+    playerNewtileRefresh();
+    playerDiscardRefresh();
     playerHandRefresh();
+  }
+
+  function playerNewtileRefresh() {
+    for (let i = 0; i < 4; i++) {
+      if (mjGame.players[i].newtile !== emptyTile) {
+        newList[i].value = mjGame.players[i].newtile;
+      }
+    }
+  }
+
+  function playerDiscardRefresh() {
+    for (let i = 0; i < 4; i++) {
+      discardList[i].value = mjGame.players[i].played.map((tile) => tile.name);
+    }
+  }
+
+  function clearNewtile() {
+    for (let i = 0; i < 4; i++) {
+      newList[i].value = emptyTile;
+    }
   }
 
   function playerHandRefresh() {
@@ -66,6 +77,10 @@ export const useMjStore = defineStore("mj", () => {
         handList[i].value.push(newList[i].value);
       }
     }
+  }
+
+  function isCurrentPlayer(index: number) {
+    return index === mjGame.playerIndex && status.value === true;
   }
 
   mjGame.init();
@@ -86,14 +101,22 @@ export const useMjStore = defineStore("mj", () => {
     p4,
 
     p1_discard,
+    p2_discard,
+    p3_discard,
+    p4_discard,
+
     p1_new,
-    selectedTile,
+    p2_new,
+    p3_new,
+    p4_new,
 
     players,
     status,
+    selectedTile,
 
     // actions
     refresh,
-    init,
+    clearNewtile,
+    isCurrentPlayer,
   };
 });

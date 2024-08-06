@@ -1,17 +1,25 @@
 <template>
-  <div class="column flex-center area-board">
+  <div class="column flex-center area-player">
     <div class="row flex-center">
-      <comp-tile :type="userMj.p2_new.name" :selected="false" position="right" size="large"></comp-tile>
+      <comp-tile
+        v-for="(tile, index) in userMj.p2_discard"
+        :key="index"
+        :type="tile"
+        position="right"
+        size="small"
+      ></comp-tile>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: "BoardAreaB",
+  name: "PlayerDiscardRight",
 });
 
 import CompTile from "components/CompTile.vue";
+
 import { useMjStore } from "src/stores/mj-store";
+
 const userMj = useMjStore();
 </script>
