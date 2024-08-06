@@ -20,6 +20,7 @@ const mjStore = useMjStore();
 function reset() {
   mjGame.init();
   mjGame.separate();
+  mjStore.clearNewtile();
   mjStore.refresh();
 }
 

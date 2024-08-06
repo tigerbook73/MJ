@@ -1,15 +1,22 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.isCurrentPlayer(2) ? 'bg-green-4' : 'bg-green-0']">
+  <div class="column flex-center area-player">
     <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.p3" :key="index" :type="tile" position="top" size="large"></comp-tile>
+      <comp-tile
+        v-for="(tile, index) in userMj.p4_discard"
+        :key="index"
+        :type="tile"
+        position="left"
+        size="small"
+      ></comp-tile>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: "PlayerAreaTop",
+  name: "PlayerDiscardLeft",
 });
+
 import CompTile from "components/CompTile.vue";
 
 import { useMjStore } from "src/stores/mj-store";

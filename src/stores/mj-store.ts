@@ -13,6 +13,7 @@ export const useMjStore = defineStore("mj", () => {
   const leftWall = ref([] as string[]);
 
   const players = ref([] as MjPlayer[]);
+  // const bgColor = ref("" as string);
 
   const p1 = ref([] as string[]);
   const p2 = ref([] as string[]);
@@ -40,11 +41,29 @@ export const useMjStore = defineStore("mj", () => {
 
     status.value = mjGame.is_started();
 
-    if (mjGame.players[0].newtile.name !== "") {
-      p1_new.value = mjGame.players[0].newtile.name;
-    }
-    discardList[0].value = mjGame.players[0].played.map((tile) => tile.name);
+    playerNewtileRefresh();
+    playerDiscardRefresh();
     playerHandRefresh();
+  }
+
+  function playerNewtileRefresh() {
+    for (let i = 0; i < 4; i++) {
+      if (mjGame.players[i].newtile.name !== "") {
+        newList[i].value = mjGame.players[i].newtile.name;
+      }
+    }
+  }
+
+  function playerDiscardRefresh() {
+    for (let i = 0; i < 4; i++) {
+      discardList[i].value = mjGame.players[i].played.map((tile) => tile.name);
+    }
+  }
+
+  function clearNewtile() {
+    for (let i = 0; i < 4; i++) {
+      newList[i].value = "";
+    }
   }
 
   function playerHandRefresh() {
@@ -57,6 +76,10 @@ export const useMjStore = defineStore("mj", () => {
         handList[i].value.push(newList[i].value);
       }
     }
+  }
+
+  function isCurrentPlayer(index: number) {
+    return index === mjGame.playerIndex && status.value === true;
   }
 
   mjGame.init();
@@ -77,12 +100,21 @@ export const useMjStore = defineStore("mj", () => {
     p4,
 
     p1_discard,
+    p2_discard,
+    p3_discard,
+    p4_discard,
+
     p1_new,
+    p2_new,
+    p3_new,
+    p4_new,
 
     players,
     status,
 
     // actions
     refresh,
+    clearNewtile,
+    isCurrentPlayer,
   };
 });

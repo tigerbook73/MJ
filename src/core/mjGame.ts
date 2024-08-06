@@ -88,14 +88,14 @@ export class MjGame {
   getTile() {
     //
     const player = this.players[this.playerIndex];
-    if (player.hand.length <= 13) {
+    if (player.newtile == emptyTile) {
       player.newtile = this.getOneTile();
     }
   }
 
   discardTile() {
     const player = this.players[this.playerIndex];
-    if (player.hand.length < 13 && player.newtile !== emptyTile) {
+    if (player.newtile == emptyTile) {
       return;
     }
     // const temp = player.hand.slice();
@@ -151,6 +151,7 @@ export class MjGame {
     const dice2 = Math.floor(Math.random() * 6) + 1;
     this.wallIndex = (dice1 + dice2 - 1) % 4;
     this.posIndex = this.wallLength - (dice1 + dice2) * 2;
+    this.playerIndex = 0;
     this.singlePlayer();
     this.status = "single";
   }
