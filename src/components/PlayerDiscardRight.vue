@@ -1,5 +1,5 @@
 <template>
-  <div class="column-reverse wrap area-player">
+  <div class="column reverse wrap items-start content-start full-height">
     <comp-tile
       v-for="(tile, index) in userMj.p2_discard"
       :key="index"

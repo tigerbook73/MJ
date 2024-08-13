@@ -88,9 +88,32 @@ const tileStyle = computed(
       width: props.position == "left" || props.position == "right" ? height : width,
       height: props.position == "left" || props.position == "right" ? width : height,
       position: "relative",
-      top: props.selected ? "-10px" : "0px",
+      top: verticalTrans(props.selected, props.position),
+      left: horizontalTrans(props.selected, props.position),
     }) as StyleValue,
 );
+function verticalTrans(selected: boolean, position: string) {
+  if (selected) {
+    if (position == "bottom") {
+      return "-15px";
+    }
+    if (position == "top") {
+      return "15px";
+    }
+    return "0px";
+  }
+}
+function horizontalTrans(selected: boolean, position: string) {
+  if (selected) {
+    if (position == "left") {
+      return "15px";
+    }
+    if (position == "right") {
+      return "-15px";
+    }
+    return "0px";
+  }
+}
 
 const rotate: Record<string, string> = {
   top: "rotate(180deg)",

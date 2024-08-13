@@ -1,6 +1,7 @@
 import { MjPlayer } from "./mjPlayer";
 import { MjTile, MjTileList, emptyTile } from "./mjTile";
 import { discard } from "./mjDiscard";
+import { checkWinning } from "./mjRong";
 
 class MjTileWall {
   public position: string = "";
@@ -19,6 +20,7 @@ export class MjGame {
   public posIndex: number = 0;
   public playerIndex: number = 0;
   public players: MjPlayer[] = [];
+  public selectedTile: MjTile = emptyTile;
   wallLength: number = 34;
 
   init() {
@@ -65,7 +67,7 @@ export class MjGame {
     for (const player of this.players) {
       player.newtile = this.getOneTile();
       player.pushTile();
-      player.sorthand();
+      player.sortHand();
     }
     this.players[this.playerIndex].newtile = this.getOneTile();
   }
@@ -75,7 +77,7 @@ export class MjGame {
       this.players[0].hand.push(this.getOneTile());
     }
     this.players[0].newtile = this.getOneTile();
-    this.players[0].sorthand();
+    this.players[0].sortHand();
   }
 
   getOneTile() {
@@ -93,25 +95,42 @@ export class MjGame {
     }
   }
 
+  selectTile() {
+    const player = this.players[this.playerIndex];
+    if (player.newtile == emptyTile) {
+      return;
+    }
+    const temp = player.hand.slice();
+    temp.push(player.newtile);
+    // player.pushTile();
+    this.selectedTile = discard(temp);
+    return this.selectedTile;
+  }
+
   discardTile() {
     const player = this.players[this.playerIndex];
     if (player.newtile == emptyTile) {
       return;
     }
-    // const temp = player.hand.slice();
-    // temp.push(player.newtile);
-    // const td = discard(temp);
-    player.pushTile();
-    const td = discard(player.hand);
+    if (player.newtile == this.selectedTile) {
+      player.played.push(player.newtile);
+      player.newtile = emptyTile;
+      return;
+    }
     for (const tile of player.hand) {
-      if (tile.name === td) {
+      if (tile == this.selectedTile) {
         player.played.push(tile);
-        player.hand.splice(player.hand.indexOf(tile), 1);
-        player.sorthand();
-        break;
+        player.hand[player.hand.indexOf(tile)] = emptyTile;
+        // player.sortHand();
+        return;
       }
     }
-    this.updatePlayer();
+    // this.updatePlayer();
+  }
+
+  sortTile() {
+    this.players[this.playerIndex].pushTile();
+    this.players[this.playerIndex].sortHand();
   }
 
   updateIndex() {
@@ -128,7 +147,16 @@ export class MjGame {
     }
   }
 
-  is_started() {
+  isWinning() {
+    const temp = this.players[this.playerIndex].hand.slice();
+    temp.push(this.players[this.playerIndex].newtile);
+    if (checkWinning(temp)) {
+      return true;
+    }
+    return false;
+  }
+
+  isStarted() {
     if (this.status == "started") {
       return true;
     }

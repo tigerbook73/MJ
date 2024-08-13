@@ -1,16 +1,15 @@
 <template>
   <div>
-    {{ $options.name }}
+    <!-- {{ $options.name }} -->
     <q-btn :disabled="!userMj.status" flat @click="pick">add</q-btn>
     <q-btn :disabled="!userMj.status" flat @click="discard">discard</q-btn>
-    <!-- <q-btn flat @click="pick">add</q-btn> -->
-    <!-- <q-btn flat @click="discard">discard</q-btn> -->
+    <q-btn :disabled="!userMj.status" flat @click="repeat">loop</q-btn>
   </div>
 </template>
 
 <script setup lang="ts">
+import { autoPlay } from "src/control/mjAutoPlay";
 import { mjGame } from "src/core/mjGame";
-// import { wait } from "src/core/timer";
 import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
@@ -21,14 +20,17 @@ const userMj = useMjStore();
 async function pick() {
   mjGame.getTile();
   userMj.refresh();
-  // await wait(1000);
-  //;
 }
 
 async function discard() {
-  // await pick();
+  mjGame.selectTile();
   mjGame.discardTile();
+  mjGame.sortTile();
+  mjGame.updatePlayer();
   userMj.refresh();
-  // await wait(1000);
+}
+
+async function repeat() {
+  autoPlay();
 }
 </script>

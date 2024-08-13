@@ -1,14 +1,12 @@
 <template>
-  <div class="column justify-end area-player">
-    <div class="row justify-end">
-      <comp-tile
-        v-for="(tile, index) in userMj.p3_discard"
-        :key="index"
-        :type="tile"
-        position="top"
-        size="small"
-      ></comp-tile>
-    </div>
+  <div class="row reverse reverse-wrap items-start content-start full-height">
+    <comp-tile
+      v-for="(tile, index) in userMj.p3_discard"
+      :key="index"
+      :type="tile"
+      position="top"
+      size="small"
+    ></comp-tile>
   </div>
 </template>
 

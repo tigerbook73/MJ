@@ -1,3 +1,5 @@
+import { MjTile } from "./mjTile";
+
 const Tile_IDs: { [key: string]: number } = {
   p1: 0,
   p2: 1,
@@ -35,27 +37,35 @@ const Tile_IDs: { [key: string]: number } = {
   z7: 33,
 };
 
-function have_pairs(hand: number[]) {
-  //
+//
+export function checkWinning(hand: MjTile[]) {
+  if (hand.length < 14) {
+    return;
+  }
   const tile_count = Array(34).fill(0);
-  for (const tile of hand) {
+  for (const tile of convert_ID(hand)) {
     tile_count[tile]++;
   }
+  if (havePairs(tile_count)) {
+    return true;
+  }
+  return false;
+}
 
+function havePairs(tile_count: number[]) {
   for (let i = 0; i < 34; i++) {
     if (tile_count[i] >= 2) {
       tile_count[i] -= 2;
-      if (is_winning(tile_count)) {
+      if (haveTriples(tile_count)) {
         return true;
       }
       tile_count[i] += 2;
     }
   }
-
   return false;
 }
 
-function is_winning(tile_count: number[]) {
+function haveTriples(tile_count: number[]) {
   const temp_count = [...tile_count];
   for (let i = 0; i < 34; i++) {
     //
@@ -74,10 +84,10 @@ function is_winning(tile_count: number[]) {
   return true;
 }
 
-function convert_ID(hand: string[]): number[] {
-  return hand.map((tile) => Tile_IDs[tile]);
+function convert_ID(hand: MjTile[]): number[] {
+  return hand.map((tile) => Tile_IDs[tile.name]);
 }
 
-const handStr = ["p1", "p1", "p1", "s2", "s3", "s4", "m5", "m6", "m7", "z1", "z1", "m9", "m9", "m9"];
-const handIds = convert_ID(handStr);
-console.log(have_pairs(handIds));
+// const handStr = ["p1", "p1", "p1", "s2", "s3", "s4", "m5", "m6", "m7", "z1", "z1", "m9", "m9", "m9"];
+// const handIds = convert_ID(handStr);
+// console.log(have_pairs(handIds));

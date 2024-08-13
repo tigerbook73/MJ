@@ -10,7 +10,7 @@
     <!-- center -->
     <div class="row h-50">
       <comp-tile-wall position="left" class="w-10"></comp-tile-wall>
-      <field-area class="w-50 bg-green-4"></field-area>
+      <field-area class="w-50"></field-area>
       <comp-tile-wall position="right" class="w-10"></comp-tile-wall>
     </div>
 

@@ -1,4 +1,4 @@
-import { MjTile } from "./mjTile";
+import { emptyTile, MjTile } from "./mjTile";
 
 const Tile_IDs: { [key: string]: number } = {
   m1: 0,
@@ -73,7 +73,13 @@ export function discard(hand: MjTile[]) {
       lastTile = i;
     }
   }
-  return ID_Tiles[lastTile];
+
+  for (let i = 0; i < hand.length; i++) {
+    if (hand[i].name == ID_Tiles[lastTile]) {
+      return hand[i];
+    }
+  }
+  return emptyTile;
 }
 
 function rmThreeStraight(tileCount: number[], i: number) {

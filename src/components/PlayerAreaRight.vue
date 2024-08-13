@@ -1,10 +1,11 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.isCurrentPlayer(1) ? 'bg-green-4' : 'bg-green-0']">
-    <div class="row flex-center w-5">
+  <div class="column flex-center area-player" :class="userMj.isCurrentPlayer(1) ? 'bg-green-4' : 'bg-green-0'">
+    <div class="row reverse-wrap flex-center w-5">
       <comp-tile
         v-for="(tile, index) in userMj.p2"
         :key="index"
         :type="tile.name"
+        :selected="tile === userMj.selectedTile"
         position="right"
         size="large"
       ></comp-tile>

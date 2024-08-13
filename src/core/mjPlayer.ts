@@ -30,7 +30,7 @@ export class MjPlayer {
     }
   }
 
-  sorthand() {
+  sortHand() {
     // this.pushTile();
     this.hand.sort((a, b) => {
       if (a.name > b.name) {
@@ -42,6 +42,10 @@ export class MjPlayer {
 
       return a.id - b.id;
     });
+
+    if (this.hand[0].name == "") {
+      this.hand.shift();
+    }
   }
 }
 

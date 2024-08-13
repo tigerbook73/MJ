@@ -20,9 +20,10 @@ const mjStore = useMjStore();
 
 function reset() {
   mjGame.init();
-  mjGame.separate();
+  // mjGame.separate();
   mjGame.playerIndex = 0;
   mjStore.clearNewtile();
+  mjStore.clearSelected();
   mjStore.refresh();
 }
 
