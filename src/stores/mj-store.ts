@@ -63,6 +63,7 @@ export const useMjStore = defineStore("mj", () => {
       if (mjGame.players[i].newtile !== emptyTile) {
         displayList[i].value = mjGame.players[i].newtile;
       }
+      newList[i].value = mjGame.players[i].newtile;
     }
   }
 
