@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
-export const useMjStore = defineStore("mj", () => {
+export const useMjStore = defineStore("mj-store", () => {
   const open = ref(false);
 
   const topWall = ref([] as string[]);

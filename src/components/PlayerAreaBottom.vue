@@ -25,6 +25,7 @@ import CompTile from "components/CompTile.vue";
 
 import { useMjStore } from "src/stores/mj-store";
 import { wait } from "src/utils/timer";
+import { useRouter } from "vue-router";
 
 async function onClick(tile: string) {
   if (userMj.mySelected.includes(tile)) {
@@ -52,6 +53,10 @@ async function onClick(tile: string) {
    * 8.
    */
 }
+
+const router = useRouter();
+
+useRoute;
 
 const userMj = useMjStore();
 </script>
