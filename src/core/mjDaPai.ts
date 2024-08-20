@@ -1,48 +1,57 @@
 import { MjCard, TileType } from "./mjCard";
 
 export class MjDaPai {
-  constructor(private hand: MjCard[]) {}
+  constructor(private hand: MjCard[]) {
+    // 创建手牌副本以进行操作，而不修改原手牌
+    this.hand = hand.slice();
+    this.sortHand();
+  }
+
+  sortHand() {
+    this.hand.sort((first, next) => {
+      if (first.type == next.type) {
+        return first.index - next.index;
+      } else if (first.type > next.type) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  }
 
   discardTile() {
-    // 创建手牌副本以进行操作，而不修改原手牌
-    const handCopy = [...this.hand];
-
     // 1. 保留所有的3顺子（3张连续的牌）
-    const shunzis = this.findAllShunzi(handCopy, 3);
+    const shunzis = this.findAllShunzi(this.hand, 3);
     for (const shunzi of shunzis) {
-      this.removeFromHand(handCopy, shunzi);
+      this.removeFromHand(this.hand, shunzi);
     }
 
     // 2. 保留所有的刻子（3张相同的牌），如果有4张只保留3张
-    const kes = this.findAllKe(handCopy);
+    const kes = this.findAllKe(this.hand);
     for (const ke of kes) {
-      this.removeFromHand(handCopy, ke);
+      this.removeFromHand(this.hand, ke);
     }
 
     // 3. 保留所有的对子（2张相同的牌）
-    const duis = this.findAllDui(handCopy);
+    const duis = this.findAllDui(this.hand);
     if (duis.length > 0) {
       for (const dui of duis) {
-        this.removeFromHand(handCopy, dui);
+        this.removeFromHand(this.hand, dui);
       }
     }
 
     // 4. 保留所有2顺子直到最后一组（2张连续的牌）
-    const shunzi2s = this.findAllShunzi(handCopy, 2);
+    const shunzi2s = this.findAllShunzi(this.hand, 2);
     for (const shunzi2 of shunzi2s) {
-      this.removeFromHand(handCopy, shunzi2);
+      this.removeFromHand(this.hand, shunzi2);
     }
 
     // 根据优先级选择要打出的牌
-    const priorityTile = this.findPriorityTile(handCopy);
+    const priorityTile = this.findPriorityTile(this.hand);
     if (priorityTile) {
       // 从原手牌中移除选中的牌
       return priorityTile;
     }
-
-    // 如果没有其他选择，则打出最后一张牌
-    const lastTile = this.hand.pop();
-    return lastTile;
   }
 
   // 根据优先级顺序寻找要打出的牌

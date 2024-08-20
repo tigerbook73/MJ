@@ -7,7 +7,6 @@ import { MjDaPai } from "./mjDaPai";
 export enum State {
   Ready,
   Start,
-  Pause,
 }
 
 export class MjGame {
@@ -17,6 +16,7 @@ export class MjGame {
   players: MjPlayer[] = [];
   pickIndex: number = 0;
   currentPlayer: number = 0;
+  paused: boolean = false;
 
   constructor(
     public cards: MjCard[] = [],
@@ -103,14 +103,18 @@ export class MjGame {
 
   pause() {
     if (this.state === State.Start) {
-      this.state = State.Pause;
+      this.paused = true;
     }
   }
 
   resume() {
-    if (this.state === State.Pause) {
-      this.state = State.Start;
+    if (this.state === State.Start) {
+      this.paused = false;
     }
+  }
+
+  isPaused() {
+    return this.paused && this.state == State.Start;
   }
 
   pickCard() {
@@ -149,7 +153,7 @@ export class MjGame {
     }
   }
 
-  discardCard() {
+  findDiscardCard() {
     // selectthrow a card
     // replace the card with a void card
     // return the thrown card
@@ -165,7 +169,7 @@ export class MjGame {
 
   discard() {
     if (this.state === State.Start && this.walls[this.wallIndex].cards.length > 0 && !this.canHu()) {
-      const card = this.discardCard();
+      const card = this.findDiscardCard();
       if (card.name !== "") {
         const player = this.players[this.currentPlayer];
         const cardIndex = player.hand.indexOf(card);

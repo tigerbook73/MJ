@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-btn flat @click="reset">reset</q-btn>
-    <q-btn flat @click="pause">pause</q-btn>
+    <q-btn flat @click="paused">pause</q-btn>
   </div>
 </template>
 
@@ -21,7 +21,7 @@ function reset() {
   mjStore.refresh();
 }
 
-function pause() {
+function paused() {
   //
   mjGame.pause();
   mjStore.refresh();

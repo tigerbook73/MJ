@@ -54,9 +54,9 @@ function copy(playerIndex: number) {
 }
 export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
-  const status = ref(Boolean);
   const canHu = ref(false);
   const currentPlayer = ref(mjGame.currentPlayer);
+  const paused = ref(false);
 
   const topWall = ref([] as HandCard[]);
   const bottomWall = ref([] as HandCard[]);
@@ -130,6 +130,7 @@ export const useMjStore = defineStore("mj", () => {
     };
     canHu.value = mjGame.canHu();
     currentPlayer.value = mjGame.currentPlayer;
+    paused.value = mjGame.isPaused();
   }
 
   mjGame.init();
@@ -150,10 +151,10 @@ export const useMjStore = defineStore("mj", () => {
     myCards,
     myDiscardCards,
     myLatestPickCard,
-    status,
     canHu,
     selectedCard,
     currentPlayer,
+    paused,
     // actions
     refresh,
   };

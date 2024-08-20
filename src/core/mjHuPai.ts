@@ -4,13 +4,27 @@ export class MjHuPai {
   private sortedHand: MjCard[];
 
   constructor(hand: MjCard[]) {
-    this.sortedHand = hand;
+    this.sortedHand = hand.slice(); // 复制手牌
+    this.sortHand(); // 在构造函数中调用 sortHand 方法
+  }
+
+  // 对手牌进行排序
+  private sortHand() {
+    this.sortedHand.sort((first, next) => {
+      if (first.type === next.type) {
+        return first.index - next.index;
+      } else if (first.type > next.type) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
   }
 
   // 判断是否胡牌的主函数
   public isHuPai(): boolean {
     const length = this.sortedHand.length;
-    if (length != 14) {
+    if (length !== 14) {
       return false;
     }
 

@@ -1,14 +1,12 @@
 <template>
-  <div class="column flex-center area-player">
-    <div class="row flex-center">
-      <comp-tile
-        v-for="(tile, index) in userMj.p2DiscardCards"
-        :key="index"
-        :type="tile"
-        size="small"
-        position="top"
-      ></comp-tile>
-    </div>
+  <div class="row reverse reverse-wrap justify-start items-end content-start">
+    <comp-tile
+      v-for="(tile, index) in userMj.p2DiscardCards"
+      :key="index"
+      :type="tile"
+      size="small"
+      position="top"
+    ></comp-tile>
   </div>
 </template>
 
