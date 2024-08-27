@@ -1,26 +1,34 @@
 <template>
-  <q-page class="q-pa-md column flex-center">
-    <q-card class="q-pa-md" style="width: 50%">
-      <q-card-section>
-        <q-input filled v-model="ph" label="Address" placeholder="website address" :dense="dense" />
+  <q-page class="q-pa-md bg-green-2 column flex-center">
+    <q-card class="q-pa-md bg-grey-1" style="width: 50%">
+      <q-card-section class="q-pa-md row q-col-gutter-md">
+        <q-input filled v-model="username" class="col-6" label="Username" placeholder="e.g. user1234" />
+        <q-input filled v-model="password" class="col-6" label="Password" placeholder="e.g. password1234" />
       </q-card-section>
-      <q-card-section>
-        <q-btn align="right"> Connect </q-btn>
+      <q-separator></q-separator>
+      <q-card-section class="q-pa-md row q-col-gutter-md">
+        <q-input filled v-model="address" class="col-6" label="Lobby Number" placeholder="e.g. lobby1" />
       </q-card-section>
+      <q-separator></q-separator>
+      <q-card-actions align="right">
+        <q-btn class="q-pa-md bg-green-2" @click="connect"> Connect </q-btn>
+      </q-card-actions>
     </q-card>
   </q-page>
 </template>
 
-<script>
+<script setup lang="ts">
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+defineOptions({
+  name: "ConnectPage",
+});
 
-export default {
-  setup() {
-    return {
-      text: ref(""),
-      ph: ref(""),
-      dense: ref(false),
-    };
-  },
-};
+const router = useRouter();
+const username = ref("");
+const password = ref("");
+const address = ref("");
+function connect() {
+  router.push("/lobby");
+}
 </script>
