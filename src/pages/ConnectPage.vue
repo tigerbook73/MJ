@@ -1,13 +1,26 @@
 <template>
-  <q-page class="row flex-center">
-    <game-area class="w-90 h-90"></game-area>
+  <q-page class="q-pa-md column flex-center">
+    <q-card class="q-pa-md" style="width: 50%">
+      <q-card-section>
+        <q-input filled v-model="ph" label="Address" placeholder="website address" :dense="dense" />
+      </q-card-section>
+      <q-card-section>
+        <q-btn align="right"> Connect </q-btn>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
-<script setup lang="ts">
-import GameArea from "components/GameArea.vue";
+<script>
+import { ref } from "vue";
 
-defineOptions({
-  name: "IndexPage",
-});
+export default {
+  setup() {
+    return {
+      text: ref(""),
+      ph: ref(""),
+      dense: ref(false),
+    };
+  },
+};
 </script>
