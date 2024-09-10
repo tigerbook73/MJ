@@ -2,7 +2,7 @@
   <q-page class="row flex-center">
     <q-card style="width: 50%">
       <q-card-section>
-        <q-input v-model="name" label="Username: "></q-input>
+        <q-input v-model="userstore.username" label="Username: "></q-input>
         <q-input v-model="password" label="Password: "></q-input>
       </q-card-section>
 
@@ -18,11 +18,12 @@ defineOptions({
   name: "ConnectedPage",
 });
 
+import { userStore } from "src/stores/user-store";
 import { wait } from "src/utils/timer";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const name = ref("Username");
+const userstore = userStore();
 
 const password = ref("Password");
 
