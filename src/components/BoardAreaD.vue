@@ -1,7 +1,7 @@
 <template>
   <div class="column flex-center area-board">
     <div class="row flex-center">
-      <comp-tile :type="userMj.p1_display.name" :selected="false" position="bottom" size="large"></comp-tile>
+      <comp-tile :type="userMj.bottom_display.name" :selected="false" position="bottom" size="large"></comp-tile>
     </div>
   </div>
 </template>

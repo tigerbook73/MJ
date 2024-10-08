@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
       { path: "connect", component: () => import("pages/ConnectPage.vue") },
       { path: "game", component: () => import("pages/IndexPage.vue") },
       { path: "lobby", component: () => import("pages/LobbyPage.vue") },
+      { path: "client-page", component: () => import("pages/ClientPage.vue") },
     ],
   },
 

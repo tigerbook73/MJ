@@ -1,7 +1,7 @@
 <template>
   <div class="column reverse wrap items-start content-start full-height">
     <comp-tile
-      v-for="(tile, index) in userMj.p2_discard"
+      v-for="(tile, index) in userMj.right_discard"
       :key="index"
       :type="tile"
       position="right"

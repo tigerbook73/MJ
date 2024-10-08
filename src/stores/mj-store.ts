@@ -11,6 +11,7 @@ export const useMjStore = defineStore("mj", () => {
 
   const players = ref([] as MjPlayer[]);
   const selectedTile = ref(emptyTile as MjTile);
+  const my_pos = ref(2 as number);
 
   const topWall = ref([] as string[]);
   const bottomWall = ref([] as string[]);
@@ -24,23 +25,23 @@ export const useMjStore = defineStore("mj", () => {
   const p4 = ref([] as MjTile[]);
   const handList = [p1, p2, p3, p4];
 
-  const p1_discard = ref([] as string[]);
-  const p2_discard = ref([] as string[]);
-  const p3_discard = ref([] as string[]);
-  const p4_discard = ref([] as string[]);
-  const discardList = [p1_discard, p2_discard, p3_discard, p4_discard];
+  const bottom_discard = ref([] as string[]);
+  const right_discard = ref([] as string[]);
+  const top_discard = ref([] as string[]);
+  const left_discard = ref([] as string[]);
+  const discardList = [bottom_discard, right_discard, top_discard, left_discard];
 
-  const p1_new = ref(emptyTile as MjTile);
-  const p2_new = ref(emptyTile as MjTile);
-  const p3_new = ref(emptyTile as MjTile);
-  const p4_new = ref(emptyTile as MjTile);
-  const newList = [p1_new, p2_new, p3_new, p4_new];
+  const bottom_new = ref(emptyTile as MjTile);
+  const right_new = ref(emptyTile as MjTile);
+  const top_new = ref(emptyTile as MjTile);
+  const left_new = ref(emptyTile as MjTile);
+  const newList = [bottom_new, right_new, top_new, left_new];
 
-  const p1_display = ref(emptyTile as MjTile);
-  const p2_display = ref(emptyTile as MjTile);
-  const p3_display = ref(emptyTile as MjTile);
-  const p4_display = ref(emptyTile as MjTile);
-  const displayList = [p1_display, p2_display, p3_display, p4_display];
+  const bottom_display = ref(emptyTile as MjTile);
+  const right_display = ref(emptyTile as MjTile);
+  const top_display = ref(emptyTile as MjTile);
+  const left_display = ref(emptyTile as MjTile);
+  const displayList = [bottom_display, right_display, top_display, left_display];
 
   function refresh() {
     isWinning.value = mjGame.isWinning();
@@ -63,13 +64,13 @@ export const useMjStore = defineStore("mj", () => {
       if (mjGame.players[i].newtile !== emptyTile) {
         displayList[i].value = mjGame.players[i].newtile;
       }
-      newList[i].value = mjGame.players[i].newtile;
+      newList[i].value = mjGame.players[(my_pos.value + i) % 4].newtile;
     }
   }
 
   function playerDiscardRefresh() {
     for (let i = 0; i < 4; i++) {
-      discardList[i].value = mjGame.players[i].played.map((tile) => tile.name);
+      discardList[i].value = mjGame.players[(my_pos.value + i) % 4].played.map((tile) => tile.name);
     }
   }
 
@@ -85,7 +86,7 @@ export const useMjStore = defineStore("mj", () => {
 
   function playerHandRefresh() {
     for (let i = 0; i < 4; i++) {
-      handList[i].value = mjGame.players[i].hand.map((tile) => tile);
+      handList[i].value = mjGame.players[(my_pos.value + i) % 4].hand.map((tile) => tile);
     }
     for (let i = 0; i < 4; i++) {
       // if (mjGame.players[i].newtile.name !== "") {
@@ -111,25 +112,29 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall,
     leftWall,
 
+    my_pos,
     p1,
     p2,
     p3,
     p4,
 
-    p1_discard,
-    p2_discard,
-    p3_discard,
-    p4_discard,
+    discardList,
+    bottom_discard,
+    right_discard,
+    top_discard,
+    left_discard,
 
-    p1_display,
-    p2_display,
-    p3_display,
-    p4_display,
+    displayList,
+    bottom_display,
+    right_display,
+    top_display,
+    left_display,
 
-    p1_new,
-    p2_new,
-    p3_new,
-    p4_new,
+    newList,
+    bottom_new,
+    right_new,
+    top_new,
+    left_new,
 
     players,
     status,

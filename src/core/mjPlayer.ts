@@ -2,6 +2,8 @@ import { MjTile, emptyTile } from "./mjTile";
 
 export class MjPlayer {
   //
+  public name: string = "";
+  //
   public hand: MjTile[] = [];
   public openhand: MjTile[] = [];
   public newtile: MjTile = emptyTile;

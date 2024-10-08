@@ -1,8 +1,9 @@
+----------------------------------------------------------------------------------------------------------------
 <template>
   <div class="column area-player">
     <div class="row">
       <comp-tile
-        v-for="(tile, index) in userMj.p1_discard"
+        v-for="(tile, index) in userMj.bottom_discard"
         :key="index"
         :type="tile"
         position="bottom"

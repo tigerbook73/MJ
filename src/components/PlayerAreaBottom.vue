@@ -1,5 +1,7 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.isCurrentPlayer(0) ? 'bg-green-4' : 'bg-green-0']">
+  <div
+    :class="['column flex-center area-player', userMj.isCurrentPlayer(userMj.my_pos % 4) ? 'bg-green-4' : 'bg-green-0']"
+  >
     <div class="row flex-center">
       <comp-tile
         v-for="(tile, index) in userMj.p1"
