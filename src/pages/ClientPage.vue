@@ -96,6 +96,7 @@ interface ResponseRecord {
 
 <script setup lang="ts">
 import dayjs from "dayjs";
+import { GameRequestType, ListRoomRequest } from "src/common/protocols/apis.models";
 import { socket, socketSend, onSocketReceive, socketState } from "src/websocket/socket";
 import { ref } from "vue";
 
@@ -120,9 +121,10 @@ function listClient() {
 }
 
 function listRoom() {
-  sendRequest({
-    type: "listRoom",
-  });
+  const request: ListRoomRequest = {
+    type: GameRequestType.LIST_ROOM,
+  };
+  sendRequest(request);
 }
 
 function signIn() {
