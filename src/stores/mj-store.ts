@@ -30,26 +30,6 @@ function copy(playerIndex: number) {
     id: voidCard.id,
     options: { selected: false },
   };
-
-  // if (cards.length == 13){
-  //   cards.push({
-  //     name: "",
-  //     id: voidCard.id,
-  //     options: { selected: false },
-  //   });
-  //   cards.push({
-  //     name: "",
-  //     id: voidCard.id,
-  //     options: { selected: false },
-  //   });
-  // } else if (cards.length == 14) {
-  //   cards.splice(13,0,{
-  //     name: "",
-  //     id: voidCard.id,
-  //     options: { selected: false },
-  //   });
-  // }
-
   return cards;
 }
 export const useMjStore = defineStore("mj", () => {

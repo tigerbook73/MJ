@@ -17,6 +17,7 @@ export class MjGame {
   pickIndex: number = 0;
   currentPlayer: number = 0;
   paused: boolean = false;
+  myplayer: number = 0;
 
   constructor(
     public cards: MjCard[] = [],
@@ -24,6 +25,10 @@ export class MjGame {
   ) {
     this.walls = [new MjCardWall("East"), new MjCardWall("South"), new MjCardWall("West"), new MjCardWall("North")];
     this.players = [new MjPlayer("East"), new MjPlayer("South"), new MjPlayer("West"), new MjPlayer("North")];
+  }
+
+  setMySit(position: string) {
+    this.myplayer = this.players.findIndex((player) => player.position === position);
   }
   // 初始化牌，选择合适的牌，加入到游戏中（第一步只需要最基本的牌型）
   init() {
@@ -70,6 +75,13 @@ export class MjGame {
     if (this.state != State.Ready) {
       return;
     }
+    // 如果玩家数组中没有 East，就分配一个默认庄家
+    if (!this.players.some((player) => player && player.position === "East")) {
+      this.players[0] = new MjPlayer("East");
+    }
+
+    // 确保 East 作为庄家开始游戏
+    this.currentPlayer = this.players.findIndex((player) => player.position === "East");
     const diceOne = Math.floor(Math.random() * 6) + 1;
     const diceTwo = Math.floor(Math.random() * 6) + 1;
     this.wallIndex = (diceOne + diceTwo - 2) % 4;
@@ -94,7 +106,7 @@ export class MjGame {
       this.players[playerIndex].sortHand();
     }
 
-    this.players[0].hand.push(this.pickCard());
+    this.players[this.currentPlayer].hand.push(this.pickCard());
   }
 
   sort() {

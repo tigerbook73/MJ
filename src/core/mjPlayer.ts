@@ -3,6 +3,7 @@ import { MjCard, voidCard } from "./mjCard";
 export class MjPlayer {
   constructor(
     public position: string,
+    public username: string = "",
     public hand: MjCard[] = [],
     public pick: MjCard = voidCard,
     public discard: MjCard[] = [],
