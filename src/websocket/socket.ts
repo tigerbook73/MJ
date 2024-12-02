@@ -6,7 +6,7 @@ export const socketState = reactive({
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
-export const socket = process.env.NODE_ENV === "production" ? io(undefined) : io("http://localhost:3000");
+export const socket = process.env.NODE_ENV === "production" ? io(undefined) : io("http://192.168.3.71:3000");
 
 socket.on("connect", () => {
   socketState.connected = true;

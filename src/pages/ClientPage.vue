@@ -7,6 +7,8 @@
       <div class="class q-gutter-md">
         <q-btn @click="listClient">List Client</q-btn>
         <q-btn @click="listRoom">List Room</q-btn>
+        <q-btn @click="signIn">Sign In</q-btn>
+        <q-btn @click="listUser">List User</q-btn>
       </div>
     </div>
     <q-separator vertical />
@@ -120,6 +122,22 @@ function listClient() {
 function listRoom() {
   sendRequest({
     type: "listRoom",
+  });
+}
+
+function signIn() {
+  sendRequest({
+    type: "signIn",
+    data: {
+      email: "admin@hello.com",
+      password: "admin",
+    },
+  });
+}
+
+function listUser() {
+  sendRequest({
+    type: "listUser",
   });
 }
 
