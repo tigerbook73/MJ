@@ -124,6 +124,12 @@ function listRoom() {
   });
 }
 
+// function listUser() {
+//   sendRequest({
+//     type: "listUser",
+//   });
+// }
+
 function signIn() {
   sendRequest({
     type: "signIn",
