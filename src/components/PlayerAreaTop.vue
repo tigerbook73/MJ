@@ -17,6 +17,8 @@
 </template>
 
 <script setup lang="ts">
+import { useMjStore } from "src/stores/mj-store";
+
 defineOptions({
   name: "PlayerAreaTop",
 });

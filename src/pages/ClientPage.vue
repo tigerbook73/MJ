@@ -8,6 +8,7 @@
         <q-btn @click="listClient">List Client</q-btn>
         <q-btn @click="listRoom">List Room</q-btn>
         <q-btn @click="signIn">Sign In</q-btn>
+        <q-btn @click="listUser">List User</q-btn>
       </div>
     </div>
     <q-separator vertical />
@@ -95,6 +96,7 @@ interface ResponseRecord {
 
 <script setup lang="ts">
 import dayjs from "dayjs";
+import { GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
 import { socket, socketSend, onSocketReceive, socketState } from "src/websocket/socket";
 import { ref } from "vue";
 
@@ -119,31 +121,32 @@ function listClient() {
 }
 
 function listRoom() {
-  sendRequest({
-    type: "listRoom",
-  });
+  const request: ListRoomRequest = {
+    type: GameRequestType.LIST_ROOM,
+  };
+  sendRequest(request);
 }
-
-// function listUser() {
-//   sendRequest({
-//     type: "listUser",
-//   });
-// }
 
 function signIn() {
   sendRequest({
     type: "signIn",
     data: {
-      email: "Admin",
-      password: "Password",
+      email: "admin@hello.com",
+      password: "admin",
     },
+  });
+}
+
+function listUser() {
+  sendRequest({
+    type: "listUser",
   });
 }
 
 // function resetGame() {}
 // function startGame() {}
 
-onSocketReceive((data) => {
+onSocketReceive((data: GameResponse) => {
   responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data as Response });
 });
 </script>

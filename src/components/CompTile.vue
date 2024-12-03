@@ -124,6 +124,7 @@ const rotate: Record<string, string> = {
 const imgStyle = ref({
   width: width,
   transform: rotate[props.position] || "none",
+  position: "relative",
 });
 </script>
 

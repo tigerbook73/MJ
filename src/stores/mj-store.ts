@@ -100,6 +100,8 @@ export const useMjStore = defineStore("mj", () => {
     return index === mjGame.playerIndex && status.value === true;
   }
 
+  mySelected.value = ["西"];
+
   mjGame.init();
   mjGame.separate();
   refresh();
