@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
+import { GameResponse } from "src/common/protocols/apis.models";
 
 export const socketState = reactive({
   connected: false,
@@ -22,6 +23,6 @@ export function socketSend(data: unknown) {
   socket.emit("mj:game", data);
 }
 
-export function onSocketReceive(callback: (data: unknown) => void) {
+export function onSocketReceive(callback: (data: GameResponse) => void) {
   socket.on("mj:game", callback);
 }
