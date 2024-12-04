@@ -14,17 +14,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
 import { useMjStore } from "src/stores/mj-store";
 import CompTile from "./CompTile.vue";
 
 defineOptions({
   name: "PlayerAreaLeft",
 });
-
-import CompTile from "components/CompTile.vue";
-
-import { useMjStore } from "src/stores/mj-store";
 
 const userMj = useMjStore();
 </script>

@@ -97,8 +97,8 @@ interface ResponseRecord {
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
-import { socket, socketSend, onSocketReceive, socketState } from "src/websocket/socket";
-import { ref } from "vue";
+import { socket, socketSend, onSocketReceive, socketState, offSocketReceive } from "src/websocket/socket";
+import { onBeforeUnmount, ref } from "vue";
 
 defineOptions({
   name: "ClientPage",
@@ -128,14 +128,34 @@ function listRoom() {
 }
 
 function signIn() {
-  sendRequest({
+  const email = sessionStorage.getItem("userEmail");
+  const password = sessionStorage.getItem("userPassword");
+
+  if (!email || !password) {
+    console.error("Email or password not found in sessionStorage");
+    return;
+  }
+
+  const request = {
     type: "signIn",
     data: {
-      email: "admin@hello.com",
-      password: "admin",
+      email,
+      password,
     },
-  });
+  };
+
+  socketSend(request);
 }
+// function signIn() {
+//   const request = {
+//     type: "signIn",
+//     data: {
+//       email: "admin@hello.com",
+//       password: "admin123",
+//     },
+//   };
+//   socketSend(request);
+// }
 
 function listUser() {
   sendRequest({
@@ -146,7 +166,13 @@ function listUser() {
 // function resetGame() {}
 // function startGame() {}
 
-onSocketReceive((data: GameResponse) => {
+const ioCallback = onSocketReceive((data: GameResponse) => {
   responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data as Response });
+});
+
+onBeforeUnmount(() => {
+  if (ioCallback) {
+    offSocketReceive(ioCallback);
+  }
 });
 </script>

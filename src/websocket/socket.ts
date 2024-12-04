@@ -7,7 +7,7 @@ export const socketState = reactive({
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
-export const socket = process.env.NODE_ENV === "production" ? io(undefined) : io("http://192.168.3.71:3000");
+export const socket = io(undefined);
 
 socket.on("connect", () => {
   socketState.connected = true;
@@ -23,6 +23,20 @@ export function socketSend(data: unknown) {
   socket.emit("mj:game", data);
 }
 
+export function socketSendAndWaitAck(data: unknown): Promise<GameResponse> {
+  return new Promise((resolve) => {
+    socket.once("mj:game", (response: GameResponse) => {
+      resolve(response);
+    });
+    socket.emit("mj:game", data);
+  });
+}
+
 export function onSocketReceive(callback: (data: GameResponse) => void) {
   socket.on("mj:game", callback);
+  return callback;
+}
+
+export function offSocketReceive(callback: (data: GameResponse) => void) {
+  socket.off("mj:game", callback);
 }

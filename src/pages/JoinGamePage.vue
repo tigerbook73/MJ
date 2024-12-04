@@ -12,11 +12,15 @@ defineOptions({
   name: "JoinGamePage",
 });
 
-const rooms = ref([
-  { name: "Room 1", players: ["John", "Tom", "Justin", "Simon"] },
-  { name: "Room 2", players: ["1", "2", "", ""] },
-  { name: "Room 3", players: ["", "", "Hello", "World"] },
-]);
+/**
+ * define room interface
+ * define rooms array ref var
+ * define refresh() function, which will call listRoomRequest() and update rooms ref var
+ * call refresh()
+ * define a button to call refresh()
+ */
+
+const rooms = ref([]);
 </script>
 
 <style lang="scss">
