@@ -62,8 +62,8 @@ import { useMjStore } from "src/stores/mj-store";
 
 interface Props {
   roomName: string;
-  isJoined: boolean;
-  players: string[];
+  isJoined?: boolean;
+  players?: string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {

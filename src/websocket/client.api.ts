@@ -18,13 +18,9 @@ export function socketSignInAndWaitAck(email: string, password: string): Promise
   return socketSendAndWaitAck(request) as Promise<SignInResponse>;
 }
 
-export function socketListRoomAndWaitAck(email: string, password: string): Promise<ListRoomResponse> {
+export function socketListRoomAndWaitAck(): Promise<ListRoomResponse> {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
-    data: {
-      email,
-      password,
-    },
   };
   return socketSendAndWaitAck(request) as Promise<ListRoomResponse>;
 }
