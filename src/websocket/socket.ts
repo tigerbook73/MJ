@@ -24,10 +24,10 @@ export function socketSend(data: unknown) {
 }
 
 export function socketSendAndWait(data: GameRequest): Promise<GameResponse> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const timeout = setTimeout(
       () =>
-        resolve({
+        reject({
           type: data.type,
           status: "error",
           message: "timeout",
