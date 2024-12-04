@@ -71,33 +71,21 @@
 </template>
 
 <script lang="ts">
-interface Request {
-  type: string;
-  data?: unknown;
-}
-
 interface RequestRecord {
   time: string;
-  request: Request;
-}
-
-interface Response {
-  type: string;
-  status: string;
-  message?: string;
-  data?: object;
+  request: GameRequest;
 }
 
 interface ResponseRecord {
   time: string;
-  response: Response;
+  response: GameResponse;
 }
 </script>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
-import { socket, socketSend, onSocketReceive, socketState } from "src/websocket/socket";
+import { GameRequest, GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
+import { socket, socketSend, onSocketReceive, socketState, socketSendAndWait } from "src/websocket/socket";
 import { ref } from "vue";
 
 defineOptions({
@@ -107,29 +95,38 @@ defineOptions({
 const requestList = ref([] as RequestRecord[]);
 const responseList = ref([] as ResponseRecord[]);
 
-function sendRequest(request: Request) {
+function sendRequest(request: GameRequest): void {
   if (socket.connected) {
     socketSend(request);
-    requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request });
+    requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
   }
+}
+sendRequest({
+  type: GameRequestType.LIST_CLIENT,
+});
+
+async function sendRequestAndWait(request: GameRequest): Promise<void> {
+  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
+  const response = await socketSendAndWait(request);
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
 }
 
 function listClient() {
-  sendRequest({
-    type: "listClient",
+  sendRequestAndWait({
+    type: GameRequestType.LIST_CLIENT,
   });
 }
 
-function listRoom() {
+async function listRoom() {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
   };
-  sendRequest(request);
+  sendRequestAndWait(request);
 }
 
 function signIn() {
-  sendRequest({
-    type: "signIn",
+  sendRequestAndWait({
+    type: GameRequestType.SIGN_IN,
     data: {
       email: "admin@hello.com",
       password: "admin",
@@ -138,8 +135,8 @@ function signIn() {
 }
 
 function listUser() {
-  sendRequest({
-    type: "listUser",
+  sendRequestAndWait({
+    type: GameRequestType.LIST_USER,
   });
 }
 
@@ -147,6 +144,6 @@ function listUser() {
 // function startGame() {}
 
 onSocketReceive((data: GameResponse) => {
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data as Response });
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data });
 });
 </script>

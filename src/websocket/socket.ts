@@ -1,13 +1,13 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
-import { GameResponse } from "src/common/protocols/apis.models";
+import { GameRequest, GameResponse } from "src/common/protocols/apis.models";
 
 export const socketState = reactive({
   connected: false,
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
-export const socket = process.env.NODE_ENV === "production" ? io(undefined) : io("http://192.168.3.71:3000");
+export const socket = io(undefined);
 
 socket.on("connect", () => {
   socketState.connected = true;
@@ -23,6 +23,37 @@ export function socketSend(data: unknown) {
   socket.emit("mj:game", data);
 }
 
-export function onSocketReceive(callback: (data: GameResponse) => void) {
+export function socketSendAndWait(data: GameRequest): Promise<GameResponse> {
+  return new Promise((resolve) => {
+    const timeout = setTimeout(
+      () =>
+        resolve({
+          type: data.type,
+          status: "error",
+          message: "timeout",
+          data: null,
+        }),
+      1000,
+    );
+    socket.emit(
+      "mj:game",
+      data,
+      (response: GameResponse) => {
+        resolve(response);
+        clearTimeout(timeout);
+      },
+      //
+    );
+  });
+}
+
+type SocketReceiveCallback = (data: GameResponse) => void;
+
+export function onSocketReceive(callback: SocketReceiveCallback) {
   socket.on("mj:game", callback);
+  return callback;
+}
+
+export function offSocketReceive(callback: SocketReceiveCallback) {
+  socket.off("mj:game", callback);
 }
