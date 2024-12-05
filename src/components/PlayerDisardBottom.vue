@@ -1,10 +1,7 @@
 <template>
   <div class="column flex-center area-player">
-    <!-- <div class="row justify-between items-start">
-      <comp-tile v-for="(tile, index) in userMj.myTiles" :key="index" :type="tile" size="large"></comp-tile>
-    </div> -->
     <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.myTiles" :key="index" :type="tile" size="large"></comp-tile>
+      <comp-tile v-for="(tile, index) in userMj.bottom_discard" :key="index" :type="tile" size="large"></comp-tile>
     </div>
   </div>
 </template>

@@ -17,14 +17,12 @@
 </template>
 
 <script setup lang="ts">
+import CompTile from "components/CompTile.vue";
 import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
   name: "PlayerAreaTop",
 });
-import CompTile from "components/CompTile.vue";
-
-import { useMjStore } from "src/stores/mj-store";
 
 const userMj = useMjStore();
 </script>
