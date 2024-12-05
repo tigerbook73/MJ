@@ -85,6 +85,7 @@ interface ResponseRecord {
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { GameRequest, GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
+import { sendSignIn } from "src/websocket/client.api";
 import { socket, socketSend, onSocketReceive, socketState, socketSendAndWait } from "src/websocket/socket";
 import { ref } from "vue";
 
@@ -124,14 +125,8 @@ async function listRoom() {
   sendRequestAndWait(request);
 }
 
-function signIn() {
-  sendRequestAndWait({
-    type: GameRequestType.SIGN_IN,
-    data: {
-      email: "admin@hello.com",
-      password: "admin",
-    },
-  });
+async function signIn() {
+  await sendSignIn("hello@admin.com", "admin");
 }
 
 function listUser() {
