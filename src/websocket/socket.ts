@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
-import { GameResponse } from "src/common/protocols/apis.models";
+import { GameRequest, GameResponse } from "src/common/protocols/apis.models";
 
 export const socketState = reactive({
   connected: false,
@@ -23,20 +23,37 @@ export function socketSend(data: unknown) {
   socket.emit("mj:game", data);
 }
 
-export function socketSendAndWaitAck(data: unknown): Promise<GameResponse> {
-  return new Promise((resolve) => {
-    socket.once("mj:game", (response: GameResponse) => {
-      resolve(response);
-    });
-    socket.emit("mj:game", data);
+export function socketSendAndWait(data: GameRequest): Promise<GameResponse> {
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(
+      () =>
+        reject({
+          type: data.type,
+          status: "error",
+          message: "timeout",
+          data: null,
+        }),
+      1000,
+    );
+    socket.emit(
+      "mj:game",
+      data,
+      (response: GameResponse) => {
+        resolve(response);
+        clearTimeout(timeout);
+      },
+      //
+    );
   });
 }
 
-export function onSocketReceive(callback: (data: GameResponse) => void) {
+type SocketReceiveCallback = (data: GameResponse) => void;
+
+export function onSocketReceive(callback: SocketReceiveCallback) {
   socket.on("mj:game", callback);
   return callback;
 }
 
-export function offSocketReceive(callback: (data: GameResponse) => void) {
+export function offSocketReceive(callback: SocketReceiveCallback) {
   socket.off("mj:game", callback);
 }

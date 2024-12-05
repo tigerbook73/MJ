@@ -5,7 +5,7 @@ import {
   SignInRequest,
   SignInResponse,
 } from "src/common/protocols/apis.models";
-import { socketSendAndWaitAck } from "./socket";
+import { socketSendAndWait } from "./socket";
 
 export function socketSignInAndWaitAck(email: string, password: string): Promise<SignInResponse> {
   const request: SignInRequest = {
@@ -15,12 +15,12 @@ export function socketSignInAndWaitAck(email: string, password: string): Promise
       password,
     },
   };
-  return socketSendAndWaitAck(request) as Promise<SignInResponse>;
+  return socketSendAndWait(request) as Promise<SignInResponse>;
 }
 
 export function socketListRoomAndWaitAck(): Promise<ListRoomResponse> {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
   };
-  return socketSendAndWaitAck(request) as Promise<ListRoomResponse>;
+  return socketSendAndWait(request) as Promise<ListRoomResponse>;
 }
