@@ -1,11 +1,14 @@
 import {
   GameRequestType,
+  JoinRoomResponse,
   ListRoomRequest,
   ListRoomResponse,
   SignInRequest,
   SignInResponse,
+  JoinRoomRequest,
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
+import { PlayerPosition } from "src/common/models/common.types";
 
 export function socketSignInAndWaitAck(email: string, password: string): Promise<SignInResponse> {
   const request: SignInRequest = {
@@ -23,4 +26,15 @@ export function socketListRoomAndWaitAck(): Promise<ListRoomResponse> {
     type: GameRequestType.LIST_ROOM,
   };
   return socketSendAndWait(request) as Promise<ListRoomResponse>;
+}
+
+export function socketJoinRoomAndWaitAck(roomName: string, position: PlayerPosition): Promise<JoinRoomResponse> {
+  const request: JoinRoomRequest = {
+    type: GameRequestType.JOIN_ROOM,
+    data: {
+      roomName,
+      position,
+    },
+  };
+  return socketSendAndWait(request) as Promise<JoinRoomResponse>;
 }

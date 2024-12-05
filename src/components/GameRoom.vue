@@ -7,9 +7,9 @@
         <q-btn
           flat
           class="col-6 bg-blue-4"
-          :label="player1"
-          @click="joinRoom('North')"
-          :disable="props.isJoined"
+          :label="getPlayerName('North')"
+          @click="joinRoom()"
+          :disable="isJoined || isPositionOccupied('North')"
         ></q-btn>
         <div class="col-3"></div>
       </div>
@@ -21,19 +21,19 @@
         <q-btn
           flat
           class="col-3 bg-blue-4"
-          :label="player2"
-          @click="joinRoom('West')"
-          :disable="props.isJoined"
+          :label="getPlayerName('West')"
+          @click="joinRoom(PlayerPosition.West)"
+          :disable="isJoined || isPositionOccupied('West')"
         ></q-btn>
         <div class="col-6 bg-green-4 row flex-center">
-          <div>{{ props.roomName }}</div>
+          <div>{{ roomName }}</div>
         </div>
         <q-btn
           flat
           class="col-3 bg-blue-4"
-          :label="player3"
-          @click="joinRoom('East')"
-          :disable="props.isJoined"
+          :label="getPlayerName('East')"
+          @click="joinRoom(PlayerPosition.East)"
+          :disable="isJoined || isPositionOccupied('East')"
         ></q-btn>
       </div>
     </div>
@@ -45,9 +45,9 @@
         <q-btn
           flat
           class="col-6 bg-blue-4"
-          :label="player4"
-          @click="joinRoom('South')"
-          :disable="props.isJoined"
+          :label="getPlayerName('South')"
+          @click="joinRoom(PlayerPosition.South)"
+          :disable="isJoined || isPositionOccupied('South')"
         ></q-btn>
         <div class="col-3"></div>
       </div>
@@ -56,14 +56,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-import { useMjStore } from "src/stores/mj-store";
+import { PlayerPosition } from "src/common/models/common.types";
+import { socketJoinRoomAndWaitAck } from "src/websocket/client.api";
+// import { useRouter } from "vue-router";
 
 interface Props {
   roomName: string;
   isJoined?: boolean;
-  players?: string[];
+  players: { name: string; position: string; type: string }[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -72,37 +72,29 @@ const props = withDefaults(defineProps<Props>(), {
   players: () => [],
 });
 
-const player1 = ref("Player 1");
-const player2 = ref("Player 2");
-const player3 = ref("Player 3");
-const player4 = ref("Player 4");
+const emits = defineEmits(["update"]);
 
-const mjStore = useMjStore();
-const router = useRouter();
+// const router = useRouter();
 
-function joinRoom(position: string) {
-  if (props.isJoined) return;
+function getPlayerName(position: string): string {
+  const player = props.players.find((p) => p.position === position);
+  return player ? player.name : "Player";
+}
 
-  const username = "User"; // Replace with actual user data
-  mjStore.refresh(); // Synchronize state
+function isPositionOccupied(position: string): boolean {
+  return props.players.some((p) => p.position === position);
+}
 
-  switch (position) {
-    case "North":
-      player1.value = `${username} (North)`;
-      break;
-    case "West":
-      player2.value = `${username} (West)`;
-      break;
-    case "East":
-      player3.value = `${username} (East)`;
-      break;
-    case "South":
-      player4.value = `${username} (South)`;
-      break;
+async function joinRoom(position: PlayerPosition = PlayerPosition.North) {
+  // if (props.isJoined || isPositionOccupied(position)) return;
+
+  try {
+    await socketJoinRoomAndWaitAck(props.roomName, position);
+    emits("update");
+  } catch (error) {
+    console.error("Error joining room:", error);
+    alert("An error occurred while trying to join the room.");
   }
-
-  mjStore.refresh(); // Update the game room state
-  router.push("/game-page");
 }
 </script>
 

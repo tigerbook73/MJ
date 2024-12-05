@@ -4,7 +4,13 @@
       <h1>Join a Game Room</h1>
       <q-btn color="primary" label="Refresh Rooms" :loading="loading" @click="refreshRooms" />
     </div>
-    <GameRoom v-for="(room, index) in rooms" :key="index" :roomName="room.name"></GameRoom>
+    <GameRoom
+      v-for="(room, index) in rooms"
+      :key="index"
+      :roomName="room.name"
+      :players="room.players"
+      @update="refreshRooms"
+    ></GameRoom>
   </q-page>
 </template>
 
@@ -12,7 +18,6 @@
 import GameRoom from "src/components/GameRoom.vue";
 import { socketListRoomAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 
 defineOptions({
   name: "JoinGamePage",
@@ -29,13 +34,12 @@ defineOptions({
 // define room interface
 interface Room {
   name: string;
-  players: number;
+  players: { name: string; position: string; type: string }[];
 }
 
 // define rooms array ref var
 const rooms = ref<Room[]>([]);
 const loading = ref<boolean>(false); // Tracks loading state
-const router = useRouter();
 
 // define refresh() function, which will call listRoomRequest() and update rooms ref var
 // Refresh the list of available rooms
@@ -43,21 +47,16 @@ async function refreshRooms() {
   loading.value = true;
 
   try {
-    const email = sessionStorage.getItem("userEmail");
-    const password = sessionStorage.getItem("userPassword");
-
-    if (!email || !password) {
-      alert("User not logged in. Redirecting to login.");
-      router.push("/login");
-      return;
-    }
-
     const response = await socketListRoomAndWaitAck();
 
     if (response.status === "success") {
       rooms.value = response.data.map((room) => ({
         name: room.name,
-        players: room.players.length,
+        players: room.players.map((player) => ({
+          name: player.userName,
+          position: player.position,
+          type: player.type,
+        })),
       }));
     } else {
       alert(`Failed to fetch rooms: ${response.message}`);
@@ -69,6 +68,8 @@ async function refreshRooms() {
     loading.value = false;
   }
 }
+
+refreshRooms();
 </script>
 
 <style lang="scss">

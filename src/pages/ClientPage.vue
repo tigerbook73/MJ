@@ -71,34 +71,22 @@
 </template>
 
 <script lang="ts">
-interface Request {
-  type: string;
-  data?: unknown;
-}
-
 interface RequestRecord {
   time: string;
-  request: Request;
-}
-
-interface Response {
-  type: string;
-  status: string;
-  message?: string;
-  data?: object;
+  request: GameRequest;
 }
 
 interface ResponseRecord {
   time: string;
-  response: Response;
+  response: GameResponse;
 }
 </script>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
-import { socket, socketSend, onSocketReceive, socketState, offSocketReceive } from "src/websocket/socket";
-import { onBeforeUnmount, ref } from "vue";
+import { GameRequest, GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
+import { socket, socketSend, onSocketReceive, socketState, socketSendAndWait } from "src/websocket/socket";
+import { ref } from "vue";
 
 defineOptions({
   name: "ClientPage",
@@ -107,72 +95,55 @@ defineOptions({
 const requestList = ref([] as RequestRecord[]);
 const responseList = ref([] as ResponseRecord[]);
 
-function sendRequest(request: Request) {
+function sendRequest(request: GameRequest): void {
   if (socket.connected) {
     socketSend(request);
-    requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request });
+    requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
   }
+}
+sendRequest({
+  type: GameRequestType.LIST_CLIENT,
+});
+
+async function sendRequestAndWait(request: GameRequest): Promise<void> {
+  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
+  const response = await socketSendAndWait(request);
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
 }
 
 function listClient() {
-  sendRequest({
-    type: "listClient",
+  sendRequestAndWait({
+    type: GameRequestType.LIST_CLIENT,
   });
 }
 
-function listRoom() {
+async function listRoom() {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
   };
-  sendRequest(request);
+  sendRequestAndWait(request);
 }
 
 function signIn() {
-  const email = sessionStorage.getItem("userEmail");
-  const password = sessionStorage.getItem("userPassword");
-
-  if (!email || !password) {
-    console.error("Email or password not found in sessionStorage");
-    return;
-  }
-
-  const request = {
-    type: "signIn",
+  sendRequestAndWait({
+    type: GameRequestType.SIGN_IN,
     data: {
-      email,
-      password,
+      email: "admin@hello.com",
+      password: "admin",
     },
-  };
-
-  socketSend(request);
+  });
 }
-// function signIn() {
-//   const request = {
-//     type: "signIn",
-//     data: {
-//       email: "admin@hello.com",
-//       password: "admin123",
-//     },
-//   };
-//   socketSend(request);
-// }
 
 function listUser() {
-  sendRequest({
-    type: "listUser",
+  sendRequestAndWait({
+    type: GameRequestType.LIST_USER,
   });
 }
 
 // function resetGame() {}
 // function startGame() {}
 
-const ioCallback = onSocketReceive((data: GameResponse) => {
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data as Response });
-});
-
-onBeforeUnmount(() => {
-  if (ioCallback) {
-    offSocketReceive(ioCallback);
-  }
+onSocketReceive((data: GameResponse) => {
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data });
 });
 </script>
