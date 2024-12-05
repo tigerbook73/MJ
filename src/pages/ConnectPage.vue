@@ -22,7 +22,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { sendSignIn } from "src/websocket/client.api";
-// import { wait } from "src/core/timer";
 
 defineOptions({
   name: "ConnectPage",

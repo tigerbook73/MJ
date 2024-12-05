@@ -31,7 +31,7 @@ export function sendSignIn(email: string, password: string): Promise<SignInRespo
   return socketSendAndWait(request) as Promise<SignInResponse>;
 }
 
-export function sendSingout(): Promise<SignOutResponse> {
+export function sendSignout(): Promise<SignOutResponse> {
   //
   const request: SignOutRequest = {
     type: GameRequestType.SIGN_OUT,
