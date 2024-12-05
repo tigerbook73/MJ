@@ -23,12 +23,12 @@
 </template>
 
 <script setup lang="ts">
-import { wait } from "src/core/timer";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { socket, socketSend, onSocketReceive } from "src/websocket/socket";
-import { GameRequest, GameRequestType, SignInRequest } from "src/common/protocols/apis.models";
+import { onSocketReceive } from "src/websocket/socket";
+import { GameRequestType } from "src/common/protocols/apis.models";
+import { sendSignIn } from "src/websocket/client.api";
 
 defineOptions({
   name: "ConnectPage",
@@ -51,28 +51,8 @@ init();
 
 async function login() {
   loading.value = true;
+  await sendSignIn(username.value, password.value);
 
-  const request: SignInRequest = {
-    type: GameRequestType.SIGN_IN,
-    data: {
-      email: username.value,
-      password: password.value,
-    },
-  };
-  sendRequest(request);
-
-  await wait(1000);
   loading.value = false;
 }
-
-function sendRequest(request: GameRequest) {
-  //
-  if (socket.connected) {
-    socketSend(request);
-  }
-}
-
-// function testpage() {
-//   router.push("/lobby");
-// }
 </script>
