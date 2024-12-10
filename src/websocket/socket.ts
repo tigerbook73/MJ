@@ -33,7 +33,7 @@ export function socketSendAndWait(data: GameRequest): Promise<GameResponse> {
           message: "timeout",
           data: null,
         }),
-      1000,
+      6000,
     );
     socket.emit(
       "mj:game",

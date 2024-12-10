@@ -14,14 +14,17 @@
 </template>
 
 <script setup lang="ts">
+import { UserModel } from "src/common/models/user.model";
+import { userStore } from "src/stores/user-store";
 import { socketSignInAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-const email = ref("");
-const password = ref("");
+const email = ref("a@a.com");
+const password = ref("password");
 const loading = ref(false);
 const router = useRouter();
+const store = userStore();
 
 async function login() {
   if (!email.value || !password.value) {
@@ -38,9 +41,11 @@ async function login() {
     if (response.status === "success") {
       console.log("Sign-in successful:", response);
 
-      // Save email and password in sessionStorage
-      sessionStorage.setItem("userEmail", email.value);
-      sessionStorage.setItem("userPassword", password.value);
+      if (!store.user) {
+        store.user = new UserModel({ name: "", firstName: "", lastName: "", email: "" }, "");
+      }
+      store.user.email = email.value;
+      store.user.password = password.value;
 
       // Navigate to Join Page
       router.push("/join-game");

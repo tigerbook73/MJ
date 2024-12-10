@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
+import { UserModel } from "src/common/models/user.model";
 import { ref } from "vue";
 
 export const userStore = defineStore("mj", () => {
-  const username = ref("Username");
+  const user = ref<UserModel | null>(null); // Empty string means not logged in
+
   return {
-    // state
-    // actions
-    username,
+    user,
   };
 });

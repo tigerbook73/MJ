@@ -16,13 +16,19 @@
 
 <script setup lang="ts">
 import GameRoom from "src/components/GameRoom.vue";
+import { useRouter } from "vue-router";
+import { userStore } from "src/stores/user-store";
 import { socketListRoomAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
 
 defineOptions({
   name: "JoinGamePage",
 });
-
+const store = userStore();
+const router = useRouter();
+if (!store.user) {
+  router.push("/sign-in");
+}
 /**
  * define room interface
  * define rooms array ref var

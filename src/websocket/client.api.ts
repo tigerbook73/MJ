@@ -6,6 +6,8 @@ import {
   SignInRequest,
   SignInResponse,
   JoinRoomRequest,
+  LeaveRoomRequest,
+  LeaveRoomResponse,
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
 import { PlayerPosition } from "src/common/models/common.types";
@@ -37,4 +39,16 @@ export function socketJoinRoomAndWaitAck(roomName: string, position: PlayerPosit
     },
   };
   return socketSendAndWait(request) as Promise<JoinRoomResponse>;
+}
+
+// socketLeaveRoomAndWaitAck
+export function socketLeaveRoomAndWaitAck(roomName: string): Promise<LeaveRoomResponse> {
+  const request: LeaveRoomRequest = {
+    type: GameRequestType.LEAVE_ROOM,
+    data: {
+      roomName,
+    },
+  };
+
+  return socketSendAndWait(request) as Promise<LeaveRoomResponse>;
 }

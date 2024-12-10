@@ -2,6 +2,7 @@ import { route } from "quasar/wrappers";
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
 import routes from "./routes";
+import { userStore } from "src/stores/user-store";
 
 /*
  * If not building with SSR mode, you can
@@ -27,6 +28,17 @@ export default route(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE),
+  });
+
+  const store = userStore();
+  Router.beforeEach((to, from, next) => {
+    if (to.meta.requiresAuth && !store.user) {
+      // Redirect to sign-in page if not logged in
+      next("/sign-in");
+    } else {
+      // Proceed normally
+      next();
+    }
   });
 
   return Router;
