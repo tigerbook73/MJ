@@ -11,6 +11,7 @@ import {
   ListClientRequest,
   ListClientResponse,
   ListRoomRequest,
+  ListRoomResponse,
   SignInRequest,
   SignInResponse,
   SignOutRequest,
@@ -39,11 +40,11 @@ export function sendSignout(): Promise<SignOutResponse> {
   return socketSendAndWait(request) as Promise<SignOutResponse>;
 }
 
-export function sendListRoom() {
+export function sendListRoom(): Promise<ListRoomResponse> {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
   };
-  return socketSendAndWait(request);
+  return socketSendAndWait(request) as Promise<ListRoomResponse>;
 }
 
 export function sendListClient(): Promise<ListClientResponse> {

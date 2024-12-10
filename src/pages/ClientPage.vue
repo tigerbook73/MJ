@@ -113,12 +113,6 @@ async function sendRequestAndWait(request: GameRequest): Promise<void> {
   responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
 }
 
-async function sendandreceive(request: GameRequest): Promise<void> {
-  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
-  const response = await socketSendAndWait(request);
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: request });
-}
-
 function listClient() {
   sendRequestAndWait({
     type: GameRequestType.LIST_CLIENT,
@@ -132,7 +126,7 @@ async function listRoom() {
   sendRequestAndWait(request);
 }
 
-function signIn() {
+async function signIn() {
   sendSignIn("hello@admin.com", "admin");
 }
 
