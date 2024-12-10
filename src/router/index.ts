@@ -34,8 +34,8 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !userStore.user) {
       next("/login");
-    } else if (!to.meta.requiresAuth && userStore.user) {
-      next("/lobby");
+      // } else if (!to.meta.requiresAuth && userStore.user) {
+      //   next("/lobby");
     } else {
       next();
     }

@@ -21,8 +21,8 @@ type Item = {
 };
 
 defineProps<{
-  items: Item[];
-  group: number;
+  items: Item[]; // List of rooms passed as props
+  group: number; // Group ID
 }>();
 
 const emit = defineEmits(["clicked"]);
@@ -35,15 +35,15 @@ const handleClick = (id: number, name: string, group: number) => {
 <style scoped>
 .item {
   flex: 1;
-  height: 50px;
+  min-height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: medium;
   font-weight: 500;
-  cursor: pointer; /* Optional: for a clickable effect */
-  padding: 10px; /* Optional: adjust padding to fit your design */
-  margin: 3px; /* Optional: add margin between items */
-  border-radius: 5px; /* Optional: rounded corners */
+  cursor: pointer;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 5px;
 }
 </style>

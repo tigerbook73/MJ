@@ -1,7 +1,7 @@
 <template>
   <q-page class="q-pa-md column flex-center bg-blue-grey-5">
     <q-card class="q-pa-md row flex-center bg-green-1" style="width: 80%; min-height: 500px; flex: 1">
-      <div class="q-pa-md column flex-center bg-blue-grey-3" style="width: 70%; margin: 5px">
+      <div class="q-pa-md row flex-center bg-blue-grey-3" style="width: 70%; margin: 5px">
         <LobbyDiv
           :items="[
             { id: 0, name: '东', class: ' bg-pink-3' },

@@ -9,6 +9,7 @@
         <q-btn @click="listRoom">List Room</q-btn>
         <q-btn @click="signIn">Sign In</q-btn>
         <q-btn @click="listUser">List User</q-btn>
+        <q-btn @click="signOut">Sign Out</q-btn>
       </div>
     </div>
     <q-separator vertical />
@@ -85,7 +86,7 @@ interface ResponseRecord {
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { GameRequest, GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
-import { sendSignIn } from "src/websocket/client.api";
+import { sendSignIn, sendSignout } from "src/websocket/client.api";
 import { socket, socketSend, onSocketReceive, socketState, socketSendAndWait } from "src/websocket/socket";
 import { ref } from "vue";
 
@@ -112,6 +113,12 @@ async function sendRequestAndWait(request: GameRequest): Promise<void> {
   responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
 }
 
+async function sendandreceive(request: GameRequest): Promise<void> {
+  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
+  const response = await socketSendAndWait(request);
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: request });
+}
+
 function listClient() {
   sendRequestAndWait({
     type: GameRequestType.LIST_CLIENT,
@@ -125,8 +132,12 @@ async function listRoom() {
   sendRequestAndWait(request);
 }
 
-async function signIn() {
-  await sendSignIn("hello@admin.com", "admin");
+function signIn() {
+  sendSignIn("hello@admin.com", "admin");
+}
+
+async function signOut() {
+  sendSignout();
 }
 
 function listUser() {
