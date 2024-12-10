@@ -22,20 +22,23 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 import { sendSignIn } from "src/websocket/client.api";
+import { useUserStore } from "src/stores/user-store";
 
 defineOptions({
-  name: "ConnectPage",
+  name: "LoginPage",
 });
 
 const router = useRouter();
 const username = ref("Admin@mj.com");
 const password = ref("Password");
 const loading = ref(false);
+const userStore = useUserStore();
 
 async function login() {
   loading.value = true;
   const response = await sendSignIn(username.value, password.value);
   if (response.status == "success") {
+    userStore.user = response.data;
     router.push("/lobby");
   }
   loading.value = false;

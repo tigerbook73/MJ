@@ -35,6 +35,7 @@ import LobbyDiv from "src/components/LobbyDiv.vue";
 import { sendSignout } from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "src/stores/user-store";
 
 const currentSelection = ref("None");
 const router = useRouter();
@@ -45,8 +46,10 @@ const handleClick = (selection: { id: number; name: string; group: number }) => 
 
 async function logout() {
   const response = await sendSignout();
+  const userStore = useUserStore();
   if (response.status == "success") {
-    router.push("/connect");
+    userStore.user = null;
+    router.push("/login");
   }
 }
 </script>

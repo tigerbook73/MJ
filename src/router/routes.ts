@@ -3,12 +3,20 @@ import { RouteRecordRaw } from "vue-router";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/connect",
+    redirect: "/login",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "connect", component: () => import("pages/ConnectPage.vue") },
-      { path: "game", component: () => import("pages/IndexPage.vue") },
-      { path: "lobby", component: () => import("pages/LobbyPage.vue") },
+      { path: "login", component: () => import("pages/LoginPage.vue") },
+      {
+        path: "game",
+        component: () => import("pages/IndexPage.vue"),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: "lobby",
+        component: () => import("pages/LobbyPage.vue"),
+        meta: { requiresAuth: true },
+      },
       { path: "client-page", component: () => import("pages/ClientPage.vue") },
     ],
   },
