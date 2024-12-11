@@ -4,14 +4,19 @@
     <div class="col-3">
       <div class="row full-height">
         <div class="col-3"></div>
-        <q-btn
-          no-caps
-          flat
-          class="col-6 bg-blue-4"
-          :label="northPlayer?.name"
-          @click="joinRoom(PlayerPosition.North)"
-          :disable="isJoined || isPositionOccupied('North')"
-        ></q-btn>
+        <div no-caps flat class="col-6 bg-blue-4 column flex-center area-player">
+          {{ northPlayer?.name }}
+          <q-menu v-model="showingMenu.North" touch-position>
+            <q-list style="min-width: 100px">
+              <q-item v-show="northPlayer?.type == UserType.Bot" clickable v-close-popup>
+                <q-item-section @click="joinRoom(PlayerPosition.North)">Join the room</q-item-section>
+              </q-item>
+              <q-item v-show="northPlayer?.name == store.user?.email" clickable v-close-popup>
+                <q-item-section @click="leaveRoom">Leave the room</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
         <div class="col-3"></div>
       </div>
     </div>
@@ -19,25 +24,40 @@
     <!-- Center (West, Room Name, East) -->
     <div class="col-6">
       <div class="row full-height">
-        <q-btn
-          no-caps
-          flat
-          class="col-3 bg-blue-4"
-          :label="westPlayer?.name"
-          @click="joinRoom(PlayerPosition.West)"
-          :disable="isJoined || isPositionOccupied('West')"
-        ></q-btn>
+        <!-- West -->
+        <div no-caps flat class="col-3 bg-blue-4 column flex-center area-player">
+          {{ westPlayer?.name }}
+          <q-menu v-model="showingMenu.West" touch-position>
+            <q-list style="min-width: 100px">
+              <q-item v-show="westPlayer?.type == UserType.Bot" clickable v-close-popup>
+                <q-item-section @click="joinRoom(PlayerPosition.West)">Join the room</q-item-section>
+              </q-item>
+              <q-item v-show="westPlayer?.name == store.user?.email" clickable v-close-popup>
+                <q-item-section @click="leaveRoom">Leave the room</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
+
+        <!-- Room Name -->
         <div class="col-6 bg-green-4 row flex-center">
           <div>{{ roomName }}</div>
         </div>
-        <q-btn
-          no-caps
-          flat
-          class="col-3 bg-blue-4"
-          :label="eastPlayer?.name"
-          @click="joinRoom(PlayerPosition.East)"
-          :disable="isJoined || isPositionOccupied('East')"
-        ></q-btn>
+
+        <!-- East -->
+        <div no-caps flat class="col-3 bg-blue-4 column flex-center area-player">
+          {{ eastPlayer?.name }}
+          <q-menu v-model="showingMenu.East" touch-position>
+            <q-list style="min-width: 100px">
+              <q-item v-show="eastPlayer?.type == UserType.Bot" clickable v-close-popup>
+                <q-item-section @click="joinRoom(PlayerPosition.East)">Join the room</q-item-section>
+              </q-item>
+              <q-item v-show="eastPlayer?.name == store.user?.email" clickable v-close-popup>
+                <q-item-section @click="leaveRoom">Leave the room</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
       </div>
     </div>
 
@@ -45,14 +65,19 @@
     <div class="col-3">
       <div class="row full-height">
         <div class="col-3"></div>
-        <q-btn
-          no-caps
-          flat
-          class="col-6 bg-blue-4"
-          :label="southPlayer?.name"
-          @click="joinRoom(PlayerPosition.South)"
-          :disable="isJoined || isPositionOccupied('South')"
-        ></q-btn>
+        <div no-caps flat class="col-6 bg-blue-4 column flex-center area-player">
+          {{ southPlayer?.name }}
+          <q-menu v-model="showingMenu.South" touch-position>
+            <q-list style="min-width: 100px">
+              <q-item v-show="southPlayer?.type == UserType.Bot" clickable v-close-popup>
+                <q-item-section @click="joinRoom(PlayerPosition.South)">Join the room</q-item-section>
+              </q-item>
+              <q-item v-show="southPlayer?.name == store.user?.email" clickable v-close-popup>
+                <q-item-section @click="leaveRoom">Leave the room</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </div>
         <div class="col-3"></div>
       </div>
     </div>
@@ -60,9 +85,14 @@
 </template>
 
 <script setup lang="ts">
-import { PlayerPosition } from "src/common/models/common.types";
-import { socketJoinRoomAndWaitAck } from "src/websocket/client.api";
-import { computed } from "vue";
+import { PlayerPosition, UserType } from "src/common/models/common.types";
+import { userStore } from "src/stores/user-store";
+import {
+  socketJoinRoomAndWaitAck,
+  socketLeaveRoomAndWaitAck,
+  // socketStartGameAndWaitAck,
+} from "src/websocket/client.api";
+import { computed, ref } from "vue";
 // import { useRouter } from "vue-router";
 
 interface Props {
@@ -77,7 +107,16 @@ const props = withDefaults(defineProps<Props>(), {
   players: () => [],
 });
 
+const showingMenu = ref({
+  North: false,
+  South: false,
+  East: false,
+  West: false,
+});
+
 const emits = defineEmits(["update"]);
+
+const store = userStore();
 
 const northPlayer = computed(() => {
   return props.players.find((p) => p.position === PlayerPosition.North);
@@ -96,10 +135,6 @@ const eastPlayer = computed(() => {
 });
 // const router = useRouter();
 
-function isPositionOccupied(position: string): boolean {
-  return props.players.some((p) => p.position === position);
-}
-
 async function joinRoom(position: PlayerPosition) {
   try {
     // Make the socket request to join the room
@@ -115,6 +150,38 @@ async function joinRoom(position: PlayerPosition) {
     alert("An error occurred while trying to join the room.");
   }
 }
+
+async function leaveRoom() {
+  try {
+    // Example API call to leave the room
+    const response = await socketLeaveRoomAndWaitAck(props.roomName);
+
+    if (response.status === "success") {
+      emits("update"); // Notify parent to refresh the room state
+    } else {
+      alert(`Failed to leave room: ${response.message}`);
+    }
+  } catch (error) {
+    console.error("Error leaving room:", error);
+    alert("An error occurred while trying to leave the room.");
+  }
+}
+
+// function startGame using socketStartGameAndWaitAck
+// async function startGame() {
+//   try {
+//     const response = await socketStartGameAndWaitAck();
+
+//     if (response.status === "success") {
+//       // router.push("/game");
+//     } else {
+//       alert(`Failed to start game: ${response.message}`);
+//     }
+//   } catch (error) {
+//     console.error("Error starting game:", error);
+//     alert("An error occurred while trying to start the game.");
+//   }
+// }
 </script>
 
 <style lang="scss">

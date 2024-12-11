@@ -8,6 +8,8 @@ import {
   JoinRoomRequest,
   LeaveRoomRequest,
   LeaveRoomResponse,
+  StartGameResponse,
+  StartGameRequest,
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
 import { PlayerPosition } from "src/common/models/common.types";
@@ -51,4 +53,13 @@ export function socketLeaveRoomAndWaitAck(roomName: string): Promise<LeaveRoomRe
   };
 
   return socketSendAndWait(request) as Promise<LeaveRoomResponse>;
+}
+
+// socketStartGameAnWaitAck
+export function socketStartGameAndWaitAck(): Promise<StartGameResponse> {
+  const request: StartGameRequest = {
+    type: GameRequestType.START_GAME,
+  };
+
+  return socketSendAndWait(request) as Promise<StartGameResponse>;
 }
