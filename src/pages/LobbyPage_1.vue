@@ -28,7 +28,14 @@
 </template>
 
 <script setup lang="ts">
-import { sendDeleteRoom, sendJoinRoom, sendListRoom, sendSignout } from "src/websocket/client.api";
+import {
+  sendCreateRoom,
+  sendDeleteRoom,
+  sendJoinRoom,
+  sendLeaveRoom,
+  sendListRoom,
+  sendSignout,
+} from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user-store";
@@ -58,18 +65,17 @@ async function logout() {
     router.push("/login");
   }
 }
-
 async function creatRoom(roomName: string) {
   if (haveRoom.value) {
     const response = await sendDeleteRoom(roomName);
     if (response.status == "success") {
-      haveRoom.value = true;
+      haveRoom.value = false;
       refreshRooms();
     }
   } else {
-    const response = await sendDeleteRoom(roomName);
+    const response = await sendCreateRoom(roomName);
     if (response.status == "success") {
-      haveRoom.value = false;
+      haveRoom.value = true;
       refreshRooms();
     }
   }
@@ -83,10 +89,9 @@ async function joinRoom() {
     }
   }
 }
-
 async function leaveRoom() {
   if (currentRoom.value) {
-    const response = await sendJoinRoom(currentRoom.value, currentPos.value);
+    const response = await sendLeaveRoom(currentRoom.value);
     if (response.status == "success") {
       refreshRooms();
     }

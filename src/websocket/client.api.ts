@@ -19,7 +19,6 @@ import {
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
 import { PlayerPosition } from "src/common/models/common.types";
-import { RoomCreateDto } from "src/common/models/room.model";
 
 export function sendSignIn(email: string, password: string): Promise<SignInResponse> {
   const request: SignInRequest = {
@@ -73,10 +72,10 @@ export function sendLeaveRoom(roomName: string): Promise<LeaveRoomResponse> {
   return socketSendAndWait(request) as Promise<LeaveRoomResponse>;
 }
 
-export function sendCreateRoom(name: RoomCreateDto): Promise<CreateRoomResponse> {
+export function sendCreateRoom(name: string): Promise<CreateRoomResponse> {
   const request: CreateRoomRequest = {
     type: GameRequestType.CREATE_ROOM,
-    data: name,
+    data: { name },
   };
   return socketSendAndWait(request) as Promise<CreateRoomResponse>;
 }
