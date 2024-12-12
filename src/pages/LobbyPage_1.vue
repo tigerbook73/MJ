@@ -31,16 +31,18 @@ import { sendListRoom, sendSignout } from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user-store";
-import LobbyDiv from "src/components/LobbyDiv.vue";
+import { RoomModel } from "src/common/models/room.model";
 
 const currentSelection = ref("None");
 const router = useRouter();
-const room = ref([]);
-const rooms = ref([][]);
+const rooms = ref([] as RoomModel[]);
 
-async function refresh() {
+async function refreshRooms() {
   const response = await sendListRoom();
-  rooms.value = response.data;
+  rooms.value = [];
+  for (const room of response.data) {
+    rooms.value.push(room);
+  }
 }
 
 async function logout() {
