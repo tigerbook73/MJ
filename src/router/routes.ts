@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "lobby",
-        component: () => import("pages/LobbyPage.vue"),
+        component: () => import("pages/LobbyPage_1.vue"),
         meta: { requiresAuth: true },
       },
       { path: "client-page", component: () => import("pages/ClientPage.vue") },
