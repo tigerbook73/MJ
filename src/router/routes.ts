@@ -9,6 +9,7 @@ const routes: RouteRecordRaw[] = [
       { path: "sign-in", component: () => import("pages/LoginPage.vue") },
       { path: "join-game", component: () => import("pages/JoinGamePage.vue"), meta: { requiresAuth: true } },
       { path: "game-page", component: () => import("pages/GamePage.vue") },
+      { path: "index-page", component: () => import("pages/IndexPage.vue") },
       { path: "client-page", component: () => import("pages/ClientPage.vue") },
     ],
   },

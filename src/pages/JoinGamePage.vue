@@ -20,6 +20,7 @@ import { useRouter } from "vue-router";
 import { userStore } from "src/stores/user-store";
 import { socketListRoomAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
+import { PlayerModel } from "src/common/models/player.model";
 
 defineOptions({
   name: "JoinGamePage",
@@ -40,7 +41,7 @@ if (!store.user) {
 // define room interface
 interface Room {
   name: string;
-  players: { name: string; position: string; type: string }[];
+  players: PlayerModel[];
 }
 
 // define rooms array ref var
@@ -58,11 +59,7 @@ async function refreshRooms() {
     if (response.status === "success") {
       rooms.value = response.data.map((room) => ({
         name: room.name,
-        players: room.players.map((player) => ({
-          name: player.userName,
-          position: player.position,
-          type: player.type,
-        })),
+        players: room.players,
       }));
     } else {
       alert(`Failed to fetch rooms: ${response.message}`);
