@@ -12,6 +12,7 @@
 import GameArea from "components/GameArea.vue";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
+// import { userStore } from "src/stores/user-store";
 import { useRouter } from "vue-router";
 
 defineOptions({
@@ -19,6 +20,7 @@ defineOptions({
 });
 
 const mjStore = useMjStore();
+// const user = userStore();
 const router = useRouter();
 
 function resume() {

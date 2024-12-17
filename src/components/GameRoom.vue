@@ -91,7 +91,7 @@ const canStartGame = computed(() => {
 // function startGame using socketStartGameAndWaitAck
 async function startGame() {
   try {
-    const response = await socketStartGameAndWaitAck();
+    const response = await socketStartGameAndWaitAck(props.roomName);
 
     if (response.status === "success") {
       router.push("/game-page");

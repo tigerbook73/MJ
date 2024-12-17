@@ -56,9 +56,12 @@ export function socketLeaveRoomAndWaitAck(roomName: string): Promise<LeaveRoomRe
 }
 
 // socketStartGameAnWaitAck
-export function socketStartGameAndWaitAck(): Promise<StartGameResponse> {
+export function socketStartGameAndWaitAck(roomName: string): Promise<StartGameResponse> {
   const request: StartGameRequest = {
     type: GameRequestType.START_GAME,
+    data: {
+      roomName,
+    },
   };
 
   return socketSendAndWait(request) as Promise<StartGameResponse>;
