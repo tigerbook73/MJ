@@ -23,6 +23,7 @@ import { useRouter } from "vue-router";
 
 import { sendSignIn } from "src/websocket/client.api";
 import { useUserStore } from "src/stores/user-store";
+import { wait } from "src/core/timer";
 
 defineOptions({
   name: "LoginPage",
@@ -36,6 +37,7 @@ const userStore = useUserStore();
 
 async function login() {
   loading.value = true;
+  await wait(2000);
   const response = await sendSignIn(username.value, password.value);
   if (response.status == "success") {
     userStore.user = response.data;
