@@ -140,22 +140,4 @@ async function signOut() {
   const data = await clientApi.signOut();
   updateResponse(GameRequestType.SIGN_OUT, data);
 }
-
-async function listClient() {
-  updateRequest(GameRequestType.LIST_CLIENT, {});
-  const data = await clientApi.listClient();
-  updateResponse(GameRequestType.LIST_CLIENT, data);
-}
-
-async function listRoom() {
-  updateRequest(GameRequestType.LIST_ROOM, {});
-  const data = await clientApi.listRoom();
-  updateResponse(GameRequestType.LIST_ROOM, data);
-}
-
-async function listUser() {
-  updateRequest(GameRequestType.LIST_USER, {});
-  const data = await clientApi.listUser();
-  updateResponse(GameRequestType.LIST_USER, data);
-}
 </script>
