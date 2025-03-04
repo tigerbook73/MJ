@@ -3,12 +3,10 @@
     <div class="col-3 q-ma-md column">
       <q-btn to="/">Home</q-btn>
 
-      <div class="q-my-md text-h6">{{ socketState.connected ? "Connected" : "Disconnected" }}</div>
-      <div class="class q-gutter-md">
-        <q-btn @click="listClient">List Client</q-btn>
-        <q-btn @click="listRoom">List Room</q-btn>
-        <q-btn @click="signIn">Sign In</q-btn>
-        <q-btn @click="listUser">List User</q-btn>
+      <div class="q-my-md text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
+      <div class="row q-gutter-sm">
+        <q-btn dense @click="signIn">Sign In</q-btn>
+        <q-btn dense @click="signOut">Sign Out</q-btn>
       </div>
     </div>
     <q-separator vertical />
@@ -73,77 +71,73 @@
 <script lang="ts">
 interface RequestRecord {
   time: string;
-  request: GameRequest;
+  request: {
+    type: GameRequestType;
+    data?: unknown;
+  };
 }
 
 interface ResponseRecord {
   time: string;
-  response: GameResponse;
+  response: {
+    type: GameRequestType;
+    data?: unknown;
+  };
 }
 </script>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
-import { GameRequest, GameRequestType, GameResponse, ListRoomRequest } from "src/common/protocols/apis.models";
-import { socket, socketSend, onSocketReceive, socketState, socketSendAndWait } from "src/websocket/socket";
+import { clientApi } from "src/client/client-api";
+import { GameRequestType, GameResponse } from "src/common/protocols/apis.models";
 import { ref } from "vue";
 
 defineOptions({
   name: "ClientPage",
 });
 
+const connected = ref(clientApi.gameSocket.connected);
+clientApi.gameSocket.onConnect(() => {
+  connected.value = true;
+});
+clientApi.gameSocket.onDisconnect(() => {
+  connected.value = false;
+});
+
 const requestList = ref([] as RequestRecord[]);
 const responseList = ref([] as ResponseRecord[]);
 
-function sendRequest(request: GameRequest): void {
-  if (socket.connected) {
-    socketSend(request);
-    requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
-  }
+function updateRequest(type: GameRequestType, data: unknown): void {
+  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: { type, data } });
 }
-sendRequest({
-  type: GameRequestType.LIST_CLIENT,
+
+function updateResponse(type: GameRequestType, data: unknown): void {
+  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: { type, data } });
+}
+
+clientApi.gameSocket.onReceive((data: GameResponse) => {
+  updateResponse(data.type, data.data);
 });
 
-async function sendRequestAndWait(request: GameRequest): Promise<void> {
-  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
-  const response = await socketSendAndWait(request);
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
-}
+/**
+ * sign in
+ */
+const email = ref("player1@gmail.com");
+const password = ref("123456");
 
-function listClient() {
-  sendRequestAndWait({
-    type: GameRequestType.LIST_CLIENT,
-  });
-}
-
-async function listRoom() {
-  const request: ListRoomRequest = {
-    type: GameRequestType.LIST_ROOM,
+async function signIn() {
+  const request = {
+    email: email.value,
+    password: password.value,
   };
-  sendRequestAndWait(request);
+  updateRequest(GameRequestType.SIGN_IN, request);
+  const data = await clientApi.signIn(request.email, request.password);
+  updateResponse(GameRequestType.SIGN_IN, data);
 }
 
-function signIn() {
-  sendRequestAndWait({
-    type: GameRequestType.SIGN_IN,
-    data: {
-      email: "admin@hello.com",
-      password: "admin",
-    },
-  });
+async function signOut() {
+  updateRequest(GameRequestType.SIGN_OUT, {});
+  const data = await clientApi.signOut();
+  updateResponse(GameRequestType.SIGN_OUT, data);
 }
-
-function listUser() {
-  sendRequestAndWait({
-    type: GameRequestType.LIST_USER,
-  });
-}
-
-// function resetGame() {}
-// function startGame() {}
-
-onSocketReceive((data: GameResponse) => {
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: data });
-});
 </script>
