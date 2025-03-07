@@ -14,9 +14,9 @@
 </template>
 
 <script setup lang="ts">
+import { clientApi } from "src/client/client-api";
 import { UserModel } from "src/common/models/user.model";
 import { userStore } from "src/stores/user-store";
-import { socketSignInAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -36,13 +36,20 @@ async function login() {
 
   try {
     // Send sign-in request and wait for acknowledgment
-    const response = await socketSignInAndWaitAck(email.value, password.value);
+    const response = await clientApi.signIn(email.value, password.value);
 
-    if (response.status === "success") {
+    if (response) {
       console.log("Sign-in successful:", response);
 
       if (!store.user) {
-        store.user = new UserModel({ name: "", firstName: "", lastName: "", email: "" }, "");
+        store.user = new UserModel(
+          response.name,
+          response.firstName || "",
+          response.lastName || "",
+          response.email,
+          response.password,
+          response.type,
+        );
       }
       store.user.email = email.value;
       store.user.password = password.value;
@@ -50,8 +57,8 @@ async function login() {
       // Navigate to Join Page
       router.push("/join-game");
     } else {
-      console.error("Sign-in failed:", response.message);
-      alert("Login failed: " + response.message);
+      console.error("Sign-in failed:", response);
+      alert("Login failed: " + response);
     }
   } catch (error) {
     console.error("Sign-in error:", error);

@@ -48,12 +48,14 @@
 </template>
 
 <script setup lang="ts">
-import { PlayerPosition, UserType } from "src/common/models/common.types";
-import { socketStartGameAndWaitAck } from "src/websocket/client.api";
+import { UserType } from "src/common/models/common.types";
+
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import PositionPlayer from "./PositionPlayer.vue";
 import { PlayerModel } from "src/common/models/player.model";
+import { Position } from "src/common/core/mj.game";
+import { clientApi } from "src/client/client-api";
 
 interface Props {
   roomName: string;
@@ -67,19 +69,19 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const northPlayer = computed(() => {
-  return props.players.find((p) => p.position === PlayerPosition.North) as PlayerModel;
+  return props.players.find((p) => p.position === Position.North) as PlayerModel;
 });
 
 const southPlayer = computed(() => {
-  return props.players.find((p) => p.position === PlayerPosition.South) as PlayerModel;
+  return props.players.find((p) => p.position === Position.South) as PlayerModel;
 });
 
 const westPlayer = computed(() => {
-  return props.players.find((p) => p.position === PlayerPosition.West) as PlayerModel;
+  return props.players.find((p) => p.position === Position.West) as PlayerModel;
 });
 
 const eastPlayer = computed(() => {
-  return props.players.find((p) => p.position === PlayerPosition.East) as PlayerModel;
+  return props.players.find((p) => p.position === Position.East) as PlayerModel;
 });
 
 const router = useRouter();
@@ -91,12 +93,11 @@ const canStartGame = computed(() => {
 // function startGame using socketStartGameAndWaitAck
 async function startGame() {
   try {
-    const response = await socketStartGameAndWaitAck(props.roomName);
-
-    if (response.status === "success") {
+    const response = await clientApi.startGame();
+    if (response) {
       router.push("/game-page");
     } else {
-      alert(`Failed to start game: ${response.message}`);
+      alert(`Failed to start game: ${response}`);
     }
   } catch (error) {
     console.error("Error starting game:", error);

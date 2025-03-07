@@ -20,7 +20,7 @@ import { UserType } from "src/common/models/common.types";
 import { userStore } from "src/stores/user-store";
 // import { RoomModel } from "src/common/models/room.model";
 import { PlayerModel } from "src/common/models/player.model";
-import { socketJoinRoomAndWaitAck, socketLeaveRoomAndWaitAck } from "src/websocket/client.api";
+import { clientApi } from "src/client/client-api";
 
 const props = defineProps<{
   player: PlayerModel;
@@ -34,12 +34,12 @@ const isActive = computed(() => props.player?.userName === store.user?.email);
 async function joinRoom() {
   try {
     // Make the socket request to join the room
-    const response = await socketJoinRoomAndWaitAck(props.player.roomName, props.player.position);
+    const response = await await clientApi.joinRoom(props.player.roomName, props.player.position);
 
-    if (response.status === "success") {
+    if (response) {
       emits("update");
     } else {
-      alert(`Failed to join room: ${response.message}`);
+      alert(`Failed to join room: ${response}`);
     }
   } catch (error) {
     console.error("Error joining room:", error);
@@ -50,13 +50,7 @@ async function joinRoom() {
 async function leaveRoom() {
   try {
     // Example API call to leave the room
-    const response = await socketLeaveRoomAndWaitAck(props.player.roomName);
-
-    if (response.status === "success") {
-      emits("update"); // Notify parent to refresh the room state
-    } else {
-      alert(`Failed to leave room: ${response.message}`);
-    }
+    await clientApi.leaveRoom(props.player.roomName);
   } catch (error) {
     console.error("Error leaving room:", error);
     alert("An error occurred while trying to leave the room.");

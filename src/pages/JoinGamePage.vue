@@ -18,9 +18,9 @@
 import GameRoom from "src/components/GameRoom.vue";
 import { useRouter } from "vue-router";
 import { userStore } from "src/stores/user-store";
-import { socketListRoomAndWaitAck } from "src/websocket/client.api";
 import { ref } from "vue";
 import { PlayerModel } from "src/common/models/player.model";
+import { clientApi } from "src/client/client-api";
 
 defineOptions({
   name: "JoinGamePage",
@@ -54,15 +54,15 @@ async function refreshRooms() {
   loading.value = true;
 
   try {
-    const response = await socketListRoomAndWaitAck();
+    const response = await clientApi.listRoom();
 
-    if (response.status === "success") {
-      rooms.value = response.data.map((room) => ({
+    if (response && response.length > 0) {
+      rooms.value = response.map((room) => ({
         name: room.name,
         players: room.players,
       }));
     } else {
-      alert(`Failed to fetch rooms: ${response.message}`);
+      alert(`Failed to fetch rooms: ${response}`);
     }
   } catch (error) {
     console.error("Error fetching rooms:", error);
