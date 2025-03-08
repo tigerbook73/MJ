@@ -212,7 +212,7 @@ class MessageRecord {
   }
 
   getClass() {
-    return this.state === "pending" ? "text-brown" : this.state === "completed" ? "text-green" : "text-red";
+    return this.state === "pending" ? "text-warning" : this.state === "completed" ? "text-positive" : "text-negative";
   }
 }
 </script>
