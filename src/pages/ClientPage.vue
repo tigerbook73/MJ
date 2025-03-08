@@ -1,37 +1,50 @@
 <template>
-  <q-page class="row justify-between">
-    <div class="col-3 q-ma-md column">
-      <q-btn to="/">Home</q-btn>
+  <q-page class="row">
+    <div class="col-4 q-ma-md">
+      <div class="row items-stretch">
+        <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
+        <q-space />
+        <div><q-btn to="/">Home</q-btn></div>
+      </div>
 
-      <div class="q-my-md text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
-      <div class="column q-gutter-md">
+      <q-separator class="q-my-md" />
+
+      <div>
         <!-- list client -->
-        <div class="row justify-between">
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
-          <q-btn dense @click="listClient">List Client</q-btn>
+          <div class="col-3">
+            <q-btn class="fit" dense @click="listClient">List Client</q-btn>
+          </div>
         </div>
 
         <!-- sign in -->
-        <div class="row justify-between">
-          <q-input v-model="email" label="Email" dense outlined />
-          <q-input v-model="password" label="Password" dense outlined />
-          <q-btn dense @click="signIn">Sign In</q-btn>
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="email" label="Email" class="col" dense outlined />
+          <q-input v-model="password" label="Password" class="col" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="signIn">Sign In</q-btn>
+          </div>
         </div>
 
         <!-- sign out -->
-        <div class="row justify-between">
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
-          <q-btn dense @click="signOut">Sign Out</q-btn>
+          <div class="col-3">
+            <q-btn class="fit" dense @click="signOut">Sign Out</q-btn>
+          </div>
         </div>
 
         <!-- list room -->
-        <div class="row justify-between">
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
-          <q-btn dense @click="listRoom">List Room</q-btn>
+          <div class="col-3">
+            <q-btn class="fit" dense @click="listRoom">List Room</q-btn>
+          </div>
         </div>
 
         <!-- join room -->
-        <div class="row justify-between">
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="roomName" label="Room Name" dense outlined />
           <q-select
             v-model="position"
@@ -41,7 +54,9 @@
             outlined
             :options="[Position.East, Position.South, Position.West, Position.North]"
           />
-          <q-btn dense @click="joinRoom">Join Room</q-btn>
+          <div class="col-3">
+            <q-btn class="fit" dense @click="joinRoom">Join Room</q-btn>
+          </div>
         </div>
       </div>
     </div>
@@ -49,9 +64,9 @@
     <q-separator vertical />
 
     <div class="col column">
-      <!-- request -->
+      <!-- Messages -->
       <q-item>
-        <q-item-section>Request</q-item-section>
+        <q-item-section>Messages</q-item-section>
         <q-btn @click="messageList = []" dense>Clean</q-btn>
       </q-item>
       <q-scroll-area class="col">
@@ -184,9 +199,22 @@ clientApi.gameSocket.onReceive((response: GameResponse) => {
   appendMessage(response.type, null, response.data);
 });
 
-/**
- * sign in
- */
+// list client
+async function listClient() {
+  const request: ListClientRequest = {
+    type: GameRequestType.LIST_CLIENT,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.listClient();
+    updateMessage(message, null, data);
+  } catch (error: any) {
+    updateMessage(message, null, { message: error.message });
+  }
+}
+
+// sign in
 const email = ref("player1@gmail.com");
 const password = ref("123456");
 async function signIn() {
@@ -206,6 +234,7 @@ async function signIn() {
   }
 }
 
+// sign out
 async function signOut() {
   const request: SignOutRequest = {
     type: GameRequestType.SIGN_OUT,
@@ -220,20 +249,7 @@ async function signOut() {
   }
 }
 
-async function listClient() {
-  const request: ListClientRequest = {
-    type: GameRequestType.LIST_CLIENT,
-    data: {},
-  };
-  const message = appendMessage(request.type, request.data, null);
-  try {
-    const data = await clientApi.listClient();
-    updateMessage(message, null, data);
-  } catch (error: any) {
-    updateMessage(message, null, { message: error.message });
-  }
-}
-
+// list room
 async function listRoom() {
   const request: ListRoomRequest = {
     type: GameRequestType.LIST_ROOM,
@@ -248,7 +264,8 @@ async function listRoom() {
   }
 }
 
-const roomName = ref("default");
+// join room
+const roomName = ref("room-1");
 const position = ref(Position.North);
 async function joinRoom() {
   const request: JoinRoomRequest = {
