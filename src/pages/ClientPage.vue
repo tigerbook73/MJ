@@ -4,7 +4,7 @@
       <div class="row items-stretch">
         <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
         <q-space />
-        <div><q-btn to="/">Home</q-btn></div>
+        <div><q-btn to="/" no-caps>Home</q-btn></div>
       </div>
 
       <q-separator class="q-my-md" />
@@ -14,7 +14,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="listClient">List Client</q-btn>
+            <q-btn class="fit" dense @click="listClient" no-caps>List Client</q-btn>
           </div>
         </div>
 
@@ -23,7 +23,7 @@
           <q-input v-model="email" label="Email" class="col" dense outlined />
           <q-input v-model="password" label="Password" class="col" dense outlined />
           <div class="col-3">
-            <q-btn class="fit" dense @click="signIn">Sign In</q-btn>
+            <q-btn class="fit" dense @click="signIn" no-caps>Sign In</q-btn>
           </div>
         </div>
 
@@ -31,7 +31,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="signOut">Sign Out</q-btn>
+            <q-btn class="fit" dense @click="signOut" no-caps>Sign Out</q-btn>
           </div>
         </div>
 
@@ -39,7 +39,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="listRoom">List Room</q-btn>
+            <q-btn class="fit" dense @click="listRoom" no-caps>List Room</q-btn>
           </div>
         </div>
 
@@ -55,7 +55,7 @@
             :options="[Position.East, Position.South, Position.West, Position.North]"
           />
           <div class="col-3">
-            <q-btn class="fit" dense @click="joinRoom">Join Room</q-btn>
+            <q-btn class="fit" dense @click="joinRoom" no-caps>Join Room</q-btn>
           </div>
         </div>
 
@@ -63,7 +63,23 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="leaveRoomName" label="Room Name" dense outlined />
           <div class="col-3">
-            <q-btn class="fit" dense @click="leaveRoom">Leave Room</q-btn>
+            <q-btn class="fit" dense @click="leaveRoom" no-caps>Leave Room</q-btn>
+          </div>
+        </div>
+
+        <!-- enter game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="enterGameRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="enterGame" no-caps>Enter Game</q-btn>
+          </div>
+        </div>
+
+        <!-- quit game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="quitGameRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="quitGame" no-caps>Quit Game</q-btn>
           </div>
         </div>
       </div>
@@ -75,7 +91,7 @@
       <!-- Messages -->
       <q-item>
         <q-item-section>Messages</q-item-section>
-        <q-btn @click="messageList = []" dense>Clean</q-btn>
+        <q-btn @click="messageList = []" dense no-caps>Clean</q-btn>
       </q-item>
       <q-scroll-area class="col">
         <q-list bordered>
@@ -306,6 +322,44 @@ async function leaveRoom() {
   const message = appendMessage(request.type, request.data, null);
   try {
     const data = await clientApi.leaveRoom(request.data.roomName);
+    updateMessage(message, null, data);
+  } catch (error: any) {
+    updateMessage(message, null, { message: error.message });
+  }
+}
+
+// enter game
+const enterGameRoomName = ref("room-1");
+
+async function enterGame() {
+  const request = {
+    type: GameRequestType.ENTER_GAME,
+    data: {
+      roomName: enterGameRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.enterGame(request.data.roomName);
+    updateMessage(message, null, data);
+  } catch (error: any) {
+    updateMessage(message, null, { message: error.message });
+  }
+}
+
+// quit game
+const quitGameRoomName = ref("room-1");
+
+async function quitGame() {
+  const request = {
+    type: GameRequestType.QUIT_GAME,
+    data: {
+      roomName: quitGameRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.quitGame(request.data.roomName);
     updateMessage(message, null, data);
   } catch (error: any) {
     updateMessage(message, null, { message: error.message });
