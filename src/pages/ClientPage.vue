@@ -58,6 +58,14 @@
             <q-btn class="fit" dense @click="joinRoom">Join Room</q-btn>
           </div>
         </div>
+
+        <!-- leave room -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="leaveRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="leaveRoom">Leave Room</q-btn>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -148,6 +156,7 @@ import {
   GameRequestType,
   GameResponse,
   JoinRoomRequest,
+  LeaveRoomRequest,
   ListClientRequest,
   ListRoomRequest,
   SignInRequest,
@@ -278,6 +287,25 @@ async function joinRoom() {
   const message = appendMessage(request.type, request.data, null);
   try {
     const data = await clientApi.joinRoom(request.data.roomName, request.data.position);
+    updateMessage(message, null, data);
+  } catch (error: any) {
+    updateMessage(message, null, { message: error.message });
+  }
+}
+
+// leave room
+const leaveRoomName = ref("room-1");
+
+async function leaveRoom() {
+  const request: LeaveRoomRequest = {
+    type: GameRequestType.LEAVE_ROOM,
+    data: {
+      roomName: leaveRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.leaveRoom(request.data.roomName);
     updateMessage(message, null, data);
   } catch (error: any) {
     updateMessage(message, null, { message: error.message });
