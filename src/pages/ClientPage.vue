@@ -47,7 +47,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="roomName" label="Room Name" dense outlined />
           <q-select
-            v-model="position"
+            v-model.number="position"
             label="Position"
             class="col"
             dense
@@ -101,7 +101,7 @@
 
         <!-- action drop -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-input v-model="tileToDrop" label="Tile ID" dense outlined />
+          <q-input v-model.number="tileToDrop" label="Tile ID" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="actionDrop" no-caps>Drop Tile</q-btn>
           </div>
@@ -131,9 +131,9 @@
       <!-- Messages -->
       <q-item>
         <q-item-section>
-          <div class="row q-gutter-md">
-            <div>Messages</div>
-            <q-toggle v-model="showEvent" label="Event" dense />
+          <div class="row q-gutter-md items-center">
+            <q-btn-toggle v-model="mode" :options="modeOptions" />
+            <q-toggle v-model="showEvent" label="Event" />
             <div class="bg-warning border">Pending</div>
             <div class="bg-positive border">Completed</div>
             <div class="bg-negative border">Failed</div>
@@ -141,8 +141,9 @@
         </q-item-section>
         <q-btn @click="messageList = []" dense no-caps>Clean</q-btn>
       </q-item>
+
       <q-scroll-area class="col">
-        <q-list bordered>
+        <q-list v-show="mode === 'message'" bordered>
           <div v-for="message in messageList" :key="message.label">
             <q-expansion-item v-show="message.request || showEvent" expand-separator dense>
               <template v-slot:header>
@@ -161,6 +162,7 @@
             </q-expansion-item>
           </div>
         </q-list>
+        <GameCore v-show="mode === 'game'" :game="game as any" @drop="handleDrop" />
       </q-scroll-area>
 
       <q-separator></q-separator>
@@ -232,6 +234,7 @@ import {
   SignInRequest,
   SignOutRequest,
 } from "src/common/protocols/apis.models";
+import GameCore from "src/components/websocket/GameCore.vue";
 import { ref } from "vue";
 
 defineOptions({
@@ -245,6 +248,12 @@ clientApi.gameSocket.onConnect(() => {
 clientApi.gameSocket.onDisconnect(() => {
   connected.value = false;
 });
+
+const mode = ref("message");
+const modeOptions = [
+  { label: "Message", value: "message" },
+  { label: "Game", value: "game" },
+];
 
 const messageList = ref([] as MessageRecord[]);
 const showEvent = ref(false);
@@ -406,6 +415,7 @@ async function enterGame() {
   const message = appendMessage(request.type, request.data, null);
   try {
     const data = await clientApi.enterGame(request.data.roomName);
+    game.value = data.game;
     updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
@@ -455,7 +465,7 @@ async function resetGame() {
   try {
     const data = await clientApi.resetGame();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -473,7 +483,7 @@ async function actionDrop() {
   try {
     const data = await clientApi.actionDrop(request.data.tileId);
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -488,7 +498,7 @@ async function actionPass() {
   try {
     const data = await clientApi.actionPass();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -503,9 +513,16 @@ async function actionHu() {
   try {
     const data = await clientApi.actionHu();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+function handleDrop(tileId?: TileId) {
+  if (tileId) {
+    tileToDrop.value = tileId;
+    actionDrop();
   }
 }
 </script>
