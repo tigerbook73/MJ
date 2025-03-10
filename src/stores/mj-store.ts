@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { TileCore } from "src/common/core/mj.tile-core";
 import { voidCard, voidTileId } from "src/core/mjCard";
 import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
@@ -12,12 +13,18 @@ interface HandCard {
 }
 
 function copy(playerIndex: number) {
-  const cards = mjGame.players[playerIndex].hand.map((tile) => ({
-    name: tile.name,
-    id: tile.id,
-    options: { selected: false },
-  }));
-  if (cards.length == 0) {
+  const player = mjGame.players[playerIndex];
+  if (!player || !player.handTiles) return [];
+
+  const cards = player.handTiles.map((tileId) => {
+    const tile = TileCore.fromId(tileId);
+    return {
+      name: tile.name,
+      id: tile.id,
+      options: { selected: false },
+    };
+  });
+  if (cards?.length == 0) {
     return cards;
   }
   cards[14] = cards[13] ?? {
@@ -36,7 +43,9 @@ export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const canHu = ref(false);
   const current = ref(mjGame.current);
-  const paused = ref(false);
+  const activePositions = mjGame.players.filter((player) => player !== null).map((player) => player!.position);
+
+  // const paused = ref(false);
 
   const topWall = ref([] as HandCard[]);
   const bottomWall = ref([] as HandCard[]);
@@ -46,74 +55,116 @@ export const useMjStore = defineStore("mj", () => {
   const p1Cards = ref([] as HandCard[]);
   const p2Cards = ref([] as HandCard[]);
   const p3Cards = ref([] as HandCard[]);
-  const myCards = ref([] as HandCard[]);
+  const p4Cards = ref([] as HandCard[]); // 以前是mycards
 
   const p1DiscardCards = ref([] as HandCard[]);
   const p2DiscardCards = ref([] as HandCard[]);
   const p3DiscardCards = ref([] as HandCard[]);
-  const myDiscardCards = ref([] as HandCard[]);
+  const p4DiscardCards = ref([] as HandCard[]); // 以前是 myDiscardCards
 
   const myLatestPickCard = ref({ name: "", id: voidTileId, options: { selected: false } });
   const selectedCard = ref({ name: "", id: voidTileId, options: { selected: false } });
 
   function refresh() {
-    topWall.value = mjGame.walls[0].cards.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    rightWall.value = mjGame.walls[1].cards.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    bottomWall.value = mjGame.walls[2].cards.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    leftWall.value = mjGame.walls[3].cards.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    myCards.value = copy(0);
+    topWall.value = mjGame.walls[0].tiles.map((tileId) => {
+      const tile = TileCore.fromId(tileId);
+      return {
+        name: tile.name,
+        id: tile.id,
+        options: { selected: false },
+      };
+    });
+    rightWall.value = mjGame.walls[1].tiles.map((tileId) => {
+      const tile = TileCore.fromId(tileId);
+      return {
+        name: tile.name,
+        id: tile.id,
+        options: { selected: false },
+      };
+    });
+    bottomWall.value = mjGame.walls[2].tiles.map((tileId) => {
+      const tile = TileCore.fromId(tileId);
+      return {
+        name: tile.name,
+        id: tile.id,
+        options: { selected: false },
+      };
+    });
+    leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
+      const tile = TileCore.fromId(tileId);
+      return {
+        name: tile.name,
+        id: tile.id,
+        options: { selected: false },
+      };
+    });
+    p4Cards.value = copy(0); // 以前是mycards
     p1Cards.value = copy(1);
 
     p2Cards.value = copy(2);
     p3Cards.value = copy(3);
-    myDiscardCards.value = mjGame.players[0].discard.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    p1DiscardCards.value = mjGame.players[1].discard.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    p2DiscardCards.value = mjGame.players[2].discard.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
-    p3DiscardCards.value = mjGame.players[3].discard.map((tile) => ({
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    }));
 
-    myLatestPickCard.value = {
-      name: mjGame.players[0].pick.name,
-      id: mjGame.players[0].pick.id,
-      options: { selected: false },
-    };
-    canHu.value = mjGame.canHu();
+    //以前是myDiscardCards
+    p4DiscardCards.value = mjGame.discards
+      .filter((discard) => discard.position === 0)
+      .flatMap((discard) =>
+        discard.tiles.map((tileId) => {
+          const tile = TileCore.fromId(tileId);
+          return {
+            name: tile.name,
+            id: tile.id,
+            options: { selected: false },
+          };
+        }),
+      );
+    p1DiscardCards.value = mjGame.discards
+      .filter((discard) => discard.position === 1)
+      .flatMap((discard) =>
+        discard.tiles.map((tileId) => {
+          const tile = TileCore.fromId(tileId);
+          return {
+            name: tile.name,
+            id: tile.id,
+            options: { selected: false },
+          };
+        }),
+      );
+    p2DiscardCards.value = mjGame.discards
+      .filter((discard) => discard.position === 2)
+      .flatMap((discard) =>
+        discard.tiles.map((tileId) => {
+          const tile = TileCore.fromId(tileId);
+          return {
+            name: tile.name,
+            id: tile.id,
+            options: { selected: false },
+          };
+        }),
+      );
+    p3DiscardCards.value = mjGame.discards
+      .filter((discard) => discard.position === 3)
+      .flatMap((discard) =>
+        discard.tiles.map((tileId) => {
+          const tile = TileCore.fromId(tileId);
+          return {
+            name: tile.name,
+            id: tile.id,
+            options: { selected: false },
+          };
+        }),
+      );
+
+    // myLatestPickCard.value = {
+    //   name: mjGame.players[0].pick.name,
+    //   id: mjGame.players[0].pick.id,
+    //   options: { selected: false },
+    // };
+    canHu.value = mjGame.canHu(mjGame.current?.handTiles ?? []);
     current.value = mjGame.current;
-    paused.value = mjGame.isPaused();
+    // paused.value = mjGame.isPaused();
   }
 
-  mjGame.init();
+  mjGame.init(activePositions);
 
   return {
     // state
@@ -128,13 +179,13 @@ export const useMjStore = defineStore("mj", () => {
     p2DiscardCards,
     p3Cards,
     p3DiscardCards,
-    myCards,
-    myDiscardCards,
+    p4Cards,
+    p4DiscardCards,
     myLatestPickCard,
     canHu,
     selectedCard,
     current,
-    paused,
+    // paused,
     // actions
     refresh,
   };

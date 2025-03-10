@@ -1,4 +1,4 @@
-import { mjGame, State } from "src/core/mjGame";
+import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 import { wait } from "src/utils/timer";
 // import { voidTileId } from "src/core/mjCard";
