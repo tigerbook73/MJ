@@ -2,6 +2,8 @@ import { MjHuPai } from "./mjHuPai";
 import { allTiles, MjCard } from "./mjCard";
 import { MjGame } from "./mjGame";
 
+
+
 function buildTestCards(names: string[]) {
   const cards: MjCard[] = [];
 

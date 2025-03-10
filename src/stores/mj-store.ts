@@ -35,7 +35,7 @@ function copy(playerIndex: number) {
 export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const canHu = ref(false);
-  const currentPlayer = ref(mjGame.currentPlayer);
+  const current = ref(mjGame.current);
   const paused = ref(false);
 
   const topWall = ref([] as HandCard[]);
@@ -109,7 +109,7 @@ export const useMjStore = defineStore("mj", () => {
       options: { selected: false },
     };
     canHu.value = mjGame.canHu();
-    currentPlayer.value = mjGame.currentPlayer;
+    current.value = mjGame.current;
     paused.value = mjGame.isPaused();
   }
 
@@ -133,7 +133,7 @@ export const useMjStore = defineStore("mj", () => {
     myLatestPickCard,
     canHu,
     selectedCard,
-    currentPlayer,
+    current,
     paused,
     // actions
     refresh,
