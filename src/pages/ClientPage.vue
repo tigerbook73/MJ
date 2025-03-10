@@ -1,95 +1,237 @@
 <template>
-  <q-page class="row justify-between">
-    <div class="col-3 q-ma-md column">
-      <q-btn to="/">Home</q-btn>
+  <q-page class="row">
+    <div class="col-4 q-ma-md">
+      <div class="row items-stretch">
+        <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
+        <q-space />
+        <div><q-btn to="/" no-caps>Home</q-btn></div>
+      </div>
 
-      <div class="q-my-md text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
-      <div class="row q-gutter-sm">
-        <q-btn dense @click="signIn">Sign In</q-btn>
-        <q-btn dense @click="signOut">Sign Out</q-btn>
+      <q-separator class="q-my-md" />
+
+      <div>
+        <!-- list client -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="listClient" no-caps>List Client</q-btn>
+          </div>
+        </div>
+
+        <!-- sign in -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="email" label="Email" class="col" dense outlined />
+          <q-input v-model="password" label="Password" class="col" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="signIn" no-caps>Sign In</q-btn>
+          </div>
+        </div>
+
+        <!-- sign out -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="signOut" no-caps>Sign Out</q-btn>
+          </div>
+        </div>
+
+        <!-- list room -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="listRoom" no-caps>List Room</q-btn>
+          </div>
+        </div>
+
+        <!-- join room -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="roomName" label="Room Name" dense outlined />
+          <q-select
+            v-model="position"
+            label="Position"
+            class="col"
+            dense
+            outlined
+            :options="[Position.East, Position.South, Position.West, Position.North]"
+          />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="joinRoom" no-caps>Join Room</q-btn>
+          </div>
+        </div>
+
+        <!-- leave room -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="leaveRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="leaveRoom" no-caps>Leave Room</q-btn>
+          </div>
+        </div>
+
+        <!-- enter game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="enterGameRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="enterGame" no-caps>Enter Game</q-btn>
+          </div>
+        </div>
+
+        <!-- quit game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="quitGameRoomName" label="Room Name" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="quitGame" no-caps>Quit Game</q-btn>
+          </div>
+        </div>
+
+        <!-- start game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="startGame" no-caps>Start Game</q-btn>
+          </div>
+        </div>
+
+        <!-- reset game -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="resetGame" no-caps>Reset Game</q-btn>
+          </div>
+        </div>
+
+        <!-- action drop -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tileToDrop" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionDrop" no-caps>Drop Tile</q-btn>
+          </div>
+        </div>
+
+        <!-- action pass -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionPass" no-caps>Pass</q-btn>
+          </div>
+        </div>
+
+        <!-- action hu -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionHu" no-caps>Hu</q-btn>
+          </div>
+        </div>
       </div>
     </div>
+
     <q-separator vertical />
+
     <div class="col column">
-      <!-- request -->
+      <!-- Messages -->
       <q-item>
-        <q-item-section>Request</q-item-section>
-        <q-btn @click="requestList = []" dense>Clean</q-btn>
+        <q-item-section>
+          <div class="row q-gutter-md">
+            <div>Messages</div>
+            <q-toggle v-model="showEvent" label="Event" dense />
+            <div class="bg-warning border">Pending</div>
+            <div class="bg-positive border">Completed</div>
+            <div class="bg-negative border">Failed</div>
+          </div>
+        </q-item-section>
+        <q-btn @click="messageList = []" dense no-caps>Clean</q-btn>
       </q-item>
       <q-scroll-area class="col">
         <q-list bordered>
-          <q-expansion-item
-            v-for="request in requestList"
-            :key="request.time"
-            expand-separator
-            :label="request.time + ' > ' + request.request.type"
-            dense
-          >
-            <q-input
-              type="textarea"
-              :model-value="JSON.stringify(request.request, null, 2)"
-              autogrow
-              dense
-              readonly
-              class="q-ml-lg"
-            ></q-input>
-          </q-expansion-item>
+          <div v-for="message in messageList" :key="message.label">
+            <q-expansion-item v-show="message.request || showEvent" expand-separator dense>
+              <template v-slot:header>
+                <q-item-section>
+                  <q-item-label :class="message.getClass()">{{ message.label }}</q-item-label>
+                </q-item-section>
+              </template>
+              <div v-if="message.request" class="q-pl-lg">
+                <div>=></div>
+                <q-input type="textarea" :model-value="message.request" autogrow dense readonly></q-input>
+              </div>
+              <div v-if="message.response" class="q-pl-lg">
+                <div>&lt;=</div>
+                <q-input type="textarea" :model-value="message.response" autogrow dense readonly></q-input>
+              </div>
+            </q-expansion-item>
+          </div>
         </q-list>
       </q-scroll-area>
 
       <q-separator></q-separator>
-
-      <!-- response or event -->
-      <q-item>
-        <q-item-section>Response</q-item-section>
-        <q-btn @click="responseList = []" dense>Clean</q-btn>
-      </q-item>
-      <q-scroll-area class="col">
-        <q-list bordered>
-          <q-expansion-item
-            v-for="response in responseList"
-            :key="response.time"
-            expand-separator
-            :label="response.time + ' > ' + response.response.type"
-            dense
-          >
-            <q-input
-              type="textarea"
-              :model-value="JSON.stringify(response.response, null, 2)"
-              autogrow
-              readonly
-              dense
-              class="q-ml-lg"
-            ></q-input>
-          </q-expansion-item>
-        </q-list>
-      </q-scroll-area>
     </div>
   </q-page>
 </template>
 
 <script lang="ts">
-interface RequestRecord {
-  time: string;
-  request: {
-    type: GameRequestType;
-    data?: unknown;
-  };
-}
+class MessageRecord {
+  type: string;
+  label: string = "";
+  request_time: string | null;
+  request: any | null;
+  response_time: string | null;
+  response: any | null;
+  state: "pending" | "completed" | "failed" = "completed";
+  constructor(
+    type: string,
+    request_time: string | null,
+    request: any,
+    response_time: string | null,
+    response: any | null,
+  ) {
+    this.type = type;
+    this.request_time = request_time;
+    this.request = request;
+    this.response_time = response_time;
+    this.response = response;
+  }
 
-interface ResponseRecord {
-  time: string;
-  response: {
-    type: GameRequestType;
-    data?: unknown;
-  };
+  getTimeLabel() {
+    return this.request_time || this.response_time || "N/A";
+  }
+
+  getTypeLabel() {
+    return this.type || "N/A";
+  }
+
+  getLabel() {
+    return this.getTimeLabel() + " - " + this.getTypeLabel();
+  }
+
+  refreshLabel() {
+    this.label = this.getLabel();
+  }
+
+  setState(state: "pending" | "completed" | "failed") {
+    this.state = state;
+  }
+
+  getClass() {
+    return this.state === "pending" ? "text-warning" : this.state === "completed" ? "text-positive" : "text-negative";
+  }
 }
 </script>
 
 <script setup lang="ts">
 import dayjs from "dayjs";
 import { clientApi } from "src/client/client-api";
-import { GameRequestType, GameResponse } from "src/common/protocols/apis.models";
+import { Game, Position } from "src/common/core/mj.game";
+import { TileId } from "src/common/core/mj.tile-core";
+import {
+  GameRequestType,
+  GameResponse,
+  JoinRoomRequest,
+  LeaveRoomRequest,
+  ListClientRequest,
+  ListRoomRequest,
+  SignInRequest,
+  SignOutRequest,
+} from "src/common/protocols/apis.models";
 import { ref } from "vue";
 
 defineOptions({
@@ -104,40 +246,266 @@ clientApi.gameSocket.onDisconnect(() => {
   connected.value = false;
 });
 
-const requestList = ref([] as RequestRecord[]);
-const responseList = ref([] as ResponseRecord[]);
+const messageList = ref([] as MessageRecord[]);
+const showEvent = ref(false);
 
-function updateRequest(type: GameRequestType, data: unknown): void {
-  requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: { type, data } });
+function appendMessage(type: string, request: any | null, response: any | null): MessageRecord {
+  const message = new MessageRecord(
+    type,
+    request ? dayjs().format("YYYY-MM-DD HH:mm:ss SSS") : null,
+    request ? JSON.stringify(request, null, 2) : null,
+    response ? dayjs().format("YYYY-MM-DD HH:mm:ss SSS") : null,
+    response ? JSON.stringify(response, null, 2) : null,
+  );
+  message.refreshLabel();
+
+  if (!response) {
+    message.setState("pending");
+  } else {
+    message.setState("completed");
+  }
+  messageList.value.unshift(message);
+  return message;
 }
 
-function updateResponse(type: GameRequestType, data: unknown): void {
-  responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: { type, data } });
+function updateMessage(
+  message: MessageRecord,
+  response: any | null,
+  state: "pending" | "completed" | "failed",
+): MessageRecord {
+  if (response) {
+    message.response = response ? JSON.stringify(response, null, 2) : null;
+    message.response_time = dayjs().format("YYYY-MM-DD HH:mm:ss SSS");
+  }
+  message.refreshLabel();
+  message.setState(state);
+  messageList.value = [...messageList.value];
+  return message;
 }
 
-clientApi.gameSocket.onReceive((data: GameResponse) => {
-  updateResponse(data.type, data.data);
+clientApi.gameSocket.onReceive((response: GameResponse) => {
+  appendMessage(response.type, null, response.data);
 });
 
-/**
- * sign in
- */
-const email = ref("player1@gmail.com");
-const password = ref("123456");
+const game = ref<Game | null>(null);
 
-async function signIn() {
-  const request = {
-    email: email.value,
-    password: password.value,
+// list client
+async function listClient() {
+  const request: ListClientRequest = {
+    type: GameRequestType.LIST_CLIENT,
+    data: {},
   };
-  updateRequest(GameRequestType.SIGN_IN, request);
-  const data = await clientApi.signIn(request.email, request.password);
-  updateResponse(GameRequestType.SIGN_IN, data);
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.listClient();
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
 }
 
+// sign in
+const email = ref("player1@gmail.com");
+const password = ref("123456");
+async function signIn() {
+  const request: SignInRequest = {
+    type: GameRequestType.SIGN_IN,
+    data: {
+      email: email.value,
+      password: password.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.signIn(request.data.email, request.data.password);
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// sign out
 async function signOut() {
-  updateRequest(GameRequestType.SIGN_OUT, {});
-  const data = await clientApi.signOut();
-  updateResponse(GameRequestType.SIGN_OUT, data);
+  const request: SignOutRequest = {
+    type: GameRequestType.SIGN_OUT,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.signOut();
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// list room
+async function listRoom() {
+  const request: ListRoomRequest = {
+    type: GameRequestType.LIST_ROOM,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.listRoom();
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// join room
+const roomName = ref("room-1");
+const position = ref(Position.North);
+async function joinRoom() {
+  const request: JoinRoomRequest = {
+    type: GameRequestType.JOIN_ROOM,
+    data: {
+      roomName: roomName.value,
+      position: position.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.joinRoom(request.data.roomName, request.data.position);
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// leave room
+const leaveRoomName = ref("room-1");
+
+async function leaveRoom() {
+  const request: LeaveRoomRequest = {
+    type: GameRequestType.LEAVE_ROOM,
+    data: {
+      roomName: leaveRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.leaveRoom(request.data.roomName);
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// enter game
+const enterGameRoomName = ref("room-1");
+
+async function enterGame() {
+  const request = {
+    type: GameRequestType.ENTER_GAME,
+    data: {
+      roomName: enterGameRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.enterGame(request.data.roomName);
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+// quit game
+const quitGameRoomName = ref("room-1");
+
+async function quitGame() {
+  const request = {
+    type: GameRequestType.QUIT_GAME,
+    data: {
+      roomName: quitGameRoomName.value,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.quitGame(request.data.roomName);
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function startGame() {
+  const request = {
+    type: GameRequestType.START_GAME,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.startGame();
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function resetGame() {
+  const request = {
+    type: GameRequestType.RESET_GAME,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.resetGame();
+    game.value = data;
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tileToDrop = ref<TileId>(-1);
+async function actionDrop() {
+  const request = {
+    type: GameRequestType.ACTION_DROP,
+    data: {
+      tileId: tileToDrop.value == -1 ? game.value?.current?.picked || -1 : tileToDrop.value || -1,
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionDrop(request.data.tileId);
+    game.value = data;
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function actionPass() {
+  const request = {
+    type: GameRequestType.ACTION_PASS,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionPass();
+    game.value = data;
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function actionHu() {
+  const request = {
+    type: GameRequestType.ACTION_HU,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionHu();
+    game.value = data;
+    updateMessage(message, {}, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
 }
 </script>
