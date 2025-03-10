@@ -1,8 +1,9 @@
 <template>
   <q-page class="row">
     <div class="col-3 q-ma-md">
-      <div class="row items-stretch">
-        <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
+      <div class="row items-stretch items-center">
+        <div class="text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
+        <q-toggle v-model="showAllCommand" label="Show All Commands" />
         <q-space />
         <div><q-btn to="/" no-caps>Home</q-btn></div>
       </div>
@@ -11,7 +12,7 @@
 
       <div>
         <!-- list client -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="listClient" no-caps>List Client</q-btn>
@@ -28,7 +29,7 @@
         </div>
 
         <!-- sign out -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="signOut" no-caps>Sign Out</q-btn>
@@ -36,7 +37,7 @@
         </div>
 
         <!-- list room -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="listRoom" no-caps>List Room</q-btn>
@@ -60,7 +61,7 @@
         </div>
 
         <!-- leave room -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="leaveRoomName" label="Room Name" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="leaveRoom" no-caps>Leave Room</q-btn>
@@ -75,8 +76,8 @@
           </div>
         </div>
 
-        <!-- quit game -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <!--  quit game -->
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="quitGameRoomName" label="Room Name" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="quitGame" no-caps>Quit Game</q-btn>
@@ -248,6 +249,8 @@ clientApi.gameSocket.onConnect(() => {
 clientApi.gameSocket.onDisconnect(() => {
   connected.value = false;
 });
+
+const showAllCommand = ref(false);
 
 const mode = ref("message");
 const modeOptions = [

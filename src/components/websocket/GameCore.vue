@@ -9,7 +9,11 @@
         <div class="row q-mx-sm">
           <div class="tag">Wall</div>
           <div class="tile-raw row items-center">
-            <div v-for="(tile, index) in props.game?.walls[wallIndex].tiles" :key="index" class="tile">
+            <div
+              v-for="(tile, index) in props.game?.walls[wallIndex].tiles"
+              :key="index"
+              :class="{ tile: tile !== -1, 'void-tile': tile === -1 }"
+            >
               <div>{{ tile == -1 ? "" : tile }}</div>
               <div>{{ TileCore.fromId(tile).name }}</div>
             </div>
@@ -90,6 +94,16 @@ function handleDrop(tile?: TileId) {
   font-size: x-small;
   font-weight: bold;
   cursor: pointer;
+  margin-right: 2px;
+}
+
+.void-tile {
+  width: 23px;
+  min-height: 38px;
+  text-align: center;
+  /* border: 1px solid black; */
+  font-size: x-small;
+  font-weight: bold;
   margin-right: 2px;
 }
 
