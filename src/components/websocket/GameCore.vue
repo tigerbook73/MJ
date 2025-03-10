@@ -10,7 +10,7 @@
           <div class="tag">Wall</div>
           <div class="tile-raw row items-center">
             <div v-for="(tile, index) in props.game?.walls[wallIndex].tiles" :key="index" class="tile">
-              <div>{{ tile }}</div>
+              <div>{{ tile == -1 ? "" : tile }}</div>
               <div>{{ TileCore.fromId(tile).name }}</div>
             </div>
           </div>
@@ -83,11 +83,20 @@ function handleDrop(tile?: TileId) {
 
 <style scoped>
 .tile {
-  width: 30px;
+  width: 23px;
+  min-height: 38px;
   text-align: center;
   border: 1px solid black;
   font-size: x-small;
+  font-weight: bold;
   cursor: pointer;
+  margin-right: 2px;
+}
+
+.tile:hover {
+  background-color: black;
+  border-color: #888;
+  color: white;
 }
 
 .tile-row {

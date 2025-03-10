@@ -1,6 +1,6 @@
 <template>
   <q-page class="row">
-    <div class="col-4 q-ma-md">
+    <div class="col-3 q-ma-md">
       <div class="row items-stretch">
         <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
         <q-space />
