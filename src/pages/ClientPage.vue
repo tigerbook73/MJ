@@ -104,13 +104,13 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model.number="tileToDrop" label="Tile ID" dense outlined />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionDrop" no-caps>Drop</q-btn>
+            <q-btn class="fit" dense @click="actionDrop" no-caps>打牌</q-btn>
           </div>
         </div>
 
         <!-- action angang -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-input v-model="tilesToAnGang" label="Tile ID" dense outlined />
+          <q-input v-model="tilesToAngang" label="Tile ID" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="actionAngang" no-caps>暗杠</q-btn>
           </div>
@@ -124,14 +124,6 @@
           </div>
         </div>
 
-        <!-- action chi -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-space />
-          <div class="col-3">
-            <q-btn class="fit" dense @click="actionChi" no-caps>吃</q-btn>
-          </div>
-        </div>
-
         <!-- action pass -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
@@ -140,9 +132,17 @@
           </div>
         </div>
 
+        <!-- action chi -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToChi" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionChi" no-caps>吃</q-btn>
+          </div>
+        </div>
+
         <!-- action peng -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-space />
+          <q-input v-model="tilesToPeng" label="Tile ID" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="actionPeng" no-caps>碰</q-btn>
           </div>
@@ -150,7 +150,7 @@
 
         <!-- action gang -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-space />
+          <q-input v-model="tilesToGang" label="Tile ID" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="actionGang" no-caps>杠</q-btn>
           </div>
@@ -577,12 +577,12 @@ async function actionZimo() {
   }
 }
 
-const tileToChi = ref<string>("-1,-1");
+const tilesToChi = ref<string>("-1,-1");
 async function actionChi() {
   const request = {
     type: GameRequestType.ACTION_CHI,
     data: {
-      tileIds: tileToChi.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+      tileIds: tilesToChi.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
     },
   };
   const message = appendMessage(request.type, request.data, null);
@@ -595,12 +595,12 @@ async function actionChi() {
   }
 }
 
-const tileToPeng = ref<string>("-1,-1");
+const tilesToPeng = ref<string>("-1,-1");
 async function actionPeng() {
   const request = {
     type: GameRequestType.ACTION_PENG,
     data: {
-      tileIds: tileToPeng.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+      tileIds: tilesToPeng.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
     },
   };
   const message = appendMessage(request.type, request.data, null);
@@ -613,12 +613,12 @@ async function actionPeng() {
   }
 }
 
-const tilesToAnGang = ref<string>("-1,-1,-1,-1");
+const tilesToAngang = ref<string>("-1,-1,-1,-1");
 async function actionAngang() {
   const request = {
     type: GameRequestType.ACTION_ANGANG,
     data: {
-      tileIds: tilesToAnGang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId, TileId],
+      tileIds: tilesToAngang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId, TileId],
     },
   };
   const message = appendMessage(request.type, request.data, null);
