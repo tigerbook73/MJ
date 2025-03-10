@@ -104,7 +104,31 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model.number="tileToDrop" label="Tile ID" dense outlined />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionDrop" no-caps>Drop Tile</q-btn>
+            <q-btn class="fit" dense @click="actionDrop" no-caps>Drop</q-btn>
+          </div>
+        </div>
+
+        <!-- action angang -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToAnGang" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionAngang" no-caps>暗杠</q-btn>
+          </div>
+        </div>
+
+        <!-- action zimo -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionZimo" no-caps>自摸</q-btn>
+          </div>
+        </div>
+
+        <!-- action chi -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionChi" no-caps>吃</q-btn>
           </div>
         </div>
 
@@ -112,7 +136,23 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionPass" no-caps>Pass</q-btn>
+            <q-btn class="fit" dense @click="actionPass" no-caps>过</q-btn>
+          </div>
+        </div>
+
+        <!-- action peng -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionPeng" no-caps>碰</q-btn>
+          </div>
+        </div>
+
+        <!-- action gang -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionGang" no-caps>杠</q-btn>
           </div>
         </div>
 
@@ -120,7 +160,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionHu" no-caps>Hu</q-btn>
+            <q-btn class="fit" dense @click="actionHu" no-caps>和</q-btn>
           </div>
         </div>
       </div>
@@ -515,6 +555,93 @@ async function actionHu() {
   const message = appendMessage(request.type, request.data, null);
   try {
     const data = await clientApi.actionHu();
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function actionZimo() {
+  const request = {
+    type: GameRequestType.ACTION_ZIMO,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionZimo();
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tileToChi = ref<string>("-1,-1");
+async function actionChi() {
+  const request = {
+    type: GameRequestType.ACTION_CHI,
+    data: {
+      tileIds: tileToChi.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionChi(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tileToPeng = ref<string>("-1,-1");
+async function actionPeng() {
+  const request = {
+    type: GameRequestType.ACTION_PENG,
+    data: {
+      tileIds: tileToPeng.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionPeng(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToAnGang = ref<string>("-1,-1,-1,-1");
+async function actionAngang() {
+  const request = {
+    type: GameRequestType.ACTION_ANGANG,
+    data: {
+      tileIds: tilesToAnGang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionAngang(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToGang = ref<string>("-1,-1,-1");
+async function actionGang() {
+  const request = {
+    type: GameRequestType.ACTION_GANG,
+    data: {
+      tileIds: tilesToGang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionGang(request.data.tileIds);
     game.value = data;
     updateMessage(message, data, "completed");
   } catch (error: any) {
