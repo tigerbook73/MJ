@@ -13,6 +13,7 @@
     "test": "jest",
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
     "dev": "quasar dev",
+    "start": "quasar dev",
     "build": "quasar build"
   },
   "dependencies": {
