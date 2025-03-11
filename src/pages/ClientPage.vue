@@ -266,6 +266,7 @@ import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { TileId } from "src/common/core/mj.tile-core";
 import {
+  GameEvent,
   GameRequestType,
   GameResponse,
   JoinRoomRequest,
@@ -335,8 +336,11 @@ function updateMessage(
   return message;
 }
 
-clientApi.gameSocket.onReceive((response: GameResponse) => {
-  appendMessage(response.type, null, response.data);
+clientApi.gameSocket.onReceive((event: GameEvent) => {
+  appendMessage(event.type, null, event.data);
+
+  event = clientApi.parseEvent(event);
+  game.value = clientApi.findMyGame(event);
 });
 
 const game = ref<Game | null>(null);
