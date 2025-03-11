@@ -268,7 +268,6 @@ import { TileId } from "src/common/core/mj.tile-core";
 import {
   GameEvent,
   GameRequestType,
-  GameResponse,
   JoinRoomRequest,
   LeaveRoomRequest,
   ListClientRequest,
