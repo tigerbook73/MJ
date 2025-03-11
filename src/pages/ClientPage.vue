@@ -1,8 +1,9 @@
 <template>
   <q-page class="row">
-    <div class="col-4 q-ma-md">
-      <div class="row items-stretch">
-        <div class="text-h5">{{ connected ? "Connected" : "Disconnected" }}</div>
+    <div class="col-3 q-ma-md">
+      <div class="row items-stretch items-center">
+        <div class="text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
+        <q-toggle v-model="showAllCommand" label="Show All Commands" />
         <q-space />
         <div><q-btn to="/" no-caps>Home</q-btn></div>
       </div>
@@ -11,7 +12,7 @@
 
       <div>
         <!-- list client -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="listClient" no-caps>List Client</q-btn>
@@ -28,7 +29,7 @@
         </div>
 
         <!-- sign out -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="signOut" no-caps>Sign Out</q-btn>
@@ -36,7 +37,7 @@
         </div>
 
         <!-- list room -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
             <q-btn class="fit" dense @click="listRoom" no-caps>List Room</q-btn>
@@ -47,7 +48,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="roomName" label="Room Name" dense outlined />
           <q-select
-            v-model="position"
+            v-model.number="position"
             label="Position"
             class="col"
             dense
@@ -60,7 +61,7 @@
         </div>
 
         <!-- leave room -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="leaveRoomName" label="Room Name" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="leaveRoom" no-caps>Leave Room</q-btn>
@@ -75,8 +76,8 @@
           </div>
         </div>
 
-        <!-- quit game -->
-        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+        <!--  quit game -->
+        <div v-show="showAllCommand" class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-input v-model="quitGameRoomName" label="Room Name" dense outlined />
           <div class="col-3">
             <q-btn class="fit" dense @click="quitGame" no-caps>Quit Game</q-btn>
@@ -101,9 +102,25 @@
 
         <!-- action drop -->
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
-          <q-input v-model="tileToDrop" label="Tile ID" dense outlined />
+          <q-input v-model.number="tileToDrop" label="Tile ID" dense outlined />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionDrop" no-caps>Drop Tile</q-btn>
+            <q-btn class="fit" dense @click="actionDrop" no-caps>打牌</q-btn>
+          </div>
+        </div>
+
+        <!-- action angang -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToAngang" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionAngang" no-caps>暗杠</q-btn>
+          </div>
+        </div>
+
+        <!-- action zimo -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-space />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionZimo" no-caps>自摸</q-btn>
           </div>
         </div>
 
@@ -111,7 +128,31 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionPass" no-caps>Pass</q-btn>
+            <q-btn class="fit" dense @click="actionPass" no-caps>过</q-btn>
+          </div>
+        </div>
+
+        <!-- action chi -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToChi" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionChi" no-caps>吃</q-btn>
+          </div>
+        </div>
+
+        <!-- action peng -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToPeng" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionPeng" no-caps>碰</q-btn>
+          </div>
+        </div>
+
+        <!-- action gang -->
+        <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
+          <q-input v-model="tilesToGang" label="Tile ID" dense outlined />
+          <div class="col-3">
+            <q-btn class="fit" dense @click="actionGang" no-caps>杠</q-btn>
           </div>
         </div>
 
@@ -119,7 +160,7 @@
         <div class="row justify-between q-col-gutter-md items-center q-mb-sm">
           <q-space />
           <div class="col-3">
-            <q-btn class="fit" dense @click="actionHu" no-caps>Hu</q-btn>
+            <q-btn class="fit" dense @click="actionHu" no-caps>和</q-btn>
           </div>
         </div>
       </div>
@@ -131,9 +172,9 @@
       <!-- Messages -->
       <q-item>
         <q-item-section>
-          <div class="row q-gutter-md">
-            <div>Messages</div>
-            <q-toggle v-model="showEvent" label="Event" dense />
+          <div class="row q-gutter-md items-center">
+            <q-btn-toggle v-model="mode" :options="modeOptions" />
+            <q-toggle v-model="showEvent" label="Event" />
             <div class="bg-warning border">Pending</div>
             <div class="bg-positive border">Completed</div>
             <div class="bg-negative border">Failed</div>
@@ -141,8 +182,9 @@
         </q-item-section>
         <q-btn @click="messageList = []" dense no-caps>Clean</q-btn>
       </q-item>
+
       <q-scroll-area class="col">
-        <q-list bordered>
+        <q-list v-show="mode === 'message'" bordered>
           <div v-for="message in messageList" :key="message.label">
             <q-expansion-item v-show="message.request || showEvent" expand-separator dense>
               <template v-slot:header>
@@ -161,6 +203,7 @@
             </q-expansion-item>
           </div>
         </q-list>
+        <GameCore v-show="mode === 'game'" :game="game as any" @drop="handleDrop" />
       </q-scroll-area>
 
       <q-separator></q-separator>
@@ -223,8 +266,8 @@ import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { TileId } from "src/common/core/mj.tile-core";
 import {
+  GameEvent,
   GameRequestType,
-  GameResponse,
   JoinRoomRequest,
   LeaveRoomRequest,
   ListClientRequest,
@@ -232,6 +275,7 @@ import {
   SignInRequest,
   SignOutRequest,
 } from "src/common/protocols/apis.models";
+import GameCore from "src/components/websocket/GameCore.vue";
 import { ref } from "vue";
 
 defineOptions({
@@ -245,6 +289,14 @@ clientApi.gameSocket.onConnect(() => {
 clientApi.gameSocket.onDisconnect(() => {
   connected.value = false;
 });
+
+const showAllCommand = ref(false);
+
+const mode = ref("message");
+const modeOptions = [
+  { label: "Message", value: "message" },
+  { label: "Game", value: "game" },
+];
 
 const messageList = ref([] as MessageRecord[]);
 const showEvent = ref(false);
@@ -283,8 +335,11 @@ function updateMessage(
   return message;
 }
 
-clientApi.gameSocket.onReceive((response: GameResponse) => {
-  appendMessage(response.type, null, response.data);
+clientApi.gameSocket.onReceive((event: GameEvent) => {
+  appendMessage(event.type, null, event.data);
+
+  event = clientApi.parseEvent(event);
+  game.value = clientApi.findMyGame(event);
 });
 
 const game = ref<Game | null>(null);
@@ -406,6 +461,7 @@ async function enterGame() {
   const message = appendMessage(request.type, request.data, null);
   try {
     const data = await clientApi.enterGame(request.data.roomName);
+    game.value = data.game;
     updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
@@ -455,7 +511,7 @@ async function resetGame() {
   try {
     const data = await clientApi.resetGame();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -473,7 +529,7 @@ async function actionDrop() {
   try {
     const data = await clientApi.actionDrop(request.data.tileId);
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -488,7 +544,7 @@ async function actionPass() {
   try {
     const data = await clientApi.actionPass();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
   }
@@ -503,9 +559,103 @@ async function actionHu() {
   try {
     const data = await clientApi.actionHu();
     game.value = data;
-    updateMessage(message, {}, "completed");
+    updateMessage(message, data, "completed");
   } catch (error: any) {
     updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+async function actionZimo() {
+  const request = {
+    type: GameRequestType.ACTION_ZIMO,
+    data: {},
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionZimo();
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToChi = ref<string>("-1,-1");
+async function actionChi() {
+  const request = {
+    type: GameRequestType.ACTION_CHI,
+    data: {
+      tileIds: tilesToChi.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionChi(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToPeng = ref<string>("-1,-1");
+async function actionPeng() {
+  const request = {
+    type: GameRequestType.ACTION_PENG,
+    data: {
+      tileIds: tilesToPeng.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionPeng(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToAngang = ref<string>("-1,-1,-1,-1");
+async function actionAngang() {
+  const request = {
+    type: GameRequestType.ACTION_ANGANG,
+    data: {
+      tileIds: tilesToAngang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionAngang(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+const tilesToGang = ref<string>("-1,-1,-1");
+async function actionGang() {
+  const request = {
+    type: GameRequestType.ACTION_GANG,
+    data: {
+      tileIds: tilesToGang.value.split(",").map((tileId) => parseInt(tileId)) as [TileId, TileId, TileId],
+    },
+  };
+  const message = appendMessage(request.type, request.data, null);
+  try {
+    const data = await clientApi.actionGang(request.data.tileIds);
+    game.value = data;
+    updateMessage(message, data, "completed");
+  } catch (error: any) {
+    updateMessage(message, { message: error.message }, "failed");
+  }
+}
+
+function handleDrop(tileId?: TileId) {
+  if (tileId) {
+    tileToDrop.value = tileId;
+    actionDrop();
   }
 }
 </script>
