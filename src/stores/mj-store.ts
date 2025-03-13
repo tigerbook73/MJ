@@ -12,17 +12,21 @@ interface HandCard {
   };
 }
 
+function mapTile(tileId: number): HandCard {
+  const tile = TileCore.fromId(tileId);
+  return {
+    name: tile.name,
+    id: tile.id,
+    options: { selected: false },
+  };
+}
+
 function copy(playerIndex: number) {
   const player = mjGame.players[playerIndex];
   if (!player || !player.handTiles) return [];
 
   const cards = player.handTiles.map((tileId) => {
-    const tile = TileCore.fromId(tileId);
-    return {
-      name: tile.name,
-      id: tile.id,
-      options: { selected: false },
-    };
+    return mapTile(tileId);
   });
   if (cards?.length == 0) {
     return cards;
@@ -67,36 +71,16 @@ export const useMjStore = defineStore("mj", () => {
 
   function refresh() {
     topWall.value = mjGame.walls[0].tiles.map((tileId) => {
-      const tile = TileCore.fromId(tileId);
-      return {
-        name: tile.name,
-        id: tile.id,
-        options: { selected: false },
-      };
+      return mapTile(tileId);
     });
     rightWall.value = mjGame.walls[1].tiles.map((tileId) => {
-      const tile = TileCore.fromId(tileId);
-      return {
-        name: tile.name,
-        id: tile.id,
-        options: { selected: false },
-      };
+      return mapTile(tileId);
     });
     bottomWall.value = mjGame.walls[2].tiles.map((tileId) => {
-      const tile = TileCore.fromId(tileId);
-      return {
-        name: tile.name,
-        id: tile.id,
-        options: { selected: false },
-      };
+      return mapTile(tileId);
     });
     leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
-      const tile = TileCore.fromId(tileId);
-      return {
-        name: tile.name,
-        id: tile.id,
-        options: { selected: false },
-      };
+      return mapTile(tileId);
     });
     p4Cards.value = copy(0); // 以前是mycards
     p1Cards.value = copy(1);
@@ -105,54 +89,20 @@ export const useMjStore = defineStore("mj", () => {
     p3Cards.value = copy(3);
 
     //以前是myDiscardCards
-    p4DiscardCards.value = mjGame.discards
-      .filter((discard) => discard.position === 0)
-      .flatMap((discard) =>
-        discard.tiles.map((tileId) => {
-          const tile = TileCore.fromId(tileId);
-          return {
-            name: tile.name,
-            id: tile.id,
-            options: { selected: false },
-          };
-        }),
-      );
-    p1DiscardCards.value = mjGame.discards
-      .filter((discard) => discard.position === 1)
-      .flatMap((discard) =>
-        discard.tiles.map((tileId) => {
-          const tile = TileCore.fromId(tileId);
-          return {
-            name: tile.name,
-            id: tile.id,
-            options: { selected: false },
-          };
-        }),
-      );
-    p2DiscardCards.value = mjGame.discards
-      .filter((discard) => discard.position === 2)
-      .flatMap((discard) =>
-        discard.tiles.map((tileId) => {
-          const tile = TileCore.fromId(tileId);
-          return {
-            name: tile.name,
-            id: tile.id,
-            options: { selected: false },
-          };
-        }),
-      );
-    p3DiscardCards.value = mjGame.discards
-      .filter((discard) => discard.position === 3)
-      .flatMap((discard) =>
-        discard.tiles.map((tileId) => {
-          const tile = TileCore.fromId(tileId);
-          return {
-            name: tile.name,
-            id: tile.id,
-            options: { selected: false },
-          };
-        }),
-      );
+    p4DiscardCards.value = mjGame.discards[0].tiles.map((tileId) => {
+      return mapTile(tileId);
+    });
+    p1DiscardCards.value = mjGame.discards[1].tiles.map((tileId) => {
+      return mapTile(tileId);
+    });
+
+    p2DiscardCards.value = mjGame.discards[2].tiles.map((tileId) => {
+      return mapTile(tileId);
+    });
+
+    p3DiscardCards.value = mjGame.discards[3].tiles.map((tileId) => {
+      return mapTile(tileId);
+    });
 
     // myLatestPickCard.value = {
     //   name: mjGame.players[0].pick.name,

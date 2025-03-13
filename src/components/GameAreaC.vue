@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import { mjGame } from "src/core/mjGame";
+// import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
 const mjStore = useMjStore();
@@ -13,8 +13,8 @@ defineOptions({
 });
 
 function Hu() {
-  //
-  mjGame.canHu();
-  mjStore.refresh();
+  // //
+  // mjGame.canHu();
+  // mjStore.refresh();
 }
 </script>

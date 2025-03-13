@@ -1,8 +1,8 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.currentPlayer !== 0 ? 'bg-blue' : 'bg-red']">
+  <div :class="['column flex-center area-player', userMj.current?.position !== 0 ? 'bg-blue' : 'bg-red']">
     <div class="row flex-center">
       <comp-tile
-        v-for="(tile, index) in userMj.myCards"
+        v-for="(tile, index) in userMj.p4Cards"
         :key="index"
         :type="tile"
         size="large"
@@ -52,7 +52,7 @@ import { useMjStore } from "src/stores/mj-store";
 
 import { voidTileId } from "src/core/mjCard";
 
-function onClick(tile: (typeof userMj.myCards)[0]) {
+function onClick(tile: (typeof userMj.p4Cards)[0]) {
   if (userMj.selectedCard.id == tile.id) {
     userMj.selectedCard = { name: "", id: voidTileId, options: { selected: false } };
     return;

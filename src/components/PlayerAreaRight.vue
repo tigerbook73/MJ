@@ -1,5 +1,5 @@
 <template>
-  <div :class="['row reverse flex-center area-player', userMj.currentPlayer !== 3 ? 'bg-blue' : 'bg-red']">
+  <div :class="['row reverse flex-center area-player', userMj.current?.position !== 3 ? 'bg-blue' : 'bg-red']">
     <div class="column reverse flex-center">
       <comp-tile
         v-for="(tile, index) in userMj.p3Cards"

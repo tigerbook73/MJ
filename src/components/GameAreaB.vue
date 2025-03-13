@@ -6,24 +6,24 @@
 </template>
 
 <script setup lang="ts">
-import { mjGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+// import { mjGame } from "src/core/mjGame";
+// import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
   name: "GameAreaB",
 });
 
-const mjStore = useMjStore();
+// const mjStore = useMjStore();
 
 function reset() {
-  //
-  mjGame.init();
-  mjStore.refresh();
+  // //
+  // mjGame.init();
+  // mjStore.refresh();
 }
 
 function paused() {
-  //
-  mjGame.pause();
-  mjStore.refresh();
+  // //
+  // mjGame.pause();
+  // mjStore.refresh();
 }
 </script>

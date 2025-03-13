@@ -9,18 +9,20 @@
 defineOptions({
   name: "GameAreaA",
 });
-import { autoplay } from "src/control/gameControl";
-import { mjGame } from "src/core/mjGame";
+// import { autoplay } from "src/control/gameControl";
+// import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
 const mjStore = useMjStore();
 
 function start() {
-  //
-  mjGame.init();
-  mjGame.shuffle();
-  mjGame.startGame();
-  mjStore.refresh();
-  autoplay();
+  // const playerPositions = mjGame.players
+  //   .filter(player => player !== null)
+  //   .map(player => player!.position);
+  // mjGame.init(playerPositions);
+  // mjGame.shuffle();
+  // mjGame.startGame();
+  // mjStore.refresh();
+  // autoplay();
 }
 </script>
