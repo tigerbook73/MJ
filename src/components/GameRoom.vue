@@ -24,7 +24,7 @@
         <div class="col-6 bg-green-4 row flex-center">
           <div>{{ roomName }}</div>
           <!-- start game button using startGame-->
-          <q-btn color="primary" label="Start Game" @click="startGame" :disable="!canStartGame" class="q-mt-md"></q-btn>
+          <q-btn color="primary" label="Start Game" @click="enterGame" :disable="!canStartGame" class="q-mt-md"></q-btn>
         </div>
 
         <!-- East -->
@@ -91,9 +91,9 @@ const canStartGame = computed(() => {
 });
 
 // function startGame using socketStartGameAndWaitAck
-async function startGame() {
+async function enterGame() {
   try {
-    const response = await clientApi.startGame();
+    const response = await clientApi.enterGame(props.roomName);
     if (response) {
       router.push("/game-page");
     } else {
