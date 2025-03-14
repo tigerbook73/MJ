@@ -7,7 +7,7 @@
             flat
             class="flex-center col-2 lobby"
             style="font-size: x-large"
-            @click="select(room.name, PlayerPosition.East)"
+            @click="select(room.name, Position.East)"
           >
             {{ room.name }}
           </q-card-section>
@@ -23,7 +23,7 @@
       <q-separator vertical color="red" />
       <div class="column flex-center">
         <div class="lobby">current selection:</div>
-        <div class="lobby">{{ selectRoom + selectPos }}</div>
+        <!-- <div class="lobby">{{ selectRoom + selectPos }}</div> -->
         <q-btn class="lobby" @click="logout" :loading="loading">Sign Out</q-btn>
         <q-btn class="lobby" @click="refreshRooms">Refresh</q-btn>
         <q-btn class="lobby" @click="operateRoom()" :disable="inRoom && !haveRoom">{{ newordelete }}</q-btn>
@@ -37,7 +37,7 @@
 import {
   sendCreateRoom,
   sendDeleteRoom,
-  sendJoinRoom,
+  // sendJoinRoom,
   sendLeaveRoom,
   sendListRoom,
   sendSignout,
@@ -46,14 +46,14 @@ import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user-store";
 import { RoomModel } from "src/common/models/room.model";
-import { PlayerPosition } from "src/common/models/common.types";
 import { wait } from "src/core/timer";
+import { Position } from "src/common/core/mj.game";
 
 const router = useRouter();
 const selectRoom = ref("None");
-const selectPos = ref(PlayerPosition.East);
+const selectPos = ref(Position.East);
 const currentRoom = ref("None");
-const currentPos = ref<PlayerPosition>(PlayerPosition.East);
+// const currentPos = ref<Position>(Position.East);
 const rooms = ref([] as RoomModel[]);
 const userStore = useUserStore();
 const haveRoom = ref(false);
@@ -121,7 +121,7 @@ async function operateRoom() {
       console.log("create room success");
       haveRoom.value = true;
       selectRoom.value = roomName;
-      selectPos.value = PlayerPosition.East;
+      selectPos.value = Position.East;
       joinorleaveRoom();
       refreshRooms();
     }
@@ -130,12 +130,12 @@ async function operateRoom() {
 
 async function joinorleaveRoom() {
   if (currentRoom.value == "None") {
-    const response = await sendJoinRoom(selectRoom.value, selectPos.value);
-    if (response.status == "success") {
-      currentRoom.value = selectRoom.value;
-      currentPos.value = selectPos.value;
-      console.log("join room success");
-    }
+    // const response = await sendJoinRoom(selectRoom.value, selectPos.value);
+    // if (response.status == "success") {
+    //   currentRoom.value = selectRoom.value;
+    //   currentPos.value = selectPos.value;
+    //   console.log("join room success");
+    // }
   } else {
     const response = await sendLeaveRoom(currentRoom.value);
     if (response.status == "success") {
@@ -147,7 +147,7 @@ async function joinorleaveRoom() {
   refreshRooms();
 }
 
-function select(roomName: string, position: PlayerPosition) {
+function select(roomName: string, position: Position) {
   selectRoom.value = roomName;
   selectPos.value = position;
 }

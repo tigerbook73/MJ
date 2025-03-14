@@ -188,4 +188,4 @@ export class OldMjGame {
   }
 }
 
-export const mjGame = new MjGame();
+// export const mjGame = new MjGame();

@@ -8,8 +8,8 @@
 </template>
 
 <script setup lang="ts">
-import { autoPlay } from "src/control/mjAutoPlay";
-import { mjGame } from "src/core/mjGame";
+// import { autoPlay } from "src/control/mjAutoPlay";
+// import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
@@ -18,19 +18,19 @@ defineOptions({
 const userMj = useMjStore();
 
 async function pick() {
-  mjGame.getTile();
+  // mjGame.getTile();
   userMj.refresh();
 }
 
 async function discard() {
-  mjGame.selectTile();
-  mjGame.discardTile();
-  mjGame.sortTile();
-  mjGame.updatePlayer();
+  // mjGame.selectTile();
+  // mjGame.discardTile();
+  // mjGame.sortTile();
+  // mjGame.updatePlayer();
   userMj.refresh();
 }
 
 async function repeat() {
-  autoPlay();
+  // autoPlay();
 }
 </script>

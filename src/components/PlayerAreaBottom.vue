@@ -7,8 +7,8 @@
         v-for="(tile, index) in userMj.p1"
         :key="index"
         :type="tile.name"
-        :selected="tile === userMj.selectedTile"
-        @click="onClick(tile)"
+        :selected="tile.id === userMj.selectedTile.id"
+        @click="onClick()"
         position="bottom"
         size="large"
       ></comp-tile>
@@ -23,16 +23,21 @@ defineOptions({
 
 import CompTile from "components/CompTile.vue";
 import { useMjStore } from "src/stores/mj-store";
-import { emptyTile, MjTile } from "src/core/mjTile";
+// import { emptyTile, MjTile } from "src/core/mjTile";
+// import { TileCore } from "src/common/core/mj.tile-core";
 
 const userMj = useMjStore();
 
-function onClick(tile: MjTile) {
+// function onClick(tile: MjTile) {
+//   //
+//   if (userMj.selectedTile != tile) {
+//     userMj.selectedTile = tile;
+//   } else {
+//     userMj.selectedTile = emptyTile;
+//   }
+// }
+
+function onClick() {
   //
-  if (userMj.selectedTile != tile) {
-    userMj.selectedTile = tile;
-  } else {
-    userMj.selectedTile = emptyTile;
-  }
 }
 </script>

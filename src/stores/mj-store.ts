@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
+import { Position } from "src/common/core/mj.game";
 import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/core/mjGame";
 import { MjPlayer } from "src/core/mjPlayer";
-import { emptyTile, MjTile } from "src/core/mjTile";
+import { emptyTile, IDTileList, MjTile } from "src/core/mjTile";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
@@ -32,11 +33,11 @@ export const useMjStore = defineStore("mj", () => {
   const left_discard = ref([] as string[]);
   const discardList = [bottom_discard, right_discard, top_discard, left_discard];
 
-  const bottom_new = ref(emptyTile as MjTile);
-  const right_new = ref(emptyTile as MjTile);
-  const top_new = ref(emptyTile as MjTile);
-  const left_new = ref(emptyTile as MjTile);
-  const newList = [bottom_new, right_new, top_new, left_new];
+  // const bottom_new = ref(emptyTile as MjTile);
+  // const right_new = ref(emptyTile as MjTile);
+  // const top_new = ref(emptyTile as MjTile);
+  // const left_new = ref(emptyTile as MjTile);
+  // const newList = [bottom_new, right_new, top_new, left_new];
 
   const bottom_display = ref(emptyTile as MjTile);
   const right_display = ref(emptyTile as MjTile);
@@ -45,9 +46,9 @@ export const useMjStore = defineStore("mj", () => {
   const displayList = [bottom_display, right_display, top_display, left_display];
 
   function refresh() {
-    isWinning.value = mjGame.isWinning();
-    status.value = mjGame.isStarted() && !isWinning.value;
-    selectedTile.value = mjGame.selectedTile;
+    // isWinning.value = mjGame.isWinning();
+    // status.value = mjGame.isStarted() && !isWinning.value;
+    // selectedTile.value = mjGame.selectedTile;
 
     wallRefresh();
     // playerNewtileRefresh();
@@ -56,7 +57,7 @@ export const useMjStore = defineStore("mj", () => {
   }
   function wallRefresh() {
     for (let i = 0; i < 4; i++) {
-      wallList[i].value = mjGame.walls[i].tiles.map((tile) => tile.name);
+      wallList[i].value = mjGame.walls[i].tiles.map((tile) => IDtoName(tile));
     }
   }
 
@@ -71,18 +72,21 @@ export const useMjStore = defineStore("mj", () => {
   function mapTile(tileID: number) {
     return TileCore.fromId(tileID);
   }
+  function IDtoName(tileID: number) {
+    return IDTileList[tileID];
+  }
 
   function playerDiscardRefresh() {
     for (let i = 0; i < 4; i++) {
-      discardList[i].value = mjGame.discards[i].tiles.map((tile) => findName(tile));
+      discardList[i].value = mjGame.discards[i].tiles.map((tile) => IDtoName(tile));
     }
   }
 
-  function clearNewtile() {
-    for (let i = 0; i < 4; i++) {
-      newList[i].value = emptyTile;
-    }
-  }
+  // function clearNewtile() {
+  //   for (let i = 0; i < 4; i++) {
+  //     newList[i].value = emptyTile;
+  //   }
+  // }
 
   function clearSelected() {
     selectedTile.value = emptyTile;
@@ -103,8 +107,8 @@ export const useMjStore = defineStore("mj", () => {
 
   // mySelected.value = ["西"];
 
-  mjGame.init();
-  mjGame.separate();
+  mjGame.init([Position.East]);
+  mjGame.start();
   refresh();
 
   return {
@@ -133,25 +137,24 @@ export const useMjStore = defineStore("mj", () => {
     top_display,
     left_display,
 
-    newList,
-    bottom_new,
-    right_new,
-    top_new,
-    left_new,
+    // newList,
+    // bottom_new,
+    // right_new,
+    // top_new,
+    // left_new,
 
     players,
     status,
     selectedTile,
 
     // actions
-    refresh,
-    clearNewtile,
+    // clearNewtile,
     clearSelected,
     isCurrentPlayer,
     isWinning,
-    es,
-    mySelected,
-    canHu,
+    // es,
+    // mySelected,
+    // canHu,
 
     // actions
     refresh,

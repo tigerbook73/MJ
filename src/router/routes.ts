@@ -10,11 +10,11 @@ const routes: RouteRecordRaw[] = [
       {
         path: "game",
         component: () => import("pages/IndexPage.vue"),
-        meta: { requiresAuth: true },
+        // meta: { requiresAuth: true },
       },
       {
         path: "lobby",
-        component: () => import("pages/LobbyPage_1.vue"),
+        component: () => import("pages/LobbyPage.vue"),
         meta: { requiresAuth: true },
       },
       { path: "client-page", component: () => import("pages/ClientPage.vue") },

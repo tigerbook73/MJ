@@ -1,8 +1,8 @@
-import { MjGame } from "./mjGame";
+// import { MjGame } from "./mjGame";
 
-const mj = new MjGame();
+// const mj = new MjGame();
 
-mj.init();
-mj.shuffle();
-mj.separate();
-// mj.print();
+// mj.init();
+// mj.shuffle();
+// mj.separate();
+// // mj.print();

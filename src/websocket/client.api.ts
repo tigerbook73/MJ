@@ -4,8 +4,8 @@ import {
   DeleteRoomRequest,
   DeleteRoomResponse,
   GameRequestType,
-  JoinRoomRequest,
-  JoinRoomResponse,
+  // JoinRoomRequest,
+  // JoinRoomResponse,
   LeaveRoomRequest,
   LeaveRoomResponse,
   ListClientRequest,
@@ -18,7 +18,6 @@ import {
   SignOutResponse,
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
-import { PlayerPosition } from "src/common/models/common.types";
 
 export function sendSignIn(email: string, password: string): Promise<SignInResponse> {
   const request: SignInRequest = {
@@ -53,16 +52,16 @@ export function sendListClient(): Promise<ListClientResponse> {
   return socketSendAndWait(request) as Promise<ListClientResponse>;
 }
 
-export function sendJoinRoom(roomName: string, position: PlayerPosition): Promise<JoinRoomResponse> {
-  const request: JoinRoomRequest = {
-    type: GameRequestType.JOIN_ROOM,
-    data: {
-      roomName,
-      position,
-    },
-  };
-  return socketSendAndWait(request) as Promise<JoinRoomResponse>;
-}
+// export function sendJoinRoom(roomName: string, position: PlayerPosition): Promise<JoinRoomResponse> {
+//   const request: JoinRoomRequest = {
+//     type: GameRequestType.JOIN_ROOM,
+//     data: {
+//       roomName,
+//       position,
+//     },
+//   };
+//   return socketSendAndWait(request) as Promise<JoinRoomResponse>;
+// }
 
 export function sendLeaveRoom(roomName: string): Promise<LeaveRoomResponse> {
   const request: LeaveRoomRequest = {
