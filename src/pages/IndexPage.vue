@@ -2,34 +2,24 @@
   <q-page class="row flex-center">
     <game-area class="w-90 h-90"></game-area>
 
-    <q-btn class="q-md-lg" :class="myClass" @click="pause">pause</q-btn>
-
-    <q-inner-loading color="primary" :showing="paused">
-      <q-btn @click="resume" size="xl" flat>resume</q-btn>
-    </q-inner-loading>
+    <q-btn class="q-md-lg" @click="initGame">Init Game</q-btn>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import GameArea from "components/GameArea.vue";
-import { computed, ref } from "vue";
+import { Position } from "src/common/core/mj.game";
+import { mjGame } from "src/core/mjGame";
+import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
   name: "IndexPage",
 });
 
-const paused = ref(false);
+const mjStore = useMjStore();
 
-function pause() {
-  paused.value = true;
+function initGame() {
+  mjGame.init([Position.East]);
+  mjStore.refresh();
 }
-
-function resume() {
-  paused.value = false;
-}
-
-const myClass = computed(() => ({
-  "bg-primary": paused.value,
-  "bg-secondary": !paused.value,
-}));
 </script>

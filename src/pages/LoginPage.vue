@@ -7,7 +7,7 @@
       </q-card-section>
       <q-separator></q-separator>
       <q-card-actions align="right">
-        <q-btn class="q-pa-md" type="submit" :loading="loading" label="Connect" color="teal" @click="login_old">
+        <q-btn class="q-pa-md" type="submit" :loading="loading" label="Connect" color="teal" @click="signIn">
           <template v-slot:loading>
             <q-spinner-facebook />
           </template>
@@ -21,11 +21,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { sendSignIn } from "src/websocket/client.api";
 import { useUserStore } from "src/stores/user-store";
-import { wait } from "src/core/timer";
-// import { GameRequestType, SignInRequest } from "src/common/protocols/apis.models";
-// import { clientApi } from "src/client/client-api";
+import { clientApi } from "src/client/client-api";
 
 defineOptions({
   name: "LoginPage",
@@ -37,34 +34,17 @@ const password = ref("Password");
 const loading = ref(false);
 const userStore = useUserStore();
 
-async function login_old() {
-  loading.value = true;
-  await wait(2000);
-  const response = await sendSignIn(email.value, password.value);
-  if (response.status == "success") {
-    userStore.user = response.data;
+// sign in
+async function signIn() {
+  try {
+    loading.value = true;
+    const user = await clientApi.signIn(email.value, password.value);
+    userStore.user = user;
     router.push("/lobby");
-  } else {
+  } catch (error: any) {
     window.alert("failed");
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 }
-
-// // sign in
-// async function signIn() {
-//   const request: SignInRequest = {
-//     type: GameRequestType.SIGN_IN,
-//     data: {
-//       email: email.value,
-//       password: password.value,
-//     },
-//   };
-//   try {
-//     await clientApi.signIn(request.data.email, request.data.password);
-//     window.alert("success");
-//     router.push("/lobby");
-//   } catch (error: any) {
-//     window.alert("failed");
-//   }
-// }
 </script>
