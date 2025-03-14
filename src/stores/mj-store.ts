@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/core/mjGame";
 import { MjPlayer } from "src/core/mjPlayer";
 import { emptyTile, MjTile } from "src/core/mjTile";
@@ -19,10 +20,10 @@ export const useMjStore = defineStore("mj", () => {
   const leftWall = ref([] as string[]);
   const wallList = [bottomWall, rightWall, topWall, leftWall];
 
-  const p1 = ref([] as MjTile[]);
-  const p2 = ref([] as MjTile[]);
-  const p3 = ref([] as MjTile[]);
-  const p4 = ref([] as MjTile[]);
+  const p1 = ref([] as TileCore[]);
+  const p2 = ref([] as TileCore[]);
+  const p3 = ref([] as TileCore[]);
+  const p4 = ref([] as TileCore[]);
   const handList = [p1, p2, p3, p4];
 
   const bottom_discard = ref([] as string[]);
@@ -49,9 +50,9 @@ export const useMjStore = defineStore("mj", () => {
     selectedTile.value = mjGame.selectedTile;
 
     wallRefresh();
-    playerNewtileRefresh();
+    // playerNewtileRefresh();
     playerDiscardRefresh();
-    playerHandRefresh();
+    handTileRefresh();
   }
   function wallRefresh() {
     for (let i = 0; i < 4; i++) {
@@ -59,18 +60,21 @@ export const useMjStore = defineStore("mj", () => {
     }
   }
 
-  function playerNewtileRefresh() {
-    for (let i = 0; i < 4; i++) {
-      if (mjGame.players[i].newtile !== emptyTile) {
-        displayList[i].value = mjGame.players[i].newtile;
-      }
-      newList[i].value = mjGame.players[(my_pos.value + i) % 4].newtile;
-    }
+  // function playerNewtileRefresh() {
+  //   for (let i = 0; i < 4; i++) {
+  //     if (mjGame.players[i].newtile !== emptyTile) {
+  //       displayList[i].value = mjGame.players[i].newtile;
+  //     }
+  //     newList[i].value = mjGame.players[(my_pos.value + i) % 4].newtile;
+  //   }
+  // }
+  function mapTile(tileID: number) {
+    return TileCore.fromId(tileID);
   }
 
   function playerDiscardRefresh() {
     for (let i = 0; i < 4; i++) {
-      discardList[i].value = mjGame.players[(my_pos.value + i) % 4].played.map((tile) => tile.name);
+      discardList[i].value = mjGame.discards[i].tiles.map((tile) => findName(tile));
     }
   }
 
@@ -84,20 +88,17 @@ export const useMjStore = defineStore("mj", () => {
     selectedTile.value = emptyTile;
   }
 
-  function playerHandRefresh() {
-    for (let i = 0; i < 4; i++) {
-      handList[i].value = mjGame.players[(my_pos.value + i) % 4].hand.map((tile) => tile);
-    }
-    for (let i = 0; i < 4; i++) {
-      // if (mjGame.players[i].newtile.name !== "") {
-      handList[i].value.push(emptyTile);
-      handList[i].value.push(newList[i].value);
-      // }
-    }
+  function handTileRefresh() {
+    mjGame.players.forEach((player, index) => {
+      if (player == null) {
+        return;
+      }
+      handList[index].value = player.handTiles.map((tile) => mapTile(tile));
+    });
   }
 
-  function isCurrentPlayer(index: number) {
-    return index === mjGame.playerIndex && status.value === true;
+  function isCurrentPlayer(position: number) {
+    return (position === mjGame.current?.position) === true;
   }
 
   // mySelected.value = ["西"];
@@ -148,5 +149,11 @@ export const useMjStore = defineStore("mj", () => {
     clearSelected,
     isCurrentPlayer,
     isWinning,
+    es,
+    mySelected,
+    canHu,
+
+    // actions
+    refresh,
   };
 });
