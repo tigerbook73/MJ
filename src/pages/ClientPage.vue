@@ -262,6 +262,7 @@ class MessageRecord {
 
 <script setup lang="ts">
 import dayjs from "dayjs";
+import { useQuasar } from "quasar";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { TileId } from "src/common/core/mj.tile-core";
@@ -282,6 +283,8 @@ defineOptions({
   name: "ClientPage",
 });
 
+const $q = useQuasar();
+
 const connected = ref(clientApi.gameSocket.connected);
 clientApi.gameSocket.onConnect(() => {
   connected.value = true;
@@ -297,6 +300,21 @@ const modeOptions = [
   { label: "Message", value: "message" },
   { label: "Game", value: "game" },
 ];
+
+/**
+ * function tryCall() example
+ */
+function tryCall(fn: () => void) {
+  try {
+    fn();
+  } catch (error: any) {
+    $q.notify({
+      message: error.message,
+      color: "negative",
+    });
+  }
+}
+tryCall(() => {});
 
 const messageList = ref([] as MessageRecord[]);
 const showEvent = ref(false);
