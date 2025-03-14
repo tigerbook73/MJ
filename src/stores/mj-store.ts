@@ -31,18 +31,18 @@ function copy(playerIndex: number) {
   if (cards?.length == 0) {
     return cards;
   }
-  cards[14] = cards[13] ?? {
+
+  cards.splice(13, 0, {
     name: "",
     id: voidCard.id,
     options: { selected: false },
-  };
-  cards[13] = {
-    name: "",
-    id: voidCard.id,
-    options: { selected: false },
-  };
+  });
+
+  // Append the 14th (picked) card at the end
+  cards.push(mapTile(player.picked));
   return cards;
 }
+
 export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const canHu = ref(false);
