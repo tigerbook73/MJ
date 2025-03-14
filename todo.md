@@ -11,29 +11,26 @@
      - class mjcore extends Game
 3. update core => store code
 4. test
-   1. gamecore = new Game();
-   2. gamecore.init([players]);
-   3. call sync function (to store)
-   4. gamecore.startGame();
-   5. call sync function (to store)
-   6. gamecore.drop(..)
-   7. ...
+   1. game = new Game(); store.refresh();
+   2. game.init(players); store.refresh();
+   3. game.startGame();store.refresh();
+   4. game.drop(tile) store.refresh();
+   5. game.pass() store.refresh();
+   6. ...
+   7. game.zimo() store.refresh();
 
 ### step3:
-4. invoke api:
+single player mode:
+1. invoke api:
     - room.joinGame
-    - game.enterGame
+    - room.enterGame
+2. prepare button (start, pass, drop, zimo)
     - invoke api
-    - mjcore = response.data.game;
-    - sync mjcore to store
-5. subscribe event:
-   - subscription event
-   - parse event
-   - update mjcore
-   - ...
-6. test
-    - room.joinGame
-    - game.enterGame
-    - game.startGame
-    - make sure all data can be displayed correctly
-    -
+    - game = response.data.game;
+    - store.fresh();
+
+### step4:
+multi player mode:
+
+open 2 pages
+
