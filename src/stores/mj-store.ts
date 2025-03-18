@@ -1,9 +1,8 @@
 import { defineStore } from "pinia";
-import { Position } from "src/common/core/mj.game";
+import { Player, Position } from "src/common/core/mj.game";
 import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/core/mjGame";
-import { MjPlayer } from "src/core/mjPlayer";
-import { emptyTile, IDTileList, MjTile } from "src/core/mjTile";
+import { IDTileList } from "src/core/mjTile";
 import { ref } from "vue";
 
 export const useMjStore = defineStore("mj", () => {
@@ -11,8 +10,8 @@ export const useMjStore = defineStore("mj", () => {
   const status = ref(false as boolean);
   const isWinning = ref(false as boolean);
 
-  const players = ref([] as MjPlayer[]);
-  const selectedTile = ref(emptyTile as MjTile);
+  const players = ref([] as Player[]);
+  const selectedTile = ref(TileCore.voidTile as TileCore);
   const my_pos = ref(2 as number);
 
   const topWall = ref([] as string[]);
@@ -39,11 +38,11 @@ export const useMjStore = defineStore("mj", () => {
   // const left_new = ref(emptyTile as MjTile);
   // const newList = [bottom_new, right_new, top_new, left_new];
 
-  const bottom_display = ref(emptyTile as MjTile);
-  const right_display = ref(emptyTile as MjTile);
-  const top_display = ref(emptyTile as MjTile);
-  const left_display = ref(emptyTile as MjTile);
-  const displayList = [bottom_display, right_display, top_display, left_display];
+  // const bottom_display = ref(emptyTile as MjTile);
+  // const right_display = ref(emptyTile as MjTile);
+  // const top_display = ref(emptyTile as MjTile);
+  // const left_display = ref(emptyTile as MjTile);
+  // const displayList = [bottom_display, right_display, top_display, left_display];
 
   function refresh() {
     // isWinning.value = mjGame.isWinning();
@@ -55,6 +54,7 @@ export const useMjStore = defineStore("mj", () => {
     playerDiscardRefresh();
     handTileRefresh();
   }
+
   function wallRefresh() {
     for (let i = 0; i < 4; i++) {
       wallList[i].value = mjGame.walls[i].tiles.map((tile) => IDtoName(tile));
@@ -69,6 +69,7 @@ export const useMjStore = defineStore("mj", () => {
   //     newList[i].value = mjGame.players[(my_pos.value + i) % 4].newtile;
   //   }
   // }
+
   function mapTile(tileID: number) {
     return TileCore.fromId(tileID);
   }
@@ -89,7 +90,7 @@ export const useMjStore = defineStore("mj", () => {
   // }
 
   function clearSelected() {
-    selectedTile.value = emptyTile;
+    selectedTile.value = TileCore.voidTile;
   }
 
   function handTileRefresh() {
@@ -131,11 +132,11 @@ export const useMjStore = defineStore("mj", () => {
     top_discard,
     left_discard,
 
-    displayList,
-    bottom_display,
-    right_display,
-    top_display,
-    left_display,
+    // displayList,
+    // bottom_display,
+    // right_display,
+    // top_display,
+    // left_display,
 
     // newList,
     // bottom_new,
@@ -147,6 +148,7 @@ export const useMjStore = defineStore("mj", () => {
     status,
     selectedTile,
 
+    IDtoName,
     // actions
     // clearNewtile,
     clearSelected,

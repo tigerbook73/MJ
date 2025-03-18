@@ -9,13 +9,13 @@
 </template>
 
 <script setup lang="ts">
-// import { mjGame } from "src/core/mjGame";
+import { Position } from "src/common/core/mj.game";
+import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
 defineOptions({
   name: "GameAreaB",
 });
-
 const mjStore = useMjStore();
 
 function reset() {
@@ -29,14 +29,14 @@ function reset() {
 
 function start() {
   //
-  // mjGame.init();
+  mjGame.init([Position.East]);
   // mjGame.shuffle();
-  // mjGame.start();
+  mjGame.start();
   mjStore.refresh();
 }
 
 function single() {
-  // mjGame.init();
+  // mjGame.init([Position.East]);
   // mjGame.shuffle();
   // mjGame.singleTest();
   mjStore.refresh();
