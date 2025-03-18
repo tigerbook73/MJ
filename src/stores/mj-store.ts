@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { TileCore } from "src/common/core/mj.tile-core";
-import { voidCard, voidTileId } from "src/core/mjCard";
+import { voidCard } from "src/core/mjCard";
 import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
@@ -66,8 +66,8 @@ export const useMjStore = defineStore("mj", () => {
   const p3DiscardCards = ref([] as HandCard[]);
   const p4DiscardCards = ref([] as HandCard[]); // 以前是 myDiscardCards
 
-  const myLatestPickCard = ref({ name: "", id: voidTileId, options: { selected: false } });
-  const selectedCard = ref({ name: "", id: voidTileId, options: { selected: false } });
+  const myLatestPickCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
+  const selectedCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
 
   function refresh() {
     topWall.value = mjGame.walls[0].tiles.map((tileId) => {

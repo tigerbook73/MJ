@@ -100,7 +100,7 @@ async function enterGame() {
       alert(`Failed to start game: ${response}`);
     }
   } catch (error) {
-    console.error("Error starting game:", error);
+    console.error("Error enter game:", error);
     alert("An error occurred while trying to start the game.");
   }
 }

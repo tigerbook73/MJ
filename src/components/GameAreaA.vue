@@ -9,20 +9,25 @@
 defineOptions({
   name: "GameAreaA",
 });
-// import { autoplay } from "src/control/gameControl";
-// import { mjGame } from "src/core/mjGame";
+
+import { clientApi } from "src/client/client-api";
+import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
 const mjStore = useMjStore();
 
-function start() {
-  // const playerPositions = mjGame.players
-  //   .filter(player => player !== null)
-  //   .map(player => player!.position);
-  // mjGame.init(playerPositions);
-  // mjGame.shuffle();
-  // mjGame.startGame();
-  // mjStore.refresh();
-  // autoplay();
+async function start() {
+  try {
+    const response = await clientApi.startGame();
+
+    if (response) {
+      mjGame.start();
+      mjStore.refresh();
+    } else {
+      console.error("Game start failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error starting game:", error);
+  }
 }
 </script>

@@ -6,6 +6,11 @@
       <q-btn @click="startGame">Start Game</q-btn>
       <q-btn @click="resetGame">Reset Game</q-btn>
       <q-btn @click="drop">Drop Card</q-btn>
+      <q-btn @click="passPlayer(Position.East)">Pass East</q-btn>
+      <q-btn @click="passPlayer(Position.South)">Pass South</q-btn>
+      <q-btn @click="passPlayer(Position.West)">Pass West</q-btn>
+      <q-btn @click="passPlayer(Position.North)">Pass North</q-btn>
+      <q-btn @click="zimo">zimo</q-btn>
     </div>
     <!-- <q-inner-loading :showing="mjStore.paused">
       <q-btn @click="resume" size="xl" flat>resume</q-btn>
@@ -16,7 +21,7 @@
 <script setup lang="ts">
 import GameArea from "components/GameArea.vue";
 import { useQuasar } from "quasar";
-import { Position } from "src/common/core/mj.game";
+import { GameState, Position } from "src/common/core/mj.game";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 // import { mjGame } from "src/core/mjGame";
@@ -52,14 +57,14 @@ function tryCall(fn: () => void) {
 
 function initGame() {
   tryCall(() => {
-    mjGame.init([Position.East]);
+    mjGame.init([Position.East, Position.North, Position.West, Position.South]);
     mjStore.refresh();
   });
 }
 
 function resetGame() {
   tryCall(() => {
-    mjGame.init([Position.East]);
+    mjGame.init([Position.East, Position.North, Position.West, Position.South]);
     mjStore.refresh();
   });
 }
@@ -81,6 +86,40 @@ function drop() {
       return;
     }
     mjGame.drop(mjGame.current.picked);
+    mjStore.refresh();
+  });
+}
+
+function passPlayer(position: Position) {
+  tryCall(() => {
+    if (!mjGame.current) {
+      $q.notify({ message: "Please start game first" });
+      return;
+    }
+
+    if (mjGame.state !== GameState.WaitingPass) {
+      $q.notify({ message: "game state is not waiting pass" });
+      return;
+    }
+
+    const player = mjGame.players.find((p) => p?.position === position);
+    if (!player) {
+      $q.notify({ message: "Can't find position" });
+      return;
+    }
+
+    mjGame.pass(player);
+    mjStore.refresh();
+  });
+}
+
+function zimo() {
+  tryCall(() => {
+    if (!mjGame.current) {
+      $q.notify({ message: "Please start game first", color: "negative" });
+      return;
+    }
+    mjGame.zimo();
     mjStore.refresh();
   });
 }
