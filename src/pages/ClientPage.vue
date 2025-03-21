@@ -358,7 +358,17 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
 
   event = clientApi.parseEvent(event);
   game.value = clientApi.findMyGame(event);
+
+  handleGameUpdate(game);
 });
+function handleGameUpdate(game: Game) {
+  setGame(game);
+  refresh();
+
+  // start timer
+  // select ...
+  // drop tile or chi or hu or zimo or
+}
 
 const game = ref<Game | null>(null);
 

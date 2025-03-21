@@ -6,4 +6,8 @@ export class MjGame extends Game {
   }
 }
 
-export const mjGame = new MjGame();
+export let mjGame = new MjGame();
+
+export function setGame(game: Game) {
+  mjGame = game;
+}

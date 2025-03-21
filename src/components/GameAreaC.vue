@@ -1,12 +1,11 @@
 <template>
   <div>
-    <q-btn :disable="!mjStore.canHu" @click="Hu">Hu</q-btn> <q-btn :disable="!mjStore.canHu" @click="Zimo">Zimo</q-btn>
+    <q-btn :disable="!mjStore.canHu" @click="Hu">Hu</q-btn> <q-btn :disable="!mjGame.canHu" @click="Zimo">Zimo</q-btn>
   </div>
 </template>
 
 <script setup lang="ts">
 // import { mjGame } from "src/core/mjGame";
-import { clientApi } from "src/client/client-api";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
 
@@ -16,6 +15,10 @@ defineOptions({
   name: "GameAreaC",
 });
 
+const emits = defineEmits<{
+  (e: "zi-mo"): void;
+}>();
+
 function Hu() {
   // //
   // mjGame.canHu();
@@ -23,16 +26,6 @@ function Hu() {
 }
 
 async function Zimo() {
-  try {
-    const response = await clientApi.actionZimo();
-    if (response) {
-      mjGame.zimo(); // Update game state
-      mjStore.refresh(); // Refresh UI
-    } else {
-      console.error("Zimo failed: No game data in response");
-    }
-  } catch (error) {
-    console.error("Error invoking Zimo:", error);
-  }
+  emits("zi-mo");
 }
 </script>
