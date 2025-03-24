@@ -116,6 +116,7 @@ export const useMjStore = defineStore("mj", () => {
 
   mjGame.init(activePositions);
 
+  canHu.value = mjGame.canHu(current.value?.handTiles ?? []);
   return {
     // state
     open,
