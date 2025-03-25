@@ -3,14 +3,14 @@ import { RouteRecordRaw } from "vue-router";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    redirect: "/client-page",
+    redirect: "/login",
     component: () => import("layouts/MainLayout.vue"),
     children: [
       { path: "login", component: () => import("pages/LoginPage.vue") },
       {
         path: "game",
-        component: () => import("pages/IndexPage.vue"),
-        // meta: { requiresAuth: true },
+        component: () => import("pages/GamePage.vue"),
+        meta: { requiresAuth: true },
       },
       {
         path: "lobby",

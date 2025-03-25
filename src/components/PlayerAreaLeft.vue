@@ -9,8 +9,8 @@
       <comp-tile
         v-for="(tile, index) in userMj.p4"
         :key="index"
-        :type="tile.name"
-        :selected="tile.id === userMj.selectedTile.id"
+        :type="userMj.IDtoName(tile)"
+        :selected="tile === userMj.selectedTile"
         position="left"
         size="large"
       ></comp-tile>

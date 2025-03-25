@@ -6,8 +6,8 @@
       <comp-tile
         v-for="(tile, index) in userMj.p1"
         :key="index"
-        :type="tile.name"
-        :selected="tile.id === userMj.selectedTile.id"
+        :type="userMj.IDtoName(tile)"
+        :selected="tile === userMj.selectedTile"
         @click="onClick(tile)"
         position="bottom"
         size="large"
@@ -27,12 +27,12 @@ import { useMjStore } from "src/stores/mj-store";
 
 const userMj = useMjStore();
 
-function onClick(tile: TileCore) {
+function onClick(tile: number) {
   //
   if (userMj.selectedTile != tile) {
     userMj.selectedTile = tile;
   } else {
-    userMj.selectedTile = TileCore.voidTile;
+    userMj.selectedTile = TileCore.voidTile.id;
   }
 }
 </script>
