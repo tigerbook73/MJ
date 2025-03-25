@@ -4,10 +4,10 @@
       <div class="q-pa-md row flex-center bg-blue-grey-3" style="width: 70%; margin: 5px">
         <LobbyDiv
           :items="[
-            { id: 0, name: '东', class: ' bg-pink-3' },
-            { id: 1, name: '南', class: ' bg-yellow-5' },
-            { id: 2, name: '西', class: ' bg-blue-4' },
-            { id: 3, name: '北', class: ' bg-red-5' },
+            { id: Position.East, name: '东', class: ' bg-pink-3' },
+            { id: Position.South, name: '南', class: ' bg-yellow-5' },
+            { id: Position.West, name: '西', class: ' bg-blue-4' },
+            { id: Position.North, name: '北', class: ' bg-red-5' },
           ]"
           :group="1"
           @clicked="handleClick"
@@ -16,7 +16,7 @@
       <q-separator vertical color="grey-8" />
       <div class="q-pa-sm column flex-center" style="flex: auto">
         <div class="row flex-center" style="font-weight: bold; font-size: large">current selection:</div>
-        <div class="row flex-center" style="font-weight: bold; font-size: x-large">{{ currentSelection }}</div>
+        <div class="row flex-center" style="font-weight: bold; font-size: x-large">{{ selected.name }}</div>
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="logout"
           >Sign Out</q-btn
         >
@@ -36,13 +36,17 @@ import { sendSignout } from "src/websocket/client.api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "src/stores/user-store";
+import { Game, Position } from "src/common/core/mj.game";
+import { clientApi } from "src/client/client-api";
 
-const currentSelection = ref("None");
+const selected = ref();
 const router = useRouter();
+const userStore = useUserStore();
 
-const handleClick = (selection: { id: number; name: string; group: number }) => {
-  currentSelection.value = selection.name;
+const handleClick = (selection: { id: Position; name: string; group: number }) => {
+  selected.value = selection;
 };
+const game = ref<Game | null>(null);
 
 async function logout() {
   const response = await sendSignout();
@@ -50,6 +54,31 @@ async function logout() {
   if (response.status == "success") {
     userStore.user = null;
     router.push("/login");
+  }
+}
+
+async function joinRoom() {
+  try {
+    const room = await clientApi.joinRoom(selected.value.group, selected.value.id);
+    selected.value.group = room.name;
+  } catch (error: any) {
+    window.alert("join room failed");
+  }
+}
+async function leaveRoom() {
+  try {
+    await clientApi.leaveRoom(selected.value.group);
+  } catch (error: any) {
+    window.alert("leave room failed");
+  }
+}
+
+async function enterGame() {
+  try {
+    const data = await clientApi.enterGame(roomName.value);
+    game.value = data.game;
+  } catch (error: any) {
+    window.alert("enter game failed");
   }
 }
 </script>
