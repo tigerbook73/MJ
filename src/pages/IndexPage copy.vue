@@ -8,7 +8,6 @@
 
 <script setup lang="ts">
 import GameArea from "components/GameArea.vue";
-import { clientApi } from "src/client/client-api";
 import { Position } from "src/common/core/mj.game";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
@@ -23,9 +22,4 @@ function initGame() {
   mjGame.init([Position.East]);
   mjStore.refresh();
 }
-
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  event = clientApi.parseEvent(event);
-  mjStore.game = clientApi.findMyGame(event);
-});
 </script>
