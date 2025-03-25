@@ -8,8 +8,8 @@
         size="large"
         :selected="userMj.selectedCard.id == tile.id"
         @click="onClick(tile)"
+        @dblclick="dropTile()"
       ></comp-tile>
-      <q-btn v-if="userMj.current?.position === 0" flat @click="dropTile">Drop</q-btn>
 
       <q-btn v-if="userMj.current?.position !== Position.East" flat @click="passTurn">Pass</q-btn>
     </div>

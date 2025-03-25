@@ -2,7 +2,7 @@
   <div class="column area-game">
     <!-- top -->
     <div class="row h-10">
-      <game-area-a class="w-10" @start-game="start"></game-area-a>
+      <game-area-a class="w-10" @start-game="start" @reset-game="reset"></game-area-a>
       <player-area-top class="w-70"></player-area-top>
       <game-area-b class="w-10"></game-area-b>
     </div>
@@ -48,6 +48,21 @@ const mjStore = useMjStore();
 async function start() {
   try {
     const response = await clientApi.startGame();
+
+    if (response) {
+      setGame(response);
+      mjStore.refresh();
+    } else {
+      console.error("Game start failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error starting game:", error);
+  }
+}
+
+async function reset() {
+  try {
+    const response = await clientApi.resetGame();
 
     if (response) {
       setGame(response);
@@ -131,11 +146,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
 });
 
 function handleGameUpdate(game: Game) {
-  setGame(game); // 🔁 Sync the global mjGame
-  mjStore.refresh(); // 🔃 Refresh the UI
-
-  // ✅ Optional: Handle game flow logic here
-  // Example: if (mjGame.canZimo()) showZimoButton();
-  // Example: startAutoPlayTimer();
+  setGame(game);
+  mjStore.refresh();
 }
 </script>

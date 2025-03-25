@@ -3,7 +3,7 @@
     <!-- Top (North) -->
     <div class="col-3">
       <div class="row full-height">
-        <div class="col-3"></div>
+        <!-- <div class="col-3"></div> -->
         <div no-caps flat class="col-6 bg-blue-4 column flex-center area-player">
           <position-player :player="northPlayer" @update="emits('update')" />
         </div>
@@ -37,7 +37,7 @@
     <!-- Bottom (South) -->
     <div class="col-3">
       <div class="row full-height">
-        <div class="col-3"></div>
+        <!-- <div class="col-3"></div> -->
         <div no-caps flat class="col-6 bg-blue-4 column flex-center area-player">
           <position-player :player="southPlayer" @update="emits('update')" />
         </div>

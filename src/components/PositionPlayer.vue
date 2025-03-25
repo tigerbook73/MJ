@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ active: isActive }">
+  <div :class="{ active: isActive }" @click="handleClick">
     {{ player.userName }}
     <q-menu v-model="showingMenu" touch-position>
       <q-list style="min-width: 100px">
@@ -31,6 +31,22 @@ const emits = defineEmits(["update"]);
 const showingMenu = ref(false);
 const isActive = computed(() => props.player?.userName === store.user?.email);
 
+async function handleClick() {
+  const currentUser = store.user?.email;
+  const currentIsYou = props.player?.userName === currentUser;
+
+  // Clicked your own seat
+  if (currentIsYou) {
+    await leaveRoom();
+    emits("update");
+    return;
+  }
+
+  // If it's a bot seat (i.e., joinable)
+  if (props.player?.type === UserType.Bot) {
+    await joinRoom();
+  }
+}
 async function joinRoom() {
   try {
     // Make the socket request to join the room
