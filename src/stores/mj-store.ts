@@ -1,6 +1,5 @@
-import { posix } from "path";
 import { defineStore } from "pinia";
-import { Game, Player, Position, Wall } from "src/common/core/mj.game";
+import { Game, Player, Position } from "src/common/core/mj.game";
 import { TileCore, TileId } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/core/mjGame";
 import { IDTileList } from "src/core/mjTile";
@@ -13,7 +12,7 @@ export const useMjStore = defineStore("mj", () => {
   const isWinning = ref(false as boolean);
 
   const players = ref([] as Player[]);
-  const selectedTile = ref(TileCore.voidTile as TileCore);
+  const selectedTile = ref(TileCore.voidTile.id as TileId);
   const my_pos = ref(Position.East as Position);
 
   const wallEast = ref([] as TileId[]);
@@ -22,16 +21,16 @@ export const useMjStore = defineStore("mj", () => {
   const wallNorth = ref([] as TileId[]);
   const wallList = [wallEast, wallSouth, wallWest, wallNorth];
 
-  const handTileEast = ref([] as TileCore[]);
-  const handTileSouth = ref([] as TileCore[]);
-  const handTileWest = ref([] as TileCore[]);
-  const handTIleNorth = ref([] as TileCore[]);
+  const handTileEast = ref([] as TileId[]);
+  const handTileSouth = ref([] as TileId[]);
+  const handTileWest = ref([] as TileId[]);
+  const handTIleNorth = ref([] as TileId[]);
   const handList = [handTileEast, handTileSouth, handTileWest, handTIleNorth];
 
-  const discardEast = ref([] as string[]);
-  const discardSouth = ref([] as string[]);
-  const discardWest = ref([] as string[]);
-  const discardNorth = ref([] as string[]);
+  const discardEast = ref([] as TileId[]);
+  const discardSouth = ref([] as TileId[]);
+  const discardWest = ref([] as TileId[]);
+  const discardNorth = ref([] as TileId[]);
   const discardList = [discardEast, discardSouth, discardWest, discardNorth];
 
   function refresh() {
@@ -49,42 +48,28 @@ export const useMjStore = defineStore("mj", () => {
 
   function wallRefresh() {
     for (let i = 0; i < 4; i++) {
-      wallList[i].value = mjGame.walls[i].tiles.map((tile) => IDtoName(tile));
+      wallList[i].value = mjGame.walls[i].tiles;
     }
   }
   function wallRefresh2() {
-    wallList.forEach((wall, index) => {
-      if (game.value?.walls[index].tiles == null) {
-        return;
-      }
-      wallList[index].value = game.value?.walls[index].tiles;
+    mjGame.walls.forEach((wall, index) => {
+      wallList[index].value = wall.tiles;
     });
   }
 
   function playerDiscardRefresh() {
-    for (let i = 0; i < 4; i++) {
-      discardList[i].value = mjGame.discards[i].tiles.map((tile) => IDtoName(tile));
-    }
+    mjGame.discards.forEach((discard, index) => {
+      discardList[index].value = discard.tiles;
+    });
   }
 
   function clearSelected() {
-    selectedTile.value = TileCore.voidTile;
+    selectedTile.value = TileCore.voidTile.id;
   }
 
   function handTileRefresh() {
     mjGame.players.forEach((player, index) => {
-      if (player == null) {
-        return;
-      }
-      handList[index].value = player.handTiles.map((tile) => mapTile(tile));
-    });
-  }
-  function handTileRefresh2() {
-    mjGame.players.forEach((player, index) => {
-      if (game.value == null || game.value?.players[index]?.handTiles == null) {
-        return;
-      }
-      handList[index].value = game.value.players[index].handTiles.map((tile) => mapTile(tile));
+      handList[index].value = player?.handTiles || [];
     });
   }
 
