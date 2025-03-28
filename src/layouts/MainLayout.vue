@@ -18,4 +18,71 @@
 defineOptions({
   name: "MainLayout",
 });
+
+import { onMounted, watch } from "vue";
+import { useRouter } from "vue-router";
+import { clientApi } from "src/client/client-api";
+
+import { appStore, AppState } from "src/stores/app-store";
+import { userStore } from "src/stores/user-store";
+import { roomStore } from "src/stores/room-store";
+import { gameStore } from "src/stores/game-store";
+
+const router = useRouter();
+const useAppStore = appStore();
+const useUserStore = userStore();
+const useRoomStore = roomStore();
+const useGameStore = gameStore();
+
+// 👂 Socket connection status
+onMounted(() => {
+  clientApi.gameSocket.onConnect(() => {
+    useAppStore.setAppState(AppState.NotLoggedIn);
+  });
+
+  clientApi.gameSocket.onDisconnect(() => {
+    useAppStore.setAppState(AppState.NotConnected);
+  });
+
+  // 👂 Game event handler
+  clientApi.gameSocket.onReceive((event) => {
+    const parsed = clientApi.parseEvent(event);
+
+    if (!useUserStore.user) return; // not logged in, ignore
+
+    const game = clientApi.findMyGame(parsed);
+    const room = clientApi.findMyRoom(parsed);
+
+    useRoomStore.setRooms(room ? [room] : []);
+
+    if (game) {
+      useGameStore.setGame(game);
+      useAppStore.setAppState(AppState.InGame);
+    } else {
+      useGameStore.setGame(null);
+      useAppStore.setAppState(AppState.InLobby);
+    }
+  });
+});
+
+watch(
+  () => useAppStore.appState,
+  (state) => {
+    switch (state) {
+      case AppState.NotConnected:
+        router.push("/");
+        break;
+      case AppState.NotLoggedIn:
+        router.push("/sign-in");
+        break;
+      case AppState.InLobby:
+        router.push("/join-game");
+        break;
+      case AppState.InGame:
+        router.push("/game-page");
+        break;
+    }
+  },
+  { immediate: true },
+);
 </script>
