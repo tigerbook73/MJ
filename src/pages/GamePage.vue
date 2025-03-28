@@ -11,9 +11,8 @@ import GameArea from "components/GameArea.vue";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { GameEvent } from "src/common/protocols/apis.models";
-import { mjGame } from "src/core/mjGame";
+import { mjGame, setGame } from "src/core/mjGame";
 import { useMjStore } from "src/stores/mj-store";
-import { ref } from "vue";
 
 defineOptions({
   name: "IndexPage",
@@ -37,13 +36,18 @@ function initGame() {
 
 clientApi.gameSocket.onReceive((event: GameEvent) => {
   event = clientApi.parseEvent(event);
-  game.value = clientApi.findMyGame(event);
-  myfunction(game);
+  const game = clientApi.findMyGame(event);
+
+  if (!game) {
+    console.warn("No game found in event.");
+    return;
+  }
+
+  handleGameUpdate(game);
 });
 
-const game = ref<Game | null>(null);
-
-function myfunction(game: Game) {
-  console.log(game);
+function handleGameUpdate(game: Game) {
+  setGame(game);
+  mjStore.refresh();
 }
 </script>

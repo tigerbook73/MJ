@@ -5,7 +5,7 @@
   >
     <div class="row reverse-wrap flex-center w-5">
       <comp-tile
-        v-for="(tile, index) in userMj.p2"
+        v-for="(tile, index) in userMj.players[1].handTiles"
         :key="index"
         :type="userMj.IDtoName(tile)"
         :selected="tile === userMj.selectedTile"

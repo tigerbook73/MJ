@@ -39,19 +39,15 @@ export const useMjStore = defineStore("mj", () => {
     handTileRefresh();
   }
 
-  function mapTile(tileID: number) {
-    return TileCore.fromId(tileID);
-  }
+  // function mapTile(tileID: number) {
+  //   return TileCore.fromId(tileID);
+  // }
+
   function IDtoName(tileID: number) {
     return IDTileList[tileID];
   }
 
   function wallRefresh() {
-    for (let i = 0; i < 4; i++) {
-      wallList[i].value = mjGame.walls[i].tiles;
-    }
-  }
-  function wallRefresh2() {
     mjGame.walls.forEach((wall, index) => {
       wallList[index].value = wall.tiles;
     });
@@ -76,8 +72,6 @@ export const useMjStore = defineStore("mj", () => {
   function isCurrentPlayer(position: number) {
     return (position === mjGame.current?.position) === true;
   }
-
-  // mySelected.value = ["西"];
 
   mjGame.init([Position.East]);
   mjGame.start();

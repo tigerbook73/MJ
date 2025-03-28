@@ -3,11 +3,11 @@
     <q-card class="q-pa-md row flex-center bg-green-1" style="width: 80%; min-height: 500px; flex: 1">
       <div class="q-pa-md row flex-center bg-blue-grey-3" style="width: 70%; margin: 5px">
         <LobbyDiv
-          :items="[
-            { id: Position.East, name: '东', class: ' bg-pink-3' },
-            { id: Position.South, name: '南', class: ' bg-yellow-5' },
-            { id: Position.West, name: '西', class: ' bg-blue-4' },
-            { id: Position.North, name: '北', class: ' bg-red-5' },
+          :rooms="[
+            { pos: Position.East, class: ' bg-pink-3' },
+            { pos: Position.South, class: ' bg-yellow-5' },
+            { pos: Position.West, class: ' bg-blue-4' },
+            { pos: Position.North, class: ' bg-red-5' },
           ]"
           :group="1"
           @clicked="handleClick"
@@ -24,7 +24,15 @@
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold"
           >New/Delete Room</q-btn
         >
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold">Join/Leave</q-btn>
+        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="joinRoom"
+          >Join</q-btn
+        >
+        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="leaveRoom"
+          >Leave</q-btn
+        >
+        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="enterGame"
+          >EnterGame</q-btn
+        >
       </div>
     </q-card>
   </q-page>
@@ -43,14 +51,13 @@ const selected = ref();
 const router = useRouter();
 const userStore = useUserStore();
 
-const handleClick = (selection: { id: Position; name: string; group: number }) => {
+const handleClick = (selection: { pos: Position; group: number }) => {
   selected.value = selection;
 };
 const game = ref<Game | null>(null);
 
 async function logout() {
   const response = await sendSignout();
-  const userStore = useUserStore();
   if (response.status == "success") {
     userStore.user = null;
     router.push("/login");
@@ -59,7 +66,7 @@ async function logout() {
 
 async function joinRoom() {
   try {
-    const room = await clientApi.joinRoom(selected.value.group, selected.value.id);
+    const room = await clientApi.joinRoom(selected.value.group, selected.value.pos);
     selected.value.group = room.name;
   } catch (error: any) {
     window.alert("join room failed");
@@ -75,7 +82,7 @@ async function leaveRoom() {
 
 async function enterGame() {
   try {
-    const data = await clientApi.enterGame(roomName.value);
+    const data = await clientApi.enterGame(selected.value.group);
     game.value = data.game;
   } catch (error: any) {
     window.alert("enter game failed");

@@ -20,7 +20,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   handleGameUpdate(game);
 });
 
-function setGame(game: Game) {
+export function setGame(game: Game) {
   mjGame = game;
 }
 

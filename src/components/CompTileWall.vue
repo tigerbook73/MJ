@@ -4,7 +4,7 @@
       <comp-tile
         v-for="(tile, index) in tiles.slice(0, 17)"
         :key="index"
-        :type="tile"
+        :type="mjStore.IDtoName(tile)"
         :position="props.position"
         back
       ></comp-tile>
@@ -13,7 +13,7 @@
       <comp-tile
         v-for="(tile, index) in tiles.slice(17, 34)"
         :key="index"
-        :type="tile"
+        :type="mjStore.IDtoName(tile)"
         :position="props.position"
         back
       ></comp-tile>
@@ -43,11 +43,11 @@ const flex2 = props.position === "top" || props.position === "bottom" ? "row" : 
 
 const mjStore = useMjStore();
 const tiles = computed(() => {
-  const positions: Record<string, typeof mjStore.topWall> = {
-    top: mjStore.topWall,
-    left: mjStore.leftWall,
-    right: mjStore.rightWall,
-    bottom: mjStore.bottomWall,
+  const positions: Record<string, typeof mjStore.wallWest> = {
+    top: mjStore.wallWest,
+    left: mjStore.wallNorth,
+    right: mjStore.wallSouth,
+    bottom: mjStore.wallEast,
   };
   return positions[props.position] || positions.bottom;
 });

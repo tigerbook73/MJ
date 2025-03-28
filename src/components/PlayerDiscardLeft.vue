@@ -1,9 +1,9 @@
 <template>
   <div class="column reverse-wrap items-start content-start full-height">
     <comp-tile
-      v-for="(tile, index) in userMj.left_discard"
+      v-for="(tile, index) in userMj.discardNorth"
       :key="index"
-      :type="tile"
+      :type="userMj.IDtoName(tile)"
       position="left"
       size="small"
     ></comp-tile>

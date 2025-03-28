@@ -4,7 +4,7 @@
   >
     <div class="row flex-center">
       <comp-tile
-        v-for="(tile, index) in userMj.p1"
+        v-for="(tile, index) in userMj.players[0].handTiles"
         :key="index"
         :type="userMj.IDtoName(tile)"
         :selected="tile === userMj.selectedTile"

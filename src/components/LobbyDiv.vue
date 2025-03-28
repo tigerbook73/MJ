@@ -1,34 +1,34 @@
 <template>
   <div class="row fit">
     <div
-      v-for="(item, index) in items"
+      v-for="(room, index) in rooms"
       :key="index"
-      :class="['item', item.class]"
-      @click="handleClick(item.id, item.name, group)"
+      :class="['room', room.class]"
+      @click="handleClick(room.pos, group)"
     >
-      {{ item.name }}
+      <!-- {{ room.group }} -->
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Position } from "src/common/core/mj.game";
 import { defineProps, defineEmits } from "vue";
 
-type Item = {
-  id: number;
-  name: string;
+type room = {
+  pos: number;
   class: string;
 };
 
 defineProps<{
-  items: Item[];
+  rooms: room[];
   group: number;
 }>();
 
 const emit = defineEmits(["clicked"]);
 
-const handleClick = (id: number, name: string, group: number) => {
-  emit("clicked", { id, name, group });
+const handleClick = (pos: Position, group: number) => {
+  emit("clicked", { pos, group });
 };
 </script>
 

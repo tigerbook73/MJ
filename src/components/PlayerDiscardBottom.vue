@@ -1,13 +1,11 @@
-----------------------------------------------------------------------------------------------------------------
 <template>
-  <div class="column area-player">
-    <div class="row">
+  <div class="column flex-center area-player">
+    <div class="row flex-center">
       <comp-tile
-        v-for="(tile, index) in userMj.bottom_discard"
+        v-for="(tile, index) in userMj.discardEast"
         :key="index"
-        :type="tile"
-        position="bottom"
-        size="small"
+        :type="userMj.IDtoName(tile)"
+        size="large"
       ></comp-tile>
     </div>
   </div>
