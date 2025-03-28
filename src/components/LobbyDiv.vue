@@ -23,12 +23,12 @@ type room = {
 
 defineProps<{
   rooms: room[];
-  group: number;
+  group: string;
 }>();
 
 const emit = defineEmits(["clicked"]);
 
-const handleClick = (pos: Position, group: number, display: string) => {
+const handleClick = (pos: Position, group: string, display: string) => {
   emit("clicked", { pos, group, display });
 };
 </script>

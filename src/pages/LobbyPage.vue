@@ -9,7 +9,7 @@
             { pos: Position.West, display: '西', class: ' bg-blue-4' },
             { pos: Position.North, display: '北', class: ' bg-red-5' },
           ]"
-          :group="1"
+          :group="'room-1'"
           @clicked="handleClick"
         />
       </div>
@@ -21,9 +21,10 @@
           >Sign Out</q-btn
         >
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold">Refresh</q-btn>
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold"
-          >New/Delete Room</q-btn
+        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="createRoom"
+          >New Room</q-btn
         >
+        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold">Delete Room</q-btn>
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="joinRoom"
           >Join</q-btn
         >
@@ -51,7 +52,7 @@ const selected = ref();
 const router = useRouter();
 const userStore = useUserStore();
 
-const handleClick = (selection: { pos: Position; group: number; display: string }) => {
+const handleClick = (selection: { pos: Position; group: string; display: string }) => {
   selected.value = `room: ${selection.group} position: ${selection.pos}`;
 };
 const game = ref<Game | null>(null);
@@ -61,6 +62,15 @@ async function logout() {
   if (response.status == "success") {
     userStore.user = null;
     router.push("/login");
+  }
+}
+
+async function createRoom() {
+  try {
+    const room = await clientApi.createRoom(selected.value.group);
+    selected.value = { pos: Position.East, group: room.name };
+  } catch (error: any) {
+    window.alert("create room failed");
   }
 }
 
@@ -84,6 +94,7 @@ async function enterGame() {
   try {
     const data = await clientApi.enterGame(selected.value.group);
     game.value = data.game;
+    router.push("/game");
   } catch (error: any) {
     window.alert("enter game failed");
   }
