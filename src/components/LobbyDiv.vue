@@ -4,9 +4,9 @@
       v-for="(room, index) in rooms"
       :key="index"
       :class="['room', room.class]"
-      @click="handleClick(room.pos, group)"
+      @click="handleClick(room.pos, group, room.display)"
     >
-      <!-- {{ room.group }} -->
+      {{ room.display }}
     </div>
   </div>
 </template>
@@ -18,6 +18,7 @@ import { defineProps, defineEmits } from "vue";
 type room = {
   pos: number;
   class: string;
+  display: string;
 };
 
 defineProps<{
@@ -27,13 +28,13 @@ defineProps<{
 
 const emit = defineEmits(["clicked"]);
 
-const handleClick = (pos: Position, group: number) => {
-  emit("clicked", { pos, group });
+const handleClick = (pos: Position, group: number, display: string) => {
+  emit("clicked", { pos, group, display });
 };
 </script>
 
 <style scoped>
-.item {
+.room {
   flex: 1;
   height: 50px;
   display: flex;

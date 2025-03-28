@@ -4,10 +4,10 @@
       <div class="q-pa-md row flex-center bg-blue-grey-3" style="width: 70%; margin: 5px">
         <LobbyDiv
           :rooms="[
-            { pos: Position.East, class: ' bg-pink-3' },
-            { pos: Position.South, class: ' bg-yellow-5' },
-            { pos: Position.West, class: ' bg-blue-4' },
-            { pos: Position.North, class: ' bg-red-5' },
+            { pos: Position.East, display: '东', class: ' bg-pink-3' },
+            { pos: Position.South, display: '南', class: ' bg-yellow-5' },
+            { pos: Position.West, display: '西', class: ' bg-blue-4' },
+            { pos: Position.North, display: '北', class: ' bg-red-5' },
           ]"
           :group="1"
           @clicked="handleClick"
@@ -16,7 +16,7 @@
       <q-separator vertical color="grey-8" />
       <div class="q-pa-sm column flex-center" style="flex: auto">
         <div class="row flex-center" style="font-weight: bold; font-size: large">current selection:</div>
-        <div class="row flex-center" style="font-weight: bold; font-size: x-large">{{ selected.name }}</div>
+        <div class="row flex-center" style="font-weight: bold; font-size: x-large">{{ selected }}</div>
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="logout"
           >Sign Out</q-btn
         >
@@ -51,8 +51,8 @@ const selected = ref();
 const router = useRouter();
 const userStore = useUserStore();
 
-const handleClick = (selection: { pos: Position; group: number }) => {
-  selected.value = selection;
+const handleClick = (selection: { pos: Position; group: number; display: string }) => {
+  selected.value = `room: ${selection.group} position: ${selection.pos}`;
 };
 const game = ref<Game | null>(null);
 
