@@ -3,11 +3,11 @@
     <q-card style="width: 50%">
       <q-card-section>
         <q-input v-model="email" label="Email: "></q-input>
-        <q-input v-model="password" label="Password: " type="password"></q-input>
+        <q-input v-model="password" label="Password: " type="password" class="q-mt-sm"></q-input>
       </q-card-section>
 
       <q-card-actions>
-        <q-btn label="Sign In" :loading="loading" flat @click="login"></q-btn>
+        <q-btn label="Sign In" :loading="loading" flat @click="login" class="q-mt-md"></q-btn>
       </q-card-actions>
     </q-card>
   </q-page>
@@ -17,14 +17,25 @@
 import { clientApi } from "src/client/client-api";
 import { UserModel } from "src/common/models/user.model";
 import { userStore } from "src/stores/user-store";
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { appStore, AppState } from "src/stores/app-store";
 
 const email = ref("a@a.com");
 const password = ref("password");
 const loading = ref(false);
 const router = useRouter();
 const store = userStore();
+
+
+
+onMounted(() => {
+  if (store.user) {
+    email.value = store.user.email;
+    password.value = store.user.password;
+    login();
+  }
+});
 
 async function login() {
   if (!email.value || !password.value) {
@@ -50,6 +61,7 @@ async function login() {
           response.password,
           response.type,
         );
+        appStore.setAppState(AppState.InLobby);
       }
       store.user.email = email.value;
       store.user.password = password.value;

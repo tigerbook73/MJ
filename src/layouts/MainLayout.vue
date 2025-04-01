@@ -19,50 +19,51 @@ defineOptions({
   name: "MainLayout",
 });
 
-import { onMounted, watch } from "vue";
+import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
 
 import { appStore, AppState } from "src/stores/app-store";
 import { userStore } from "src/stores/user-store";
 import { roomStore } from "src/stores/room-store";
+import { useMjStore } from "src/stores/mj-store";
 import { gameStore } from "src/stores/game-store";
 
 const router = useRouter();
 const useAppStore = appStore();
 const useUserStore = userStore();
 const useRoomStore = roomStore();
+const mjstore = useMjStore();
 const useGameStore = gameStore();
 
 // 👂 Socket connection status
-onMounted(() => {
-  clientApi.gameSocket.onConnect(() => {
-    useAppStore.setAppState(AppState.NotLoggedIn);
-  });
 
-  clientApi.gameSocket.onDisconnect(() => {
-    useAppStore.setAppState(AppState.NotConnected);
-  });
+clientApi.gameSocket.onConnect(() => {
+  useAppStore.setAppState(AppState.NotLoggedIn);
+});
 
-  // 👂 Game event handler
-  clientApi.gameSocket.onReceive((event) => {
-    const parsed = clientApi.parseEvent(event);
+clientApi.gameSocket.onDisconnect(() => {
+  useAppStore.setAppState(AppState.NotConnected);
+});
 
-    if (!useUserStore.user) return; // not logged in, ignore
+// 👂 Game event handler
+clientApi.gameSocket.onReceive((event) => {
+  const parsed = clientApi.parseEvent(event);
 
-    const game = clientApi.findMyGame(parsed);
-    const room = clientApi.findMyRoom(parsed);
+  if (!useUserStore.user) return; // not logged in, ignore
 
-    useRoomStore.setRooms(room ? [room] : []);
+  const game = clientApi.findMyGame(parsed);
+  const room = clientApi.findMyRoom(parsed);
 
-    if (game) {
-      useGameStore.setGame(game);
-      useAppStore.setAppState(AppState.InGame);
-    } else {
-      useGameStore.setGame(null);
-      useAppStore.setAppState(AppState.InLobby);
-    }
-  });
+  useRoomStore.setRooms(room ? [room] : []);
+
+  if (game) {
+    mjstore.refresh();
+    useAppStore.setAppState(AppState.InGame);
+  } else {
+    useGameStore.setGame(null);
+    useAppStore.setAppState(AppState.InLobby);
+  }
 });
 
 watch(

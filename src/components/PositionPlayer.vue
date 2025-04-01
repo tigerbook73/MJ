@@ -1,6 +1,6 @@
 <template>
-  <div :class="{ active: isActive }" @click="handleClick">
-    {{ player.userName }}
+  <div :class="{ active: isActive }" class="fit row justify-center items-center" @click="handleClick">
+    <div>{{ player.userName }}</div>
     <q-menu v-model="showingMenu" touch-position>
       <q-list style="min-width: 100px">
         <q-item v-show="player?.type === UserType.Bot" clickable v-close-popup>
