@@ -1,13 +1,13 @@
 <template>
-  <div :class="{ active: isActive }" class="fit row justify-center items-center" @click="handleClick" ref="menuTarget">
+  <div :class="{ active: isActive }" class="fit row justify-center items-center">
     <span>{{ player.userName }}</span>
 
-    <q-menu v-model="showingMenu" :target="menuTarget" touch-position anchor="top middle" self="bottom middle">
+    <q-menu v-model="showingMenu" touch-position anchor="top middle" self="bottom middle">
       <q-list style="min-width: 100px">
         <q-item v-show="player?.type === UserType.Bot" clickable v-close-popup>
           <q-item-section @click="joinRoom">Join the room</q-item-section>
         </q-item>
-        <q-item v-show="player?.userName === store.user?.email" clickable v-close-popup>
+        <q-item v-show="isActive" clickable v-close-popup>
           <q-item-section @click="leaveRoom">Leave the room</q-item-section>
         </q-item>
       </q-list>
@@ -29,41 +29,15 @@ const props = defineProps<{
 const store = userStore();
 const emits = defineEmits(["update"]);
 const showingMenu = ref(false);
-const menuTarget = ref(false); // ⬅️ 对应 ref，用作菜单 anchor
 
 const isActive = computed(() => props.player?.userName === store.user?.email);
 
-async function handleClick() {
-  const currentUser = store.user?.email;
-  const currentIsYou = props.player?.userName === currentUser;
-
-  // Clicked your own seat
-  if (currentIsYou) {
-    showingMenu.value = true;
-    await leaveRoom();
-    emits("update");
-    return;
-  }
-
-  // If it's a bot seat (i.e., joinable)
-  if (props.player?.type === UserType.Bot) {
-    showingMenu.value = true;
-    try {
-      await leaveRoom();
-    } catch (e) {
-      console.warn("Leave room failed", e);
-    }
-
-    await joinRoom();
-    emits("update");
-    return;
-  }
-}
-
 async function joinRoom() {
   try {
+    await leaveRoom();
+
     // Make the socket request to join the room
-    const response = await await clientApi.joinRoom(props.player.roomName, props.player.position);
+    const response = await clientApi.joinRoom(props.player.roomName, props.player.position);
 
     if (response) {
       emits("update");
