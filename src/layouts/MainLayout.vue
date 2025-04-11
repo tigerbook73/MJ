@@ -50,13 +50,13 @@ clientApi.gameSocket.onDisconnect(() => {
 clientApi.gameSocket.onReceive((event) => {
   const parsed = clientApi.parseEvent(event);
 
-  if (!useUserStore.user) return; // not logged in, ignore
+  if (!useUserStore.user) {
+    return; // not logged in, ignore
+  }
+
+  useRoomStore.setRooms(parsed.data.rooms);
 
   const game = clientApi.findMyGame(parsed);
-  const room = clientApi.findMyRoom(parsed);
-
-  useRoomStore.setRooms(room ? [room] : []);
-
   if (game) {
     mjstore.refresh();
     useAppStore.setAppState(AppState.InGame);
