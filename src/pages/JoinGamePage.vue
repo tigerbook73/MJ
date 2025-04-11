@@ -19,14 +19,15 @@ import GameRoom from "src/components/GameRoom.vue";
 import { useRouter } from "vue-router";
 import { userStore } from "src/stores/user-store";
 import { computed, ref } from "vue";
-import { PlayerModel } from "src/common/models/player.model";
+// import { PlayerModel } from "src/common/models/player.model";
 import { clientApi } from "src/client/client-api";
-
+import { roomStore } from "src/stores/room-store";
 defineOptions({
   name: "JoinGamePage",
 });
 const store = userStore();
 const router = useRouter();
+const useRoomStore = roomStore();
 if (!store.user) {
   router.push("/sign-in");
 }
@@ -38,14 +39,16 @@ if (!store.user) {
  * define a button to call refresh()
  */
 
-// define room interface
-interface Room {
-  name: string;
-  players: PlayerModel[];
-}
+// import roomList from room store
 
-// define rooms array ref var
-const rooms = ref<Room[]>([]);
+// define room interface
+// interface Room {
+//   name: string;
+//   players: PlayerModel[];
+// }
+
+// define rooms array from room store
+const rooms = computed(() => useRoomStore.roomList);
 const loading = ref<boolean>(false); // Tracks loading state
 
 // define refresh() function, which will call listRoomRequest() and update rooms ref var
@@ -57,10 +60,11 @@ async function refreshRooms() {
     const response = await clientApi.listRoom();
 
     if (response && response.length > 0) {
-      rooms.value = response.map((room) => ({
-        name: room.name,
-        players: room.players,
-      }));
+      // rooms = response.map((room) => ({
+      //   name: room.name,
+      //   players: room.players,
+      // }));
+      useRoomStore.setRooms(response);
     } else {
       alert(`Failed to fetch rooms: ${response}`);
     }
