@@ -1,6 +1,6 @@
 <template>
   <q-page class="row">
-    <div class="col-3 q-ma-md">
+    <div v-if="showSideBar" class="col-3 q-ma-md">
       <div class="row items-stretch items-center">
         <div class="text-h6">{{ connected ? "Connected" : "Disconnected" }}</div>
         <q-toggle v-model="showAllCommand" label="Show All Commands" />
@@ -173,11 +173,14 @@
       <q-item>
         <q-item-section>
           <div class="row q-gutter-md items-center">
+            <q-btn icon="menu" @click="showSideBar = !showSideBar" dense no-caps></q-btn>
             <q-btn-toggle v-model="mode" :options="modeOptions" />
-            <q-toggle v-model="showEvent" label="Event" />
-            <div class="bg-warning border">Pending</div>
-            <div class="bg-positive border">Completed</div>
-            <div class="bg-negative border">Failed</div>
+            <div v-if="mode === 'message'" class="row">
+              <q-toggle v-model="showEvent" label="Event" />
+              <div class="bg-warning border">Pending</div>
+              <div class="bg-positive border">Completed</div>
+              <div class="bg-negative border">Failed</div>
+            </div>
           </div>
         </q-item-section>
         <q-btn @click="messageList = []" dense no-caps>Clean</q-btn>
@@ -284,6 +287,8 @@ defineOptions({
 });
 
 const $q = useQuasar();
+
+const showSideBar = ref(false);
 
 const connected = ref(clientApi.gameSocket.connected);
 clientApi.gameSocket.onConnect(() => {
