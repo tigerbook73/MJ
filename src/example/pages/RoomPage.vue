@@ -2,7 +2,7 @@
   <q-page class="row justify-center">
     <q-card class="col-8">
       <q-card-section class="row flex-center q-col-gutter-md">
-        <div v-for="room in rooms" :key="room.id" class="col-12 col-md-6 col-xl-4 room">
+        <div v-for="room in rooms" :key="room.id" class="col-12 col-md-6 col-xl-4 square">
           <GameRoom :room="room" />
         </div>
       </q-card-section>
@@ -50,7 +50,7 @@ const rooms = ref<GameRoomProp[]>([
 </script>
 
 <style scoped lang="scss">
-.room {
+.square {
   aspect-ratio: 1 / 1;
 }
 </style>
