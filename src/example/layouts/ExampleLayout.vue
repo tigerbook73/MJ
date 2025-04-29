@@ -8,7 +8,7 @@
           <q-avatar>
             <img src="/public/svgs/Regular/Chun.svg" />
           </q-avatar>
-          This is example layout
+          Online Mahjong
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
