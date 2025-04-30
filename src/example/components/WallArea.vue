@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-export default { name: "DiscardArea" };
+export default { name: "WallArea" };
 </script>
 
 <script setup lang="ts">
