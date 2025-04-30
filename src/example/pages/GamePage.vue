@@ -39,20 +39,25 @@ import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "../components/GameTile.vue";
 
 const defaultBottomTile: GameTileProp = {
-  id: TileCore.fromNameAndIndex("发", 0).id,
+  id: TileCore.fromNameAndIndex("八万", 0).id,
+  // id: TileCore.voidId,
   position: "bottom",
+  back: false,
 };
 const defaultLeftTile: GameTileProp = {
   ...defaultBottomTile,
   position: "left",
+  back: true,
 };
 const defaultRightTile: GameTileProp = {
   ...defaultBottomTile,
   position: "right",
+  back: true,
 };
 const defaultTopTile: GameTileProp = {
   ...defaultBottomTile,
   position: "top",
+  back: true,
 };
 </script>
 

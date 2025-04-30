@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
-      <q-img :src="imgSrc" :ratio="0.95" fit="scale-down" :width="width" :class="imageClass"></q-img>
+      <q-img v-if="showImage" :src="imgSrc" :ratio="0.95" fit="scale-down" :width="width" :class="imageClass"></q-img>
     </div>
   </div>
 </template>
@@ -73,6 +73,10 @@ const imgSrc = computed(() => {
   return imageNames[name] ? `/svgs/Regular/${imageNames[name]}` : "/svgs/Black/Blank.svg";
 });
 
+const showImage = computed(() => {
+  return props.tile.id !== TileCore.voidId && !props.tile.back;
+});
+
 const sizeMap = {
   xs: 2.8,
   sm: 3,
@@ -86,8 +90,8 @@ const height = `${(size * 4) / 3}vmin`;
 
 const tileClass = computed(() => ({
   position: "relative",
-  tile: !props.tile.back,
-  tile_back: props.tile.back,
+  tile: props.tile.id !== TileCore.voidId && !props.tile.back,
+  tile_back: props.tile.id !== TileCore.voidId && props.tile.back,
 }));
 
 const tileStyle = {
