@@ -74,10 +74,10 @@ const imgSrc = computed(() => {
 });
 
 const sizeMap = {
-  xs: 3,
-  sm: 3.5,
-  md: 4,
-  lg: 4.5,
+  xs: 2.8,
+  sm: 3,
+  md: 3.5,
+  lg: 4,
   xl: 5,
 };
 const size = typeof props.tile.size === "number" ? props.tile.size : sizeMap[props.tile.size || "md"];
