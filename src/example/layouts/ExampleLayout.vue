@@ -6,7 +6,7 @@
 
         <q-toolbar-title>
           <q-avatar>
-            <img src="/public/svgs/Regular/Chun.svg" />
+            <img src="/svgs/Regular/Chun.svg" />
           </q-avatar>
           Online Mahjong
         </q-toolbar-title>
