@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
-      <q-img v-if="showImage" :src="imgSrc" :ratio="0.95" fit="scale-down" :width="width" :class="imageClass"></q-img>
-    </div>
+  <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
+    <q-img v-if="showImage" :src="imgSrc" :ratio="0.95" fit="scale-down" :width="width" :class="imageClass"></q-img>
   </div>
 </template>
 
