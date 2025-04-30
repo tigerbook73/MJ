@@ -1,34 +1,34 @@
 <template>
-  <div class="column square bg-purple-1">
+  <div class="column square bg-green-3">
     <!-- top -->
-    <div class="h-3 row">
-      <div class="w-3"></div>
-      <div class="w-18 row flex-center bg-green-1">
+    <div class="h-2 row">
+      <div class="w-2"></div>
+      <div class="w-20 row flex-center">
         <game-tile v-for="i in 13" :key="i" :tile="defaultTopHand"></game-tile>
       </div>
-      <div class="w-3"></div>
+      <div class="w-2"></div>
     </div>
 
     <!-- center -->
-    <div class="h-18 row">
-      <div class="w-3 column flex-center bg-green-1">
+    <div class="h-20 row">
+      <div class="w-2 column flex-center">
         <game-tile v-for="i in 13" :key="i" :tile="defaultLeftHand"></game-tile>
       </div>
 
-      <wall-area class="w-18" />
+      <wall-area class="w-20" />
 
-      <div class="w-3 column flex-center bg-green-1">
+      <div class="w-2 column flex-center">
         <game-tile v-for="i in 13" :key="i" :tile="defaultRightHand"></game-tile>
       </div>
     </div>
 
     <!-- bottom -->
-    <div class="h-3 row">
-      <div class="w-3"></div>
-      <div class="w-18 row flex-center bg-green-1">
+    <div class="h-2 row">
+      <div class="w-2"></div>
+      <div class="w-20 row flex-center">
         <game-tile v-for="i in 13" :key="i" :tile="defaultBottomHand"></game-tile>
       </div>
-      <div class="w-3"></div>
+      <div class="w-2"></div>
     </div>
   </div>
 </template>

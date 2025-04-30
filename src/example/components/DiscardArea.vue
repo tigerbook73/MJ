@@ -1,9 +1,9 @@
 <template>
-  <div class="column">
+  <div class="column bg-brown-3">
     <!-- top -->
     <div class="h-5 row">
       <div class="w-5"></div>
-      <div class="w-14 column flex-center bg-yellow-3">
+      <div class="w-14 column flex-center">
         <div class="row">
           <game-tile v-for="i in 5" :key="i" :tile="defaultTopDiscard"></game-tile>
         </div>
@@ -16,7 +16,7 @@
 
     <!-- center -->
     <div class="h-14 row">
-      <div class="w-5 row flex-center bg-yellow-3" style="height: 100%">
+      <div class="w-5 row flex-center" style="height: 100%">
         <div class="column">
           <game-tile v-for="i in 5" :key="i" :tile="defaultLeftDiscard" style="line-height: 0.1"></game-tile>
         </div>
@@ -24,8 +24,8 @@
           <game-tile v-for="i in 5" :key="i" :tile="defaultLeftDiscard" style="line-height: 0.1"></game-tile>
         </div>
       </div>
-      <div class="w-14"></div>
-      <div class="w-5 row flex-center bg-yellow-3">
+      <div class="w-14 bg-green"></div>
+      <div class="w-5 row flex-center">
         <div class="column">
           <game-tile v-for="i in 5" :key="i" :tile="defaultRightDiscard" style="line-height: 0.1"></game-tile>
         </div>
@@ -38,7 +38,7 @@
     <!-- bottom -->
     <div class="h-5 row">
       <div class="w-5"></div>
-      <div class="w-14 column flex-center bg-yellow-5">
+      <div class="w-14 column flex-center">
         <div class="row">
           <game-tile v-for="i in 5" :key="i" :tile="defaultBottomDisard"></game-tile>
         </div>
@@ -48,7 +48,6 @@
       </div>
       <div class="w-5"></div>
     </div>
-    6
   </div>
 </template>
 

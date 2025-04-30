@@ -1,5 +1,5 @@
 <template>
-  <q-page class="fit row flex-center bg-green-2">
+  <q-page class="fit row flex-center bg-grey-5">
     <play-area />
   </q-page>
 </template>
