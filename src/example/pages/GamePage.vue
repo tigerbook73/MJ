@@ -41,9 +41,6 @@ import GameTile, { GameTileProp } from "../components/GameTile.vue";
 const defaultBottomTile: GameTileProp = {
   id: TileCore.fromNameAndIndex("发", 0).id,
   position: "bottom",
-  size: "small",
-  back: false,
-  selected: false,
 };
 const defaultLeftTile: GameTileProp = {
   ...defaultBottomTile,

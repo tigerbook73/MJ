@@ -10,7 +10,7 @@
 export interface GameTileProp {
   id: TileId;
   position: "top" | "left" | "right" | "bottom";
-  size?: "small" | "large";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   back?: boolean;
   selected?: boolean;
 }
@@ -25,7 +25,7 @@ const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {
     // default values
     id: TileCore.voidId,
     position: "bottom",
-    size: "small",
+    size: "sm",
     back: false,
     selected: false,
   }),
@@ -73,19 +73,21 @@ const imgSrc = computed(() => {
   return imageNames[name] ? `/svgs/Regular/${imageNames[name]}` : "/svgs/Black/Blank.svg";
 });
 
-// const width = props.tile.size == "small" ? "3vh" : "3.5vh";
-// const height = props.tile.size == "small" ? "4vh" : "4.7vh";
-const width = props.tile.size == "small" ? "3vh" : "3.5vh";
-const height = props.tile.size == "small" ? "4vh" : "4.7vh";
+const sizeMap = {
+  xs: 3,
+  sm: 3.5,
+  md: 4,
+  lg: 4.5,
+  xl: 5,
+};
+const size = typeof props.tile.size === "number" ? props.tile.size : sizeMap[props.tile.size || "md"];
+const width = `${size}vmin`;
+const height = `${(size * 4) / 3}vmin`;
 
 const tileClass = computed(() => ({
   position: "relative",
   tile: !props.tile.back,
   tile_back: props.tile.back,
-  tile_top: props.tile.position == "top",
-  tile_bottom: props.tile.position == "bottom",
-  tile_left: props.tile.position == "left",
-  tile_right: props.tile.position == "right",
 }));
 
 const tileStyle = {
@@ -108,8 +110,9 @@ const imageClass = computed(() => ({
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
   &:hover {
-    background-color: #000;
-    color: #f0f0f0;
+    // background-color: #000;
+    // color: #f0f0f0;
+    filter: invert(1);
   }
 }
 
@@ -118,22 +121,6 @@ const imageClass = computed(() => ({
   border: 1px solid #000;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
-}
-
-.tile_top {
-  aspect-ratio: 3 / 4;
-}
-
-.tile_bottom {
-  aspect-ratio: 3 / 4;
-}
-
-.tile_left {
-  aspect-ratio: 4 / 3;
-}
-
-.tile_right {
-  aspect-ratio: 4 / 3;
 }
 
 .image_top {
