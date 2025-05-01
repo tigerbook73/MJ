@@ -15,8 +15,11 @@ export const useExampleStore = defineStore("example-store", () => {
   const appState = ref<AppState>(AppState.Unconnected);
 
   // user info
-  const userName = ref<string | null>(null);
-  const userEmail = ref<string | null>(null);
+  const user = ref({
+    name: "Example User",
+    email: "example@email.com",
+    password: "",
+  });
 
   // room info
   const roomList = ref<RoomModel[]>([]);
@@ -29,8 +32,7 @@ export const useExampleStore = defineStore("example-store", () => {
   return {
     appState,
     game: currentGame,
-    userName,
-    userEmail,
+    user,
     roomList,
     currentRoom,
     currentPosition,

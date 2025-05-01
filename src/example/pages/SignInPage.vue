@@ -3,26 +3,42 @@
     <q-card class="col-12 col-sm-8 col-md-6 col-lg-4">
       <q-card-section>
         <q-form @submit.prevent="signIn" class="q-gutter-md">
-          <q-input v-model="email" label="Email" type="email" required />
-          <q-input v-model="password" label="Password" type="password" required />
+          <q-input v-model="exampleStore.user.email" label="Email" type="email" required />
+          <q-input v-model="exampleStore.user.password" label="Password" type="password" required />
           <q-btn type="submit" label="Sign In" color="primary" />
         </q-form>
+        <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
       </q-card-section>
     </q-card>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { AppState, useExampleStore } from "src/stores/example-store";
+import { onBeforeMount, ref } from "vue";
 
-const email = ref("");
-const password = ref("");
+const exampleStore = useExampleStore();
 
-function signIn() {
-  if (email.value && password.value) {
-    console.log("Signing in with:", email.value, password.value);
-  } else {
-    console.error("Email and password are required");
+onBeforeMount(async () => {
+  if (exampleStore.user.email && exampleStore.user.password) {
+    signIn();
+  }
+});
+
+const loading = ref(false);
+async function signIn() {
+  if (!exampleStore.user.email && !exampleStore.user.password) {
+    return;
+  }
+
+  try {
+    loading.value = true;
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    exampleStore.appState = AppState.InLobby;
+  } catch {
+    //
+  } finally {
+    loading.value = false;
   }
 }
 </script>
