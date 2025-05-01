@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-export default { name: "DiscardAreaHori" };
+export default { name: "WallAreaHori" };
 </script>
 
 <script setup lang="ts">
@@ -23,24 +23,24 @@ const props = defineProps<{
   position: "top" | "bottom";
 }>();
 const size = "sm";
-const rowLength = 12;
+const rowLength = 18;
 
 const discardTiles = reactive(
   Array.from({ length: rowLength * 2 }, (_, i): GameTileProp => {
     return {
-      id: TileCore.voidId,
+      id: (i * 7) % TileCore.allTiles.length,
       position: props.position,
       size: size,
-      back: false,
+      back: true,
     };
   }),
 );
-const rightToLeft = computed(() => props.position === "top");
+const rightToLeft = computed(() => props.position === "bottom");
 const upperRow = computed(() =>
-  props.position === "bottom" ? discardTiles.slice(0, rowLength) : discardTiles.slice(rowLength, rowLength * 2),
+  props.position === "bottom" ? discardTiles.filter((_, i) => i % 2 == 0) : discardTiles.filter((_, i) => i % 2 == 1),
 );
 const lowerRow = computed(() =>
-  props.position === "bottom" ? discardTiles.slice(rowLength, rowLength * 2) : discardTiles.slice(0, rowLength),
+  props.position === "bottom" ? discardTiles.filter((_, i) => i % 2 == 1) : discardTiles.filter((_, i) => i % 2 == 0),
 );
 
 /**
@@ -49,15 +49,13 @@ const lowerRow = computed(() =>
 let intervalId: NodeJS.Timeout;
 onMounted(() => {
   let index = 0;
-  let action: "set" | "clear" = "set";
   intervalId = setInterval(() => {
-    discardTiles[index % discardTiles.length].id =
-      action === "set" ? (index * 7) % TileCore.allTiles.length : TileCore.voidId;
-    index++;
-    if (index % discardTiles.length === 0) {
-      action = action === "set" ? "clear" : "set";
+    if (index !== 0) {
+      discardTiles[(index - 1) % discardTiles.length].back = !discardTiles[(index - 1) % discardTiles.length].back;
     }
-  }, 500);
+    discardTiles[index % discardTiles.length].back = !discardTiles[index % discardTiles.length].back;
+    index++;
+  }, 200);
 });
 
 onUnmounted(() => {

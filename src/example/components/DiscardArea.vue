@@ -15,7 +15,11 @@
     </div>
 
     <!-- bottom -->
-    <discard-area-hori position="bottom" class="h-5" />
+    <div class="h-5 w-full row">
+      <div class="w-5 h-full"></div>
+      <discard-area-hori position="bottom" class="w-14" />
+      <div class="w-5 h-full"></div>
+    </div>
   </div>
 </template>
 
