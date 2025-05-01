@@ -37,11 +37,36 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { AppState, useExampleStore } from "src/stores/example-store";
+import { ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
+// test drawer
 const leftDrawerOpen = ref(false);
-
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
+// state management
+const exampleStore = useExampleStore();
+const route = useRoute();
+const router = useRouter();
+
+watch(
+  () => [exampleStore.appState, route.fullPath],
+  () => {
+    const stateToPath = {
+      [AppState.Unconnected]: "/example/connecting",
+      [AppState.UnSignedIn]: "/example/sign-in",
+      [AppState.InLobby]: "/example/rooms",
+      [AppState.InGame]: "/example/game",
+    };
+    const path = stateToPath[exampleStore.appState];
+    if (path === route.fullPath) {
+      return;
+    }
+    router.push(path);
+  },
+  { immediate: true },
+);
 </script>
