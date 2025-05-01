@@ -87,9 +87,9 @@ const width = `${size}vmin`;
 const height = `${(size * 4) / 3}vmin`;
 
 const tileClass = computed(() => ({
-  position: "relative",
   tile: props.tile.id !== TileCore.voidId && !props.tile.back,
   tile_back: props.tile.id !== TileCore.voidId && props.tile.back,
+  tile_selected: props.tile.selected,
 }));
 
 const tileStyle = {
@@ -117,10 +117,15 @@ const imageClass = computed(() => ({
 }
 
 .tile_back {
-  background-color: gray;
+  background-color: darkslategray;
   border: 1px solid #000;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
+}
+
+.tile_selected {
+  position: relative;
+  top: -8px;
 }
 
 .image_top {
