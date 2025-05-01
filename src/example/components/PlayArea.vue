@@ -3,31 +3,22 @@
     <!-- top -->
     <div class="h-2 row">
       <div class="w-2"></div>
-      <div class="w-20 row flex-center">
-        <game-tile v-for="i in 13" :key="i" :tile="defaultTopHand"></game-tile>
-      </div>
+
+      <play-area-top class="w-20" />
       <div class="w-2"></div>
     </div>
 
     <!-- center -->
     <div class="h-20 row">
-      <div class="w-2 column flex-center">
-        <game-tile v-for="i in 13" :key="i" :tile="defaultLeftHand"></game-tile>
-      </div>
-
+      <play-area-vert position="left" class="w-2" />
       <wall-area class="w-20" />
-
-      <div class="w-2 column flex-center">
-        <game-tile v-for="i in 13" :key="i" :tile="defaultRightHand"></game-tile>
-      </div>
+      <play-area-vert position="right" class="w-2" />
     </div>
 
     <!-- bottom -->
     <div class="h-2 row">
       <div class="w-2"></div>
-      <div class="w-20 row flex-center">
-        <game-tile v-for="i in 13" :key="i" :tile="defaultBottomHand"></game-tile>
-      </div>
+      <play-area-me class="w-20" />
       <div class="w-2"></div>
     </div>
   </div>
@@ -38,31 +29,10 @@ export default { name: "PlayerArea" };
 </script>
 
 <script setup lang="ts">
-import { TileCore } from "src/common/core/mj.tile-core";
-import GameTile, { GameTileProp } from "../components/GameTile.vue";
 import WallArea from "../components/WallArea.vue";
-
-const defaultBottomHand: GameTileProp = {
-  id: TileCore.fromNameAndIndex("八万", 0).id,
-  // id: TileCore.voidId,
-  position: "bottom",
-  back: false,
-};
-const defaultLeftHand: GameTileProp = {
-  ...defaultBottomHand,
-  position: "left",
-  back: true,
-};
-const defaultRightHand: GameTileProp = {
-  ...defaultBottomHand,
-  position: "right",
-  back: true,
-};
-const defaultTopHand: GameTileProp = {
-  ...defaultBottomHand,
-  position: "top",
-  back: true,
-};
+import PlayAreaTop from "./PlayAreaTop.vue";
+import PlayAreaMe from "./PlayAreaMe.vue";
+import PlayAreaVert from "./PlayAreaVert.vue";
 </script>
 
 <style scoped lang="scss">

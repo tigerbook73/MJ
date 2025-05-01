@@ -55,7 +55,7 @@ onMounted(() => {
     }
     discardTiles[index % discardTiles.length].back = !discardTiles[index % discardTiles.length].back;
     index++;
-  }, 200);
+  }, 500);
 });
 
 onUnmounted(() => {
