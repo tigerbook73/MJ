@@ -112,8 +112,6 @@ const imageClass = computed(() => ({
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
   &:hover {
-    // background-color: #000;
-    // color: #f0f0f0;
     filter: invert(1);
   }
 }
