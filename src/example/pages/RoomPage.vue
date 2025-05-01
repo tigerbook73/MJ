@@ -36,16 +36,6 @@ const rooms = ref<GameRoomProp[]>([
       north: { id: 8, position: Position.North, name: "Player North", email: "" },
     },
   },
-  {
-    id: 3,
-    name: "Room 3",
-    players: {
-      east: { id: 9, position: Position.East, name: "Player East", email: "" },
-      south: { id: 10, position: Position.South, name: "Player South", email: "" },
-      west: { id: 11, position: Position.West, name: "Player West", email: "" },
-      north: { id: 12, position: Position.North, name: "Player North", email: "" },
-    },
-  },
 ]);
 </script>
 
