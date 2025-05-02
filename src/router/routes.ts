@@ -1,17 +1,11 @@
 import exampleRoutes from "src/example/router/routes";
 import { RouteRecordRaw } from "vue-router";
+import justinRoutes from "../justin/router/routes";
 
 const routes: RouteRecordRaw[] = [
-  {
-    path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
-      { path: "", component: () => import("pages/IndexPage.vue") },
-      { path: "connect", component: () => import("pages/ConnectPage.vue") },
-      { path: "join-game", component: () => import("pages/JoinGamePage.vue") },
-      { path: "client-page", component: () => import("pages/ClientPage.vue") },
-    ],
-  },
+  // justin routes
+  ...justinRoutes,
+
   // example routes
   ...exampleRoutes,
 

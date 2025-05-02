@@ -268,7 +268,7 @@ import dayjs from "dayjs";
 import { useQuasar } from "quasar";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
-import { type TileId } from "src/common/core/mj.tile-core";
+import { TileId } from "src/common/core/mj.tile-core";
 import {
   GameEvent,
   GameRequestType,
@@ -342,6 +342,15 @@ function appendMessage(type: string, request: any | null, response: any | null):
   messageList.value.unshift(message);
   return message;
 }
+// sendRequest({
+//   type: GameRequestType.LIST_CLIENT,
+// });
+
+// async function sendRequestAndWait(request: GameRequest): Promise<void> {
+//   requestList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), request: request });
+//   const response = await socketSendAndWait(request);
+//   responseList.value.unshift({ time: dayjs().format("YYYY-MM-DD HH:mm:ss SSS"), response: response });
+// }
 
 function updateMessage(
   message: MessageRecord,

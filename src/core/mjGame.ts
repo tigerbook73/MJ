@@ -1,46 +1,30 @@
-import { MjTile } from "./mjTile";
-import { MjTileType, mjTileTypes } from "./mjTileType";
-import { MjTileWall } from "./mjTileWall";
+import { clientApi } from "src/client/client-api";
+import { Game } from "src/common/core/mj.game";
+import { GameEvent } from "src/common/protocols/apis.models";
+import { useMjStore } from "src/justin/stores/mj-store";
 
-export class MjGame {
-  //
-  constructor(
-    public tiles: MjTile[] = [],
-    public tileTypesList: MjTileType[] = [],
-    public walls: MjTileWall[] = [],
-  ) {
-    this.walls = [new MjTileWall("East"), new MjTileWall("South"), new MjTileWall("West"), new MjTileWall("North")];
-    this.tileTypesList = mjTileTypes;
+class MjGame extends Game {}
+
+export let mjGame = new MjGame();
+const mjStore = useMjStore();
+
+clientApi.gameSocket.onReceive((event: GameEvent) => {
+  event = clientApi.parseEvent(event);
+  const game = clientApi.findMyGame(event);
+
+  if (!game) {
+    console.warn("No game found in event.");
+    return;
   }
 
-  init() {
-    this.tiles = [];
+  handleGameUpdate(game);
+});
 
-    this.tileTypesList.forEach((type) => {
-      for (let i = 0; i < 4; i++) {
-        this.tiles.push(new MjTile(type));
-      }
-    });
-  }
-
-  shuffle() {
-    // 随机洗牌
-    for (let i = this.tiles.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [this.tiles[i], this.tiles[j]] = [this.tiles[j], this.tiles[i]];
-    }
-  }
-
-  separate() {
-    // walls -> CardWall对象的数组
-    this.tiles.forEach((tile, index) => {
-      this.walls[index % this.walls.length].add(tile);
-    });
-  }
-
-  print() {
-    this.walls.forEach((wall) => wall.print());
-  }
+export function setGame(game: Game) {
+  mjGame = game;
 }
 
-export const mjGame = new MjGame();
+function handleGameUpdate(game: Game) {
+  setGame(game);
+  mjStore.refresh();
+}

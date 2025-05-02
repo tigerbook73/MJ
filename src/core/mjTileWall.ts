@@ -16,15 +16,15 @@ export class MjTileWall {
     this.tiles.push(tile);
   }
 
-  print() {
-    console.log();
-    console.log(`${this.position}:`);
-    for (const [index, tile] of this.tiles.entries()) {
-      if (index % 8 == 0 && index != 0) {
-        console.log("|");
-      }
-      tile.print();
-    }
-    console.log();
-  }
+  // print() {
+  //   console.log();
+  //   console.log(`${this.position}:`);
+  //   for (const [index, tile] of this.tiles.entries()) {
+  //     if (index % 8 == 0 && index != 0) {
+  //       console.log("|");
+  //     }
+  //     tile.print();
+  //   }
+  //   console.log();
+  // }
 }
