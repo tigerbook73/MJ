@@ -1,0 +1,23 @@
+// example css in SCSS form
+
+@for $i from 1 through 24 {
+  .wx-#{$i} {
+    width: calc($i / 24) * 100%;
+    height: 100%;
+  }
+}
+
+@for $i from 1 through 24 {
+  .hx-#{$i} {
+    height: calc($i / 24) * 100%;
+    width: 100%;
+  }
+}
+
+.wx-full {
+  width: 100%;
+}
+
+.hx-full {
+  height: 100%;
+}
