@@ -14,10 +14,13 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from "quasar";
+import { clientApi } from "src/client/client-api";
 import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { onBeforeMount, ref } from "vue";
 
 const exampleStore = useExampleStore();
+const $q = useQuasar();
 
 onBeforeMount(async () => {
   if (exampleStore.user.email && exampleStore.user.password) {
@@ -33,10 +36,17 @@ async function signIn() {
 
   try {
     loading.value = true;
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    const user = await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
+    exampleStore.user.name = user.name;
     exampleStore.appState = AppState.InLobby;
   } catch {
-    //
+    exampleStore.user.name = "";
+    exampleStore.user.password = "";
+
+    $q.notify({
+      type: "negative",
+      message: "Sign in failed. Please check your email and password.",
+    });
   } finally {
     loading.value = false;
   }

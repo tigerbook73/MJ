@@ -77,6 +77,7 @@ watch(
   { immediate: true },
 );
 
+// connection status
 clientApi.gameSocket.onConnect(() => {
   exampleStore.appState = AppState.UnSignedIn;
 });

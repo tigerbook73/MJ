@@ -268,7 +268,7 @@ import dayjs from "dayjs";
 import { useQuasar } from "quasar";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
-import { TileId } from "src/common/core/mj.tile-core";
+import { type TileId } from "src/common/core/mj.tile-core";
 import {
   GameEvent,
   GameRequestType,
