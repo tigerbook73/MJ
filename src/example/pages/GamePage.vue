@@ -1,9 +1,9 @@
 <template>
   <q-page class="fit row flex-center bg-grey-5">
-    <play-area />
+    <player-area />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import PlayArea from "../components/PlayerArea.vue";
+import PlayerArea from "../components/PlayerArea.vue";
 </script>

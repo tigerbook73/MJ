@@ -13,9 +13,9 @@
 
         <q-space />
 
-        <div>
-          {{ exampleStore.appState }}
-        </div>
+        <div>{{ exampleStore.user.email }}</div>
+        <q-space />
+        <div>{{ exampleStore.appState }}</div>
       </q-toolbar>
     </q-header>
 
