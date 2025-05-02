@@ -17,11 +17,11 @@
 <script setup lang="ts">
 import GameRoom from "src/components/GameRoom.vue";
 import { useRouter } from "vue-router";
-import { userStore } from "src/stores/user-store";
+import { userStore } from "src/simon/stores/user-store";
 import { computed, ref } from "vue";
 // import { PlayerModel } from "src/common/models/player.model";
 import { clientApi } from "src/client/client-api";
-import { roomStore } from "src/stores/room-store";
+import { roomStore } from "src/simon/stores/room-store";
 defineOptions({
   name: "JoinGamePage",
 });

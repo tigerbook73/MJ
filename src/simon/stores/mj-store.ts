@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { TileCore } from "src/common/core/mj.tile-core";
-import { voidCard } from "src/core/mjCard";
-import { mjGame } from "src/core/mjGame";
+import { voidCard } from "src/simon/core/mjCard";
+import { mjGame } from "src/simon/core/mjGame";
 import { ref } from "vue";
 
 interface HandCard {

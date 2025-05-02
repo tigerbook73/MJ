@@ -15,8 +15,8 @@
 
 <script setup lang="ts">
 import { computed, ref, StyleValue } from "vue";
-import { useMjStore } from "src/stores/mj-store";
-import { voidTileId } from "src/core/mjCard";
+import { useMjStore } from "src/simon/stores/mj-store";
+import { voidTileId } from "src/simon/core/mjCard";
 
 interface Props {
   id?: string;

@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import { computed, defineProps, ref } from "vue";
 import { UserType } from "src/common/models/common.types";
-import { userStore } from "src/stores/user-store";
+import { userStore } from "src/simon/stores/user-store";
 import { PlayerModel } from "src/common/models/player.model";
 import { clientApi } from "src/client/client-api";
 

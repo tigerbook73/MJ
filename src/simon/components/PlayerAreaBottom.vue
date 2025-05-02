@@ -23,7 +23,7 @@ defineOptions({
 
 import CompTile from "components/CompTile.vue";
 
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/simon/stores/mj-store";
 // import { wait } from "src/utils/timer";
 
 // async function onClick(tile: string) {
@@ -53,7 +53,7 @@ import { useMjStore } from "src/stores/mj-store";
 //    */
 // }
 
-import { voidTileId } from "src/core/mjCard";
+import { voidTileId } from "src/simon/core/mjCard";
 import { Position } from "src/common/core/mj.game";
 
 function onClick(tile: (typeof userMj.p4Cards)[0]) {

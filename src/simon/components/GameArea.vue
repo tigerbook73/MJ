@@ -40,8 +40,8 @@ import PlayerAreaTop from "components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { GameEvent } from "src/common/protocols/apis.models";
-import { setGame, mjGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { setGame, mjGame } from "src/simon/core/mjGame";
+import { useMjStore } from "src/simon/stores/mj-store";
 
 const mjStore = useMjStore();
 

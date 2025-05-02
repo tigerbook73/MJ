@@ -18,8 +18,8 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
 import { UserModel } from "src/common/models/user.model";
-import { userStore } from "src/stores/user-store";
-import { appStore, AppState } from "src/stores/app-store";
+import { userStore } from "src/simon/stores/user-store";
+import { appStore, AppState } from "src/simon/stores/app-store";
 import { useQuasar } from "quasar";
 
 defineOptions({ name: "LoginPage" });

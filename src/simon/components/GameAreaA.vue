@@ -16,7 +16,7 @@ const emits = defineEmits<{
   (e: "reset-game"): void;
 }>();
 
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/simon/stores/mj-store";
 
 const mjStore = useMjStore();
 

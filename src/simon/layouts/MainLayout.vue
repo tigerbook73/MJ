@@ -23,11 +23,11 @@ import { watch } from "vue";
 import { useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
 
-import { appStore, AppState } from "src/stores/app-store";
-import { userStore } from "src/stores/user-store";
-import { roomStore } from "src/stores/room-store";
-import { useMjStore } from "src/stores/mj-store";
-import { gameStore } from "src/stores/game-store";
+import { appStore, AppState } from "src/simon/stores/app-store";
+import { userStore } from "src/simon/stores/user-store";
+import { roomStore } from "src/simon/stores/room-store";
+import { useMjStore } from "src/simon/stores/mj-store";
+import { gameStore } from "src/simon/stores/game-store";
 
 const router = useRouter();
 const useAppStore = appStore();

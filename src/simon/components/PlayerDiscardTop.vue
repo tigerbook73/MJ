@@ -1,23 +1,22 @@
 <template>
-  <div class="column reverse-wrap items-start content-start full-height">
+  <div class="row reverse reverse-wrap justify-start items-end content-start">
     <comp-tile
-      v-for="(tile, index) in userMj.p1DiscardCards"
+      v-for="(tile, index) in userMj.p2DiscardCards"
       :key="index"
       :type="tile"
       size="small"
-      position="left"
+      position="top"
     ></comp-tile>
   </div>
 </template>
 
 <script setup lang="ts">
 defineOptions({
-  name: "PlayerDiscardLeft",
+  name: "PlayerDiscardTop",
 });
-
 import CompTile from "components/CompTile.vue";
 
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/simon/stores/mj-store";
 
 const userMj = useMjStore();
 </script>
