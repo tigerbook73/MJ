@@ -28,10 +28,10 @@ defineOptions({
   name: "BoardArea",
 });
 
-import BoardAreaA from "components/BoardAreaA.vue";
-import BoardAreaB from "components/BoardAreaB.vue";
-import BoardAreaC from "components/BoardAreaC.vue";
-import BoardAreaD from "components/BoardAreaD.vue";
-import CompTileWall from "components/CompTileWall.vue";
-import FieldArea from "components/FieldArea.vue";
+import BoardAreaA from "src/justin/components/BoardAreaA.vue";
+import BoardAreaB from "src/justin/components/BoardAreaB.vue";
+import BoardAreaC from "src/justin/components/BoardAreaC.vue";
+import BoardAreaD from "src/justin/components/BoardAreaD.vue";
+import CompTileWall from "src/justin/components/CompTileWall.vue";
+import FieldArea from "src/justin/components/FieldArea.vue";
 </script>

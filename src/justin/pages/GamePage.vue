@@ -7,12 +7,12 @@
 </template>
 
 <script setup lang="ts">
-import GameArea from "components/GameArea.vue";
+import GameArea from "/src/justin/components/GameArea.vue";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { GameEvent } from "src/common/protocols/apis.models";
 import { mjGame, setGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "IndexPage",

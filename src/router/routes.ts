@@ -1,6 +1,6 @@
 import exampleRoutes from "src/example/router/routes";
 import { RouteRecordRaw } from "vue-router";
-import justinRoutes from "./JLroutes";
+import justinRoutes from "../justin/router/routes";
 
 const routes: RouteRecordRaw[] = [
   // justin routes

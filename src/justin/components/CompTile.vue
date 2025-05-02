@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { computed, ref, StyleValue } from "vue";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 interface Props {
   id?: string;

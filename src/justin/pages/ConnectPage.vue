@@ -34,6 +34,6 @@ async function connect() {
   await wait(1000);
   loading.value = false;
 
-  router.push("/");
+  router.push("/justin");
 }
 </script>

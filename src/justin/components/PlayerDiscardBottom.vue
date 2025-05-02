@@ -16,9 +16,9 @@ defineOptions({
   name: "PlayerDiscardBottom",
 });
 
-import CompTile from "components/CompTile.vue";
+import CompTile from "src/justin/components/CompTile.vue";
 
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 const userMj = useMjStore();
 </script>

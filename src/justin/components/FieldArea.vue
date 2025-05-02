@@ -27,7 +27,7 @@ import PlayerDiscardBottom from "./PlayerDiscardBottom.vue";
 import PlayerDiscardLeft from "./PlayerDiscardLeft.vue";
 import PlayerDiscardRight from "./PlayerDiscardRight.vue";
 import PlayerDiscardTop from "./PlayerDiscardTop.vue";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "FieldArea",

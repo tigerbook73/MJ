@@ -2,7 +2,7 @@ import { route } from "quasar/wrappers";
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
 
 import routes from "./routes";
-import { useUserStore } from "src/stores/user-store";
+import { useUserStore } from "src/justin/stores/user-store";
 
 /*
  * If not building with SSR mode, you can

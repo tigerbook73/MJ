@@ -44,7 +44,7 @@ import {
 } from "src/websocket/client.api";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "src/stores/user-store";
+import { useUserStore } from "src/justin/stores/user-store";
 import { RoomModel } from "src/common/models/room.model";
 import { wait } from "src/core/timer";
 import { Position } from "src/common/core/mj.game";
@@ -95,7 +95,7 @@ async function logout() {
   if (response.status == "success") {
     console.log("logout success");
     userStore.user = null;
-    router.push("/login");
+    router.push("/justin/login");
   }
   loading.value = false;
 }

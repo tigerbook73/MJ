@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-import CompTile from "components/CompTile.vue";
-import { useMjStore } from "src/stores/mj-store";
+import CompTile from "src/justin/components/CompTile.vue";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "PlayerAreaTop",

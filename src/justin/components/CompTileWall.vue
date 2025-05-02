@@ -26,8 +26,8 @@ defineOptions({
   name: "CompTileWall",
 });
 
-import CompTile from "components/CompTile.vue";
-import { useMjStore } from "src/stores/mj-store";
+import CompTile from "src/justin/components/CompTile.vue";
+import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 
 interface Props {

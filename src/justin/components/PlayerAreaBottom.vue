@@ -21,9 +21,9 @@ defineOptions({
   name: "PlayerAreaBottom",
 });
 
-import CompTile from "components/CompTile.vue";
+import CompTile from "src/justin/components/CompTile.vue";
 import { TileCore } from "src/common/core/mj.tile-core";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 const userMj = useMjStore();
 

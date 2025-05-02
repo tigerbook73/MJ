@@ -44,13 +44,13 @@
 </template>
 
 <script setup lang="ts">
-import LobbyDiv, { MyPlayer, RoomProp } from "src/components/LobbyDiv.vue";
+import LobbyDiv, { MyPlayer, RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { setGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 const router = useRouter();
 const MjStore = useMjStore();
@@ -80,7 +80,7 @@ refreshRoom();
 async function logout() {
   try {
     await clientApi.signOut();
-    router.push("/login");
+    router.push("/justin/login");
   } catch (error: any) {
     window.alert("logout failed");
   }
@@ -125,7 +125,7 @@ async function enterGame() {
       setGame(data.game);
       MjStore.refresh();
     }
-    router.push("/game");
+    router.push("/justin/game");
   } catch (error: any) {
     window.alert("enter game failed");
   }

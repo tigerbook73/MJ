@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { mjGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "GameAreaD",

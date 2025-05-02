@@ -11,7 +11,7 @@
 <script setup lang="ts">
 import { Position } from "src/common/core/mj.game";
 import { mjGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "GameAreaB",

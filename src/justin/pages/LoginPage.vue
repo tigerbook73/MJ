@@ -21,7 +21,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { useUserStore } from "src/stores/user-store";
+import { useUserStore } from "src/justin/stores/user-store";
 import { clientApi } from "src/client/client-api";
 
 defineOptions({
@@ -40,7 +40,7 @@ async function signIn() {
     loading.value = true;
     const user = await clientApi.signIn(email.value, password.value);
     userStore.user = user;
-    router.push("/lobby");
+    router.push("/justin/lobby");
   } catch (error: any) {
     window.alert("failed");
   } finally {

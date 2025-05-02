@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import GameRoom from "src/components/GameRoom.vue";
+import GameRoom from "src/justin/components/GameRoom.vue";
 import { ref } from "vue";
 
 defineOptions({

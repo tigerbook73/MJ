@@ -1,6 +1,6 @@
 // import { mjGame } from "src/core/mjGame";
 // import { wait } from "src/core/timer";
-// import { useMjStore } from "src/stores/mj-store";
+// import { useMjStore } from "src/justin/stores/mj-store";
 // const mjStore = useMjStore();
 // export async function autoPlay() {
 //   while (mjStore.status) {

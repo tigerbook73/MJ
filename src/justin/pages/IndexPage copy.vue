@@ -7,12 +7,10 @@
 </template>
 
 <script setup lang="ts">
-import GameArea from "components/GameArea.vue";
-import { clientApi } from "src/client/client-api";
+import GameArea from "src/justin/components/GameArea.vue";
 import { Position } from "src/common/core/mj.game";
-import { GameEvent } from "src/common/protocols/apis.models";
 import { mjGame } from "src/core/mjGame";
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
   name: "IndexPage",
@@ -24,9 +22,4 @@ function initGame() {
   mjGame.init([Position.East]);
   mjStore.refresh();
 }
-
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  event = clientApi.parseEvent(event);
-  mjStore.game = clientApi.findMyGame(event);
-});
 </script>

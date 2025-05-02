@@ -9,7 +9,7 @@ defineOptions({
   name: "GameAreaA",
 });
 
-import { useMjStore } from "src/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 
 const mjStore = useMjStore();
 </script>

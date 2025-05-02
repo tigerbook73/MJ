@@ -28,13 +28,13 @@ defineOptions({
   name: "GameArea",
 });
 
-import BoardArea from "components/BoardArea.vue";
-import GameAreaA from "components/GameAreaA.vue";
-import GameAreaB from "components/GameAreaB.vue";
-import GameAreaC from "components/GameAreaC.vue";
-import GameAreaD from "components/GameAreaD.vue";
-import PlayerAreaBottom from "components/PlayerAreaBottom.vue";
-import PlayerAreaLeft from "components/PlayerAreaLeft.vue";
-import PlayerAreaRight from "components/PlayerAreaRight.vue";
-import PlayerAreaTop from "components/PlayerAreaTop.vue";
+import BoardArea from "src/justin/components/BoardArea.vue";
+import GameAreaA from "src/justin/components/GameAreaA.vue";
+import GameAreaB from "src/justin/components/GameAreaB.vue";
+import GameAreaC from "src/justin/components/GameAreaC.vue";
+import GameAreaD from "src/justin/components/GameAreaD.vue";
+import PlayerAreaBottom from "src/justin/components/PlayerAreaBottom.vue";
+import PlayerAreaLeft from "src/justin/components/PlayerAreaLeft.vue";
+import PlayerAreaRight from "src/justin/components/PlayerAreaRight.vue";
+import PlayerAreaTop from "src/justin/components/PlayerAreaTop.vue";
 </script>
