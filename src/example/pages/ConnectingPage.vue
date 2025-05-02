@@ -10,17 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import { AppState, useExampleStore } from "src/example/stores/example-store";
-import { onBeforeMount } from "vue";
-
-const exampleStore = useExampleStore();
-
-onBeforeMount(async () => {
-  try {
-    await new Promise((resolve) => setTimeout(resolve, 4000));
-    exampleStore.appState = AppState.UnSignedIn;
-  } catch {
-    //
-  }
-});
+//
 </script>

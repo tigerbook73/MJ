@@ -10,6 +10,12 @@
           </q-avatar>
           Online Mahjong
         </q-toolbar-title>
+
+        <q-space />
+
+        <div>
+          {{ exampleStore.appState }}
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -40,6 +46,7 @@
 import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { clientApi } from "src/client/client-api";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -69,4 +76,11 @@ watch(
   },
   { immediate: true },
 );
+
+clientApi.gameSocket.onConnect(() => {
+  exampleStore.appState = AppState.UnSignedIn;
+});
+clientApi.gameSocket.onDisconnect(() => {
+  exampleStore.appState = AppState.Unconnected;
+});
 </script>
