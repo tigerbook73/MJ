@@ -1,26 +1,11 @@
 import exampleRoutes from "src/example/router/routes";
 import { RouteRecordRaw } from "vue-router";
+import justinRoutes from "./JLroutes";
 
 const routes: RouteRecordRaw[] = [
-  {
-    path: "/",
-    redirect: "/login",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
-      { path: "login", component: () => import("pages/LoginPage.vue") },
-      {
-        path: "game",
-        component: () => import("pages/GamePage.vue"),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: "lobby",
-        component: () => import("pages/LobbyPage.vue"),
-        meta: { requiresAuth: true },
-      },
-      { path: "client-page", component: () => import("pages/ClientPage.vue") },
-    ],
-  },
+  // justin routes
+  ...justinRoutes,
+
   // example routes
   ...exampleRoutes,
 
