@@ -41,12 +41,16 @@ export interface GameRoomProp {
 
 <script setup lang="ts">
 import GamePlayer, { GamePlayerProp } from "./GamePlayer.vue";
-import { AppState, useExampleStore } from "../stores/example-store";
+import { useExampleStore } from "../stores/example-store";
 import { RoomModel } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
 import { computed } from "vue";
+import { clientApi } from "src/client/client-api";
+import { useQuasar } from "quasar";
+import { UserType } from "src/common/models/common.types";
 
 const exampleStore = useExampleStore();
+const $q = useQuasar();
 
 const props = defineProps<{
   room: GameRoomProp;
@@ -58,10 +62,65 @@ const westPlayer = computed(() => props.room.players.find((player) => player.pos
 const northPlayer = computed(() => props.room.players.find((player) => player.position === Position.North) || null);
 
 function handlePlayerClick(player: GamePlayerProp) {
-  console.log(`Player [${player.userName}] at position [${player.position}] in room [${props.room.name}] clicked`);
+  // alread at the position
+  if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
+    try {
+      clientApi.leaveRoom(props.room.name);
+    } catch (error) {
+      $q.notify({
+        type: "negative",
+        message: "Failed to leave room",
+      });
+    }
+    return;
+  }
+
+  // position is available
+  if (player.type === UserType.Bot) {
+    if (exampleStore.currentPosition) {
+      try {
+        clientApi.leaveRoom(exampleStore.currentRoom!.name);
+      } catch (error) {
+        $q.notify({
+          type: "negative",
+          message: "Failed to leave current room",
+        });
+        return;
+      }
+    }
+
+    try {
+      clientApi.joinRoom(props.room.name, player.position);
+    } catch (error) {
+      $q.notify({
+        type: "negative",
+        message: "Failed to join room",
+      });
+    }
+  }
+
+  if (exampleStore.currentPosition !== player.position && player.type !== UserType.Bot) {
+    try {
+      clientApi.leaveRoom(props.room.name);
+      clientApi.joinRoom(props.room.name, player.position);
+    } catch (error) {
+      $q.notify({
+        type: "negative",
+        message: "Failed to leave room",
+      });
+    }
+    return;
+  }
 }
 
 function handleEnterGame() {
-  exampleStore.appState = AppState.InGame;
+  try {
+    clientApi.enterGame(props.room.name);
+  } catch (error) {
+    $q.notify({
+      type: "negative",
+      message: "Failed to enter game",
+    });
+  }
 }
 </script>

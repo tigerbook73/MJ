@@ -84,6 +84,10 @@ clientApi.gameSocket.onConnect(() => {
 });
 clientApi.gameSocket.onDisconnect(() => {
   exampleStore.appState = AppState.Unconnected;
+  exampleStore.roomList = [];
+  exampleStore.currentRoom = null;
+  exampleStore.currentGame = null;
+  exampleStore.currentPosition = null;
 });
 
 // game event
@@ -93,7 +97,13 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   exampleStore.roomList = event.data.rooms;
   exampleStore.currentRoom = clientApi.findMyRoom(event);
   exampleStore.currentPosition =
-    exampleStore.currentRoom?.players.find((player) => player.userName === exampleStore.user.name)?.position || null;
+    exampleStore.currentRoom?.players.find((player) => player.userName === exampleStore.user.name)?.position ?? null;
   exampleStore.currentGame = clientApi.findMyGame(event);
+
+  if (exampleStore.currentGame) {
+    exampleStore.appState = AppState.InGame;
+  } else if (exampleStore.roomList.length > 0) {
+    exampleStore.appState = AppState.InLobby;
+  }
 });
 </script>
