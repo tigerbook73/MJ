@@ -1,22 +1,17 @@
 <template>
   <div class="column flex-center bg-yellowx-3">
     <div>{{ positionName }}</div>
-    <div>{{ props.player.name }}</div>
-    <div>{{ props.player.email }}</div>
+    <div>{{ props.player.userName }}</div>
   </div>
 </template>
 
 <script lang="ts">
-export interface GamePlayerProp {
-  id: number;
-  position: Position;
-  name: string;
-  email: string;
-}
+export interface GamePlayerProp extends PlayerModel {}
 </script>
 
 <script setup lang="ts">
 import { Position } from "src/common/core/mj.game";
+import { PlayerModel } from "src/common/models/player.model";
 import { computed } from "vue";
 
 const positionName = computed(() => {

@@ -47,6 +47,7 @@ import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
+import { GameEvent } from "src/common/protocols/apis.models";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -83,5 +84,16 @@ clientApi.gameSocket.onConnect(() => {
 });
 clientApi.gameSocket.onDisconnect(() => {
   exampleStore.appState = AppState.Unconnected;
+});
+
+// game event
+clientApi.gameSocket.onReceive((event: GameEvent) => {
+  event = clientApi.parseEvent(event);
+
+  exampleStore.roomList = event.data.rooms;
+  exampleStore.currentRoom = clientApi.findMyRoom(event);
+  exampleStore.currentPosition =
+    exampleStore.currentRoom?.players.find((player) => player.userName === exampleStore.user.name)?.position || null;
+  exampleStore.currentGame = clientApi.findMyGame(event);
 });
 </script>

@@ -31,10 +31,10 @@ export const useExampleStore = defineStore("example-store", () => {
 
   return {
     appState,
-    game: currentGame,
     user,
     roomList,
     currentRoom,
     currentPosition,
+    currentGame,
   };
 });
