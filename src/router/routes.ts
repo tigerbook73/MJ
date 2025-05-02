@@ -1,3 +1,4 @@
+import exampleRoutes from "src/example/router/routes";
 import { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
@@ -20,6 +21,8 @@ const routes: RouteRecordRaw[] = [
       { path: "client-page", component: () => import("pages/ClientPage.vue") },
     ],
   },
+  // example routes
+  ...exampleRoutes,
 
   // Always leave this as last one,
   // but you can also remove it

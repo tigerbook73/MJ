@@ -10,8 +10,4 @@
 defineOptions({
   name: "BoardAreaD",
 });
-
-// import CompTile from "components/CompTile.vue";
-// import { useMjStore } from "src/stores/mj-store";
-// const userMj = useMjStore();
 </script>
