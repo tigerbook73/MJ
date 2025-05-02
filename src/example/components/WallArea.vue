@@ -1,24 +1,24 @@
 <template>
   <div class="column bg-blue-3">
     <!-- top -->
-    <div class="h-3 row">
-      <div class="w-3"></div>
-      <wall-area-hori position="top" class="w-18" />
-      <div class="w-3"></div>
+    <div class="hx-3 row">
+      <div class="wx-3"></div>
+      <wall-area-hori position="top" class="wx-18" />
+      <div class="wx-3"></div>
     </div>
 
     <!-- center -->
-    <div class="h-18 row">
-      <wall-area-vert position="left" class="w-3 h-full" />
-      <discard-area class="w-18" />
-      <wall-area-vert position="right" class="w-3 h-full" />
+    <div class="hx-18 row">
+      <wall-area-vert position="left" class="wx-3 hx-full" />
+      <discard-area class="wx-18" />
+      <wall-area-vert position="right" class="wx-3 hx-full" />
     </div>
 
     <!-- bottom -->
-    <div class="h-3 row">
-      <div class="w-3"></div>
-      <wall-area-hori position="bottom" class="w-18" />
-      <div class="w-3"></div>
+    <div class="hx-3 row">
+      <div class="wx-3"></div>
+      <wall-area-hori position="bottom" class="wx-18" />
+      <div class="wx-3"></div>
     </div>
   </div>
 </template>

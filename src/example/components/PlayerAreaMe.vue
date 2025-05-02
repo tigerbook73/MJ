@@ -1,11 +1,11 @@
 <template>
-  <div class="row flex-center" :class="{ reverse: true }">
+  <div class="row flex-center">
     <game-tile v-for="tile in tiles" :key="tile.id" :tile="tile"></game-tile>
   </div>
 </template>
 
 <script lang="ts">
-export default { name: "WallAreaHori" };
+export default { name: "PlayerAreaMe" };
 </script>
 
 <script setup lang="ts">
@@ -13,6 +13,7 @@ import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
 import { onMounted, onUnmounted, reactive } from "vue";
 
+// define props
 const size = "md";
 const rowLength = 15;
 
@@ -20,13 +21,14 @@ const tiles = reactive(
   Array.from({ length: rowLength }, (_, i): GameTileProp => {
     return {
       id: (i * 7) % TileCore.allTiles.length,
-      position: "top",
+      position: "bottom",
       size: size,
       back: false,
     };
   }),
 );
 tiles[13].id = TileCore.voidId;
+tiles[14].selected = true;
 
 /**
  * the following is test code

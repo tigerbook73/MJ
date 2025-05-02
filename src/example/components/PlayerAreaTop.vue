@@ -1,38 +1,32 @@
 <template>
-  <div class="column flex-center" :class="{ reverse: bottomToTop }">
+  <div class="row flex-center" :class="{ reverse: true }">
     <game-tile v-for="tile in tiles" :key="tile.id" :tile="tile"></game-tile>
   </div>
 </template>
 
 <script lang="ts">
-export default { name: "WallAreaHori" };
+export default { name: "PlayerAreaTop" };
 </script>
 
 <script setup lang="ts">
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
-import { computed, onMounted, onUnmounted, reactive } from "vue";
+import { onMounted, onUnmounted, reactive } from "vue";
 
-// define props
-const props = defineProps<{
-  position: "left" | "right";
-}>();
-const size = "sm";
+const size = "md";
 const rowLength = 15;
 
 const tiles = reactive(
   Array.from({ length: rowLength }, (_, i): GameTileProp => {
     return {
-      id: (i * 4) % TileCore.allTiles.length,
-      position: props.position,
+      id: (i * 7) % TileCore.allTiles.length,
+      position: "top",
       size: size,
       back: false,
     };
   }),
 );
 tiles[13].id = TileCore.voidId;
-
-const bottomToTop = computed(() => props.position === "right");
 
 /**
  * the following is test code

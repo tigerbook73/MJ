@@ -15,7 +15,14 @@
     <div class="row col-6">
       <!-- left -->
       <GamePlayer :player="props.room.players.west" class="col-3" @click="handlePlayerClick(props.room.players.west)" />
-      <div class="col-6 row flex-center bg-green-3">{{ props.room.name }}</div>
+
+      <!-- center -->
+      <div class="col-6 column flex-center bg-green-3">
+        {{ props.room.name }}
+        <q-btn class="q-mt-sm" color="primary" label="Join" @click="handleEnterGame" />
+      </div>
+
+      <!-- right -->
       <GamePlayer :player="props.room.players.east" class="col-3" @click="handlePlayerClick(props.room.players.east)" />
     </div>
 
@@ -46,8 +53,10 @@ export interface GameRoomProp {
 </script>
 
 <script setup lang="ts">
-import { defineProps } from "vue";
 import GamePlayer, { GamePlayerProp } from "./GamePlayer.vue";
+import { AppState, useExampleStore } from "../stores/example-store";
+
+const exampleStore = useExampleStore();
 
 const props = defineProps<{
   room: GameRoomProp;
@@ -55,5 +64,9 @@ const props = defineProps<{
 
 function handlePlayerClick(player: GamePlayerProp) {
   console.log(`Player [${player.name}] at position [${player.position}] in room [${props.room.name}] clicked`);
+}
+
+function handleEnterGame() {
+  exampleStore.appState = AppState.InGame;
 }
 </script>

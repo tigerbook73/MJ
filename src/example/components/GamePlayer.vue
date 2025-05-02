@@ -1,5 +1,5 @@
 <template>
-  <div class="column flex-center bg-yellow-3">
+  <div class="column flex-center bg-yellowx-3">
     <div>{{ positionName }}</div>
     <div>{{ props.player.name }}</div>
     <div>{{ props.player.email }}</div>
@@ -17,7 +17,7 @@ export interface GamePlayerProp {
 
 <script setup lang="ts">
 import { Position } from "src/common/core/mj.game";
-import { computed, defineProps } from "vue";
+import { computed } from "vue";
 
 const positionName = computed(() => {
   const posMap = {

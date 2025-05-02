@@ -5,5 +5,5 @@
 </template>
 
 <script setup lang="ts">
-import PlayArea from "../components/PlayArea.vue";
+import PlayArea from "../components/PlayerArea.vue";
 </script>

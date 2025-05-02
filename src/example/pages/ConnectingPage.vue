@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import { AppState, useExampleStore } from "src/stores/example-store";
+import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { onBeforeMount } from "vue";
 
 const exampleStore = useExampleStore();

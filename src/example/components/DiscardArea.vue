@@ -1,24 +1,24 @@
 <template>
   <div class="column bg-brown-3">
     <!-- top -->
-    <div class="h-5 w-full row">
-      <div class="w-5 h-full"></div>
-      <discard-area-hori position="top" class="w-14" />
-      <div class="w-5 h-full"></div>
+    <div class="hx-5 wx-full row">
+      <div class="wx-5 hx-full"></div>
+      <discard-area-hori position="top" class="wx-14" />
+      <div class="wx-5 hx-full"></div>
     </div>
 
     <!-- center -->
-    <div class="h-14 row">
-      <discard-area-vert position="left" class="w-5" />
-      <div class="w-14 bg-green"></div>
-      <discard-area-vert position="right" class="w-5" />
+    <div class="hx-14 row">
+      <discard-area-vert position="left" class="wx-5" />
+      <div class="wx-14 bg-green"></div>
+      <discard-area-vert position="right" class="wx-5" />
     </div>
 
     <!-- bottom -->
-    <div class="h-5 w-full row">
-      <div class="w-5 h-full"></div>
-      <discard-area-hori position="bottom" class="w-14" />
-      <div class="w-5 h-full"></div>
+    <div class="hx-5 wx-full row">
+      <div class="wx-5 hx-full"></div>
+      <discard-area-hori position="bottom" class="wx-14" />
+      <div class="wx-5 hx-full"></div>
     </div>
   </div>
 </template>
