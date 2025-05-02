@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, StyleValue } from "vue";
 import { useMjStore } from "src/stores/mj-store";
 
 interface Props {
@@ -23,6 +23,7 @@ interface Props {
   position?: string;
   size?: "small" | "large";
   back?: boolean;
+  selected?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
   type: "",
   position: "bottom",
   size: "small",
+  back: false,
+  selected: false,
 });
 
 const mjStore = useMjStore();
@@ -79,9 +82,29 @@ const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
 const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
-const tileStyle = computed(() =>
-  props.position == "left" || props.position == "right" ? { width: height, height: width } : { width, height },
-);
+const tileStyle = computed(() => {
+  if (props.position == "top" || props.position == "bottom") {
+    return {
+      width: width,
+      height: height,
+      position: "relative",
+      top: props.selected ? "-8px" : "0px",
+    } as StyleValue;
+  } else {
+    return {
+      width: height,
+      height: width,
+      position: "relative",
+      top: props.selected ? "-8px" : "0px",
+    } as StyleValue;
+  }
+  // return {
+  //   width: props.position == "left" || props.position == "right" ? height : width,
+  //   height: props.position == "left" || props.position == "right" ? width : height,
+  //   position: "relative",
+  //   top: props.selected ? "-8px" : "0px",
+  // } as StyleValue;
+});
 
 const rotate: Record<string, string> = {
   top: "rotate(180deg)",
@@ -92,6 +115,7 @@ const rotate: Record<string, string> = {
 const imgStyle = ref({
   width: width,
   transform: rotate[props.position] || "none",
+  position: "relative",
 });
 </script>
 

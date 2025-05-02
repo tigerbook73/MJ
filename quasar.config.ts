@@ -78,6 +78,14 @@ export default configure((/* ctx */) => {
     devServer: {
       // https: true
       open: false, // opens browser window automatically
+      proxy: {
+        "/socket.io": {
+          target: "http://localhost:3000",
+          ws: true,
+          changeOrigin: true,
+          secure: false,
+        },
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -95,7 +103,10 @@ export default configure((/* ctx */) => {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: [
+        //
+        "Notify",
+      ],
     },
 
     // animations: 'all', // --- includes all animations

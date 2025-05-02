@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { mjGame } from "src/core/mjGame";
 import { ref } from "vue";
 
-export const useMjStore = defineStore("mj", () => {
+export const useMjStore = defineStore("mj-store", () => {
   const open = ref(false);
 
   const topWall = ref([] as string[]);
@@ -11,6 +11,11 @@ export const useMjStore = defineStore("mj", () => {
   const leftWall = ref([] as string[]);
 
   const myTiles = ref([] as string[]);
+  const myDiscardTiles = ref([] as string[]);
+
+  const mySelected = ref([] as string[]);
+
+  const canHu = ref(false);
 
   function refresh() {
     topWall.value = mjGame.walls[0].tiles.map((tile) => tile.type.name);
@@ -39,6 +44,8 @@ export const useMjStore = defineStore("mj", () => {
     "?",
   ];
 
+  mySelected.value = ["西"];
+
   mjGame.init();
   mjGame.separate();
   refresh();
@@ -51,6 +58,9 @@ export const useMjStore = defineStore("mj", () => {
     bottomWall,
     leftWall,
     myTiles,
+    myDiscardTiles,
+    mySelected,
+    canHu,
 
     // actions
     refresh,
