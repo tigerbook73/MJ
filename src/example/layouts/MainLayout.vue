@@ -121,7 +121,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
 
   exampleStore.roomList = event.data.rooms;
   exampleStore.currentRoom = clientApi.findMyRoom(event);
-  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position || null;
+  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
   exampleStore.setCurrentGame(clientApi.findMyGame(event));
 });
 </script>

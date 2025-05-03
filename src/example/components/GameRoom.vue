@@ -90,7 +90,7 @@ async function handlePlayerClick(player: GamePlayerProp) {
 
   // position is available
   if (player.type === UserType.Bot) {
-    if (exampleStore.currentPosition) {
+    if (exampleStore.currentPosition !== null) {
       // if the player is currently in a room, leave it
       try {
         await clientApi.leaveRoom(exampleStore.currentRoom!.name);
