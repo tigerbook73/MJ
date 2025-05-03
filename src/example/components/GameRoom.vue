@@ -88,6 +88,16 @@ async function handlePlayerClick(player: GameSeatProp) {
     return;
   }
 
+  // position is occupied
+  if (player.type === UserType.Human) {
+    $q.notify({
+      type: "negative",
+      message: "Seat is occupied",
+      position: "top",
+    });
+    return;
+  }
+
   // position is available
   if (player.type === UserType.Bot) {
     if (exampleStore.currentPosition !== null) {
