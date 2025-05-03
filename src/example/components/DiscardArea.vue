@@ -10,7 +10,7 @@
     <!-- center -->
     <div class="hx-14 row">
       <discard-area-vert position="left" class="wx-5" />
-      <div class="wx-14 bg-green"></div>
+      <center-area class="wx-14" />
       <discard-area-vert position="right" class="wx-5" />
     </div>
 
@@ -29,6 +29,7 @@ export default { name: "DiscardArea" };
 
 <script setup lang="ts">
 // define props
+import CenterArea from "./CenterArea.vue";
 import DiscardAreaHori from "./DiscardAreaHori.vue";
 import DiscardAreaVert from "./DiscardAreaVert.vue";
 </script>
