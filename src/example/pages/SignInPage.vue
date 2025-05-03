@@ -16,13 +16,17 @@
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import { clientApi } from "src/client/client-api";
-import { useExampleStore } from "src/example/stores/example-store";
+import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { onBeforeMount, ref } from "vue";
 
 const exampleStore = useExampleStore();
 const $q = useQuasar();
 
 onBeforeMount(async () => {
+  if (exampleStore.appState !== AppState.UnSignedIn) {
+    return;
+  }
+
   if (exampleStore.user.email && exampleStore.user.password) {
     signIn();
   }

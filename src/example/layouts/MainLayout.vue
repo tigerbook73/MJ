@@ -13,8 +13,8 @@
         <q-space />
         <div class="row q-gutter-sm items-center">
           <div>{{ exampleStore.user.email }}</div>
-          <q-btn v-if="exampleStore.appState === AppState.InGame" dense flat round label="QuitGame" @click="quitGame" />
-          <q-btn v-if="exampleStore.appState === AppState.InLobby" dense flat round label="signOut" @click="signOut" />
+          <q-btn v-if="exampleStore.appState === AppState.InGame" dense flat label="Quit Game" @click="quitGame" />
+          <q-btn v-if="exampleStore.appState === AppState.InLobby" dense flat label="Sign Out" @click="signOut" />
         </div>
       </q-toolbar>
     </q-header>

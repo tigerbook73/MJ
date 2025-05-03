@@ -1,6 +1,10 @@
 <template>
   <div class="column flex-center bg-brown-3">
-    <div>{{ positionName }}</div>
+    <q-chip size="1rem" icon="chair" :label="positionName">
+      <q-tooltip ancher="top right" self="bottom left" transition-duration="0"
+        >Double click to TAKE or LEAVE the seat</q-tooltip
+      >
+    </q-chip>
     <div>{{ props.player.userName }}</div>
   </div>
 </template>

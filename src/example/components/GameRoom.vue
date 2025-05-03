@@ -19,8 +19,8 @@
 
       <!-- center -->
       <div class="col-6 column flex-center bg-green-3">
-        {{ props.room.name }}
-        <q-btn class="q-mt-sm" color="primary" label="Join" :loading="loading" @click="handleEnterGame" />
+        <q-chip size="1rem" square>{{ props.room.name }}</q-chip>
+        <q-btn label="Enter Game" color="secondary" class="q-mt-md" :loading="loading" @click="handleEnterGame" />
       </div>
 
       <!-- right -->
