@@ -3,11 +3,11 @@
     <!-- top -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer
+      <game-seat
         v-if="northPlayer"
         :player="northPlayer"
         class="col-6"
-        @click.prevent="handlePlayerClick(northPlayer)"
+        @dblclick.stop="handlePlayerClick(northPlayer)"
       />
       <q-space />
     </div>
@@ -15,7 +15,7 @@
     <!-- middle -->
     <div class="row col-6">
       <!-- left -->
-      <GamePlayer v-if="westPlayer" :player="westPlayer" class="col-3" @click.prevent="handlePlayerClick(westPlayer)" />
+      <game-seat v-if="westPlayer" :player="westPlayer" class="col-3" @dblclick.stop="handlePlayerClick(westPlayer)" />
 
       <!-- center -->
       <div class="col-6 column flex-center bg-green-3">
@@ -24,17 +24,17 @@
       </div>
 
       <!-- right -->
-      <GamePlayer v-if="eastPlayer" :player="eastPlayer" class="col-3" @click.prevent="handlePlayerClick(eastPlayer)" />
+      <game-seat v-if="eastPlayer" :player="eastPlayer" class="col-3" @dblclick.stop="handlePlayerClick(eastPlayer)" />
     </div>
 
     <!-- bottom -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer
+      <game-seat
         v-if="southPlayer"
         :player="southPlayer"
         class="col-6"
-        @click.prevent="handlePlayerClick(southPlayer)"
+        @dblclick.stop="handlePlayerClick(southPlayer)"
       />
       <q-space />
     </div>
@@ -53,7 +53,7 @@ export interface GameRoomProp {
 </script>
 
 <script setup lang="ts">
-import GamePlayer, { GamePlayerProp } from "./GamePlayer.vue";
+import GameSeat, { GameSeatProp } from "./GameSeat.vue";
 import { useExampleStore } from "../stores/example-store";
 import { RoomModel } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
@@ -74,7 +74,7 @@ const eastPlayer = computed(() => props.room.players.find((player) => player.pos
 const westPlayer = computed(() => props.room.players.find((player) => player.position === Position.West) || null);
 const northPlayer = computed(() => props.room.players.find((player) => player.position === Position.North) || null);
 
-async function handlePlayerClick(player: GamePlayerProp) {
+async function handlePlayerClick(player: GameSeatProp) {
   // already at the position
   if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
     try {

@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-export interface GamePlayerProp extends PlayerModel {}
+export interface GameSeatProp extends PlayerModel {}
 </script>
 
 <script setup lang="ts">
@@ -24,5 +24,5 @@ const positionName = computed(() => {
   return posMap[props.player.position];
 });
 
-const props = defineProps<{ player: GamePlayerProp }>();
+const props = defineProps<{ player: GameSeatProp }>();
 </script>
