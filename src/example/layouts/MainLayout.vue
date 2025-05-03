@@ -10,12 +10,12 @@
           </q-avatar>
           Online Mahjong
         </q-toolbar-title>
-
         <q-space />
-
-        <div>{{ exampleStore.user.email }}</div>
-        <q-space />
-        <div>{{ exampleStore.appState }}</div>
+        <div class="row q-gutter-sm items-center">
+          <div>{{ exampleStore.user.email }}</div>
+          <q-btn v-if="exampleStore.appState === AppState.InGame" dense flat round label="QuitGame" @click="quitGame" />
+          <q-btn v-if="exampleStore.appState === AppState.InLobby" dense flat round label="signOut" @click="signOut" />
+        </div>
       </q-toolbar>
     </q-header>
 
@@ -60,6 +60,7 @@ const exampleStore = useExampleStore();
 const route = useRoute();
 const router = useRouter();
 
+// to the correct page based on app state
 watch(
   () => [exampleStore.appState, route.fullPath],
   () => {
@@ -78,16 +79,40 @@ watch(
   { immediate: true },
 );
 
+// sign out
+async function signOut() {
+  try {
+    await clientApi.signOut();
+    exampleStore.user.password = "";
+    exampleStore.setSignedIn(false);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// quit game
+async function quitGame() {
+  if (!exampleStore.currentRoom) {
+    return;
+  }
+
+  try {
+    await clientApi.quitGame(exampleStore.currentRoom!.name);
+  } catch (e) {
+    console.error(e);
+  }
+}
+
 // connection status
 clientApi.gameSocket.onConnect(() => {
-  exampleStore.appState = AppState.UnSignedIn;
+  exampleStore.setConnected(true);
 });
 clientApi.gameSocket.onDisconnect(() => {
-  exampleStore.appState = AppState.Unconnected;
+  exampleStore.setConnected(false);
   exampleStore.roomList = [];
   exampleStore.currentRoom = null;
-  exampleStore.currentGame = null;
   exampleStore.currentPosition = null;
+  exampleStore.setCurrentGame(null);
 });
 
 // game event
@@ -96,14 +121,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
 
   exampleStore.roomList = event.data.rooms;
   exampleStore.currentRoom = clientApi.findMyRoom(event);
-  exampleStore.currentPosition =
-    exampleStore.currentRoom?.players.find((player) => player.userName === exampleStore.user.name)?.position ?? null;
-  exampleStore.currentGame = clientApi.findMyGame(event);
-
-  if (exampleStore.currentGame) {
-    exampleStore.appState = AppState.InGame;
-  } else if (exampleStore.roomList.length > 0) {
-    exampleStore.appState = AppState.InLobby;
-  }
+  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position || null;
+  exampleStore.setCurrentGame(clientApi.findMyGame(event));
 });
 </script>

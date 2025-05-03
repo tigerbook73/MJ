@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import { clientApi } from "src/client/client-api";
-import { AppState, useExampleStore } from "src/example/stores/example-store";
+import { useExampleStore } from "src/example/stores/example-store";
 import { onBeforeMount, ref } from "vue";
 
 const exampleStore = useExampleStore();
@@ -36,12 +36,11 @@ async function signIn() {
 
   try {
     loading.value = true;
-    const user = await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
-    exampleStore.user.name = user.name;
-    exampleStore.appState = AppState.InLobby;
+    await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
+    exampleStore.setSignedIn(true);
   } catch {
-    exampleStore.user.name = "";
     exampleStore.user.password = "";
+    exampleStore.setSignedIn(false);
 
     $q.notify({
       type: "negative",

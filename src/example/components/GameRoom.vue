@@ -29,6 +29,8 @@
       <q-space />
     </div>
   </div>
+
+  <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
 </template>
 
 <script lang="ts">
@@ -44,7 +46,7 @@ import GamePlayer, { GamePlayerProp } from "./GamePlayer.vue";
 import { useExampleStore } from "../stores/example-store";
 import { RoomModel } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
 import { UserType } from "src/common/models/common.types";
@@ -113,14 +115,18 @@ function handlePlayerClick(player: GamePlayerProp) {
   }
 }
 
+const loading = ref(false);
 function handleEnterGame() {
   try {
+    loading.value = true;
     clientApi.enterGame(props.room.name);
   } catch (error) {
     $q.notify({
       type: "negative",
       message: "Failed to enter game",
     });
+  } finally {
+    loading.value = false;
   }
 }
 </script>
