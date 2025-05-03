@@ -3,34 +3,45 @@
     <!-- top -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer v-if="northPlayer" :player="northPlayer" class="col-6" @click="handlePlayerClick(northPlayer)" />
+      <GamePlayer
+        v-if="northPlayer"
+        :player="northPlayer"
+        class="col-6"
+        @click.prevent="handlePlayerClick(northPlayer)"
+      />
       <q-space />
     </div>
 
     <!-- middle -->
     <div class="row col-6">
       <!-- left -->
-      <GamePlayer v-if="westPlayer" :player="westPlayer" class="col-3" @click="handlePlayerClick(westPlayer)" />
+      <GamePlayer v-if="westPlayer" :player="westPlayer" class="col-3" @click.prevent="handlePlayerClick(westPlayer)" />
 
       <!-- center -->
       <div class="col-6 column flex-center bg-green-3">
         {{ props.room.name }}
-        <q-btn class="q-mt-sm" color="primary" label="Join" @click="handleEnterGame" />
+        <q-btn class="q-mt-sm" color="primary" label="Join" :loading="loading" @click="handleEnterGame" />
       </div>
 
       <!-- right -->
-      <GamePlayer v-if="eastPlayer" :player="eastPlayer" class="col-3" @click="handlePlayerClick(eastPlayer)" />
+      <GamePlayer v-if="eastPlayer" :player="eastPlayer" class="col-3" @click.prevent="handlePlayerClick(eastPlayer)" />
     </div>
 
     <!-- bottom -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer v-if="southPlayer" :player="southPlayer" class="col-6" @click="handlePlayerClick(southPlayer)" />
+      <GamePlayer
+        v-if="southPlayer"
+        :player="southPlayer"
+        class="col-6"
+        @click.prevent="handlePlayerClick(southPlayer)"
+      />
       <q-space />
     </div>
-  </div>
 
-  <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
+    <!-- loading -->
+    <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,11 +74,11 @@ const eastPlayer = computed(() => props.room.players.find((player) => player.pos
 const westPlayer = computed(() => props.room.players.find((player) => player.position === Position.West) || null);
 const northPlayer = computed(() => props.room.players.find((player) => player.position === Position.North) || null);
 
-function handlePlayerClick(player: GamePlayerProp) {
-  // alread at the position
+async function handlePlayerClick(player: GamePlayerProp) {
+  // already at the position
   if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
     try {
-      clientApi.leaveRoom(props.room.name);
+      await clientApi.leaveRoom(props.room.name);
     } catch (error) {
       $q.notify({
         type: "negative",
@@ -80,8 +91,9 @@ function handlePlayerClick(player: GamePlayerProp) {
   // position is available
   if (player.type === UserType.Bot) {
     if (exampleStore.currentPosition) {
+      // if the player is currently in a room, leave it
       try {
-        clientApi.leaveRoom(exampleStore.currentRoom!.name);
+        await clientApi.leaveRoom(exampleStore.currentRoom!.name);
       } catch (error) {
         $q.notify({
           type: "negative",
@@ -91,24 +103,13 @@ function handlePlayerClick(player: GamePlayerProp) {
       }
     }
 
+    // join the new room
     try {
-      clientApi.joinRoom(props.room.name, player.position);
+      await clientApi.joinRoom(props.room.name, player.position);
     } catch (error) {
       $q.notify({
         type: "negative",
         message: "Failed to join room",
-      });
-    }
-  }
-
-  if (exampleStore.currentPosition !== player.position && player.type !== UserType.Bot) {
-    try {
-      clientApi.leaveRoom(props.room.name);
-      clientApi.joinRoom(props.room.name, player.position);
-    } catch (error) {
-      $q.notify({
-        type: "negative",
-        message: "Failed to leave room",
       });
     }
     return;
@@ -116,10 +117,10 @@ function handlePlayerClick(player: GamePlayerProp) {
 }
 
 const loading = ref(false);
-function handleEnterGame() {
+async function handleEnterGame() {
   try {
     loading.value = true;
-    clientApi.enterGame(props.room.name);
+    await clientApi.enterGame(props.room.name);
   } catch (error) {
     $q.notify({
       type: "negative",

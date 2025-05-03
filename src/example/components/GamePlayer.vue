@@ -1,5 +1,5 @@
 <template>
-  <div class="column flex-center bg-yellowx-3">
+  <div class="column flex-center bg-brown-3">
     <div>{{ positionName }}</div>
     <div>{{ props.player.userName }}</div>
   </div>
