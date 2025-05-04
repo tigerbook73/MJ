@@ -17,10 +17,11 @@ export default { name: "DiscardAreaVert" };
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
 import { computed, onMounted, onUnmounted, reactive } from "vue";
+import { Direction } from "../common/common";
 
 // define props
 const props = defineProps<{
-  position: "left" | "right";
+  direction: Direction.Left | Direction.Right;
 }>();
 const size = "sm";
 const rowLength = 12;
@@ -29,18 +30,18 @@ const discardTiles = reactive(
   Array.from({ length: rowLength * 2 }, (_, i): GameTileProp => {
     return {
       id: TileCore.voidId,
-      position: props.position,
+      direction: props.direction,
       size: size,
       back: false,
     };
   }),
 );
-const bottomToTop = computed(() => props.position === "right");
+const bottomToTop = computed(() => props.direction === Direction.Right);
 const leftRow = computed(() =>
-  props.position === "right" ? discardTiles.slice(0, rowLength) : discardTiles.slice(rowLength, rowLength * 2),
+  props.direction === Direction.Right ? discardTiles.slice(0, rowLength) : discardTiles.slice(rowLength, rowLength * 2),
 );
 const rightRow = computed(() =>
-  props.position === "right" ? discardTiles.slice(rowLength, rowLength * 2) : discardTiles.slice(0, rowLength),
+  props.direction === Direction.Right ? discardTiles.slice(rowLength, rowLength * 2) : discardTiles.slice(0, rowLength),
 );
 
 /**

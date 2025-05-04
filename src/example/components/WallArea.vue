@@ -3,21 +3,21 @@
     <!-- top -->
     <div class="hx-3 row">
       <div class="wx-3"></div>
-      <wall-area-hori position="top" class="wx-18" />
+      <wall-area-hori :direction="Direction.Top" class="wx-18" />
       <div class="wx-3"></div>
     </div>
 
     <!-- center -->
     <div class="hx-18 row">
-      <wall-area-vert position="left" class="wx-3 hx-full" />
+      <wall-area-vert :direction="Direction.Left" class="wx-3 hx-full" />
       <discard-area class="wx-18" />
-      <wall-area-vert position="right" class="wx-3 hx-full" />
+      <wall-area-vert :direction="Direction.Right" class="wx-3 hx-full" />
     </div>
 
     <!-- bottom -->
     <div class="hx-3 row">
       <div class="wx-3"></div>
-      <wall-area-hori position="bottom" class="wx-18" />
+      <wall-area-hori :direction="Direction.Bottom" class="wx-18" />
       <div class="wx-3"></div>
     </div>
   </div>
@@ -29,6 +29,7 @@ export default { name: "WallArea" };
 
 <script setup lang="ts">
 // define props
+import { Direction } from "../common/common";
 import DiscardArea from "./DiscardArea.vue";
 import WallAreaHori from "./WallAreaHori.vue";
 import WallAreaVert from "./WallAreaVert.vue";

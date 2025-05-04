@@ -12,6 +12,7 @@ export default { name: "PlayerAreaMe" };
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
 import { onMounted, onUnmounted, reactive } from "vue";
+import { Direction } from "../common/common";
 
 // define props
 const size = "md";
@@ -21,7 +22,7 @@ const tiles = reactive(
   Array.from({ length: rowLength }, (_, i): GameTileProp => {
     return {
       id: (i * 7) % TileCore.allTiles.length,
-      position: "bottom",
+      direction: Direction.Bottom,
       size: size,
       back: false,
     };

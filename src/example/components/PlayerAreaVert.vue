@@ -12,10 +12,11 @@ export default { name: "PlayerAreaVert" };
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
 import { computed, onMounted, onUnmounted, reactive } from "vue";
+import { Direction } from "../common/common";
 
 // define props
 const props = defineProps<{
-  position: "left" | "right";
+  direction: Direction.Left | Direction.Right;
 }>();
 const size = "sm";
 const rowLength = 15;
@@ -24,7 +25,7 @@ const tiles = reactive(
   Array.from({ length: rowLength }, (_, i): GameTileProp => {
     return {
       id: (i * 4) % TileCore.allTiles.length,
-      position: props.position,
+      direction: props.direction,
       size: size,
       back: false,
     };
@@ -32,7 +33,7 @@ const tiles = reactive(
 );
 tiles[13].id = TileCore.voidId;
 
-const bottomToTop = computed(() => props.position === "right");
+const bottomToTop = computed(() => props.direction === Direction.Right);
 
 /**
  * the following is test code
