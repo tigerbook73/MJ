@@ -23,6 +23,10 @@ const exampleStore = useExampleStore();
 const $q = useQuasar();
 
 onBeforeMount(async () => {
+  if (exampleStore.appState !== AppState.UnSignedIn) {
+    return;
+  }
+
   if (exampleStore.user.email && exampleStore.user.password) {
     signIn();
   }
@@ -36,12 +40,11 @@ async function signIn() {
 
   try {
     loading.value = true;
-    const user = await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
-    exampleStore.user.name = user.name;
-    exampleStore.appState = AppState.InLobby;
+    await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
+    exampleStore.setSignedIn(true);
   } catch {
-    exampleStore.user.name = "";
     exampleStore.user.password = "";
+    exampleStore.setSignedIn(false);
 
     $q.notify({
       type: "negative",

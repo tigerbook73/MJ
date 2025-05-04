@@ -1,12 +1,13 @@
 <template>
-  <div class="column flex-center bg-yellowx-3">
-    <div>{{ positionName }}</div>
+  <div class="column flex-center bg-brown-3">
+    <q-tooltip anchor="top middle" self="top left"> Double click to TAKE or LEAVE the seat </q-tooltip>
+    <q-chip size="1rem" icon="chair" :label="positionName"> </q-chip>
     <div>{{ props.player.userName }}</div>
   </div>
 </template>
 
 <script lang="ts">
-export interface GamePlayerProp extends PlayerModel {}
+export interface GameSeatProp extends PlayerModel {}
 </script>
 
 <script setup lang="ts">
@@ -24,5 +25,5 @@ const positionName = computed(() => {
   return posMap[props.player.position];
 });
 
-const props = defineProps<{ player: GamePlayerProp }>();
+const props = defineProps<{ player: GameSeatProp }>();
 </script>
