@@ -11,41 +11,37 @@ export default { name: "PlayerAreaTop" };
 <script setup lang="ts">
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
-import { onMounted, onUnmounted, reactive } from "vue";
-import { Direction } from "../common/common";
+import { computed } from "vue";
+import { CommonUtil, Direction } from "../common/common";
+import { useExampleStore } from "../stores/example-store";
+
+const exampleStore = useExampleStore();
 
 const size = "md";
-const rowLength = 15;
 
-const tiles = reactive(
-  Array.from({ length: rowLength }, (_, i): GameTileProp => {
-    return {
-      id: (i * 7) % TileCore.allTiles.length,
+const tiles = computed(() => {
+  if (!exampleStore.currentGame) {
+    return [];
+  }
+
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Top);
+  const player = exampleStore.currentGame.players[position];
+  if (!player) {
+    return [];
+  }
+
+  const tileIds = player.handTiles.slice();
+  tileIds.push(TileCore.voidId);
+  tileIds.push(player.picked);
+  return tileIds.map(
+    (id): GameTileProp => ({
+      id,
       direction: Direction.Top,
-      size: size,
-      back: false,
-    };
-  }),
-);
-tiles[13].id = TileCore.voidId;
-
-/**
- * the following is test code
- */
-let intervalId: NodeJS.Timeout;
-onMounted(() => {
-  let index = 0;
-  intervalId = setInterval(() => {
-    if (index !== 0) {
-      tiles[(index - 1) % tiles.length].back = !tiles[(index - 1) % tiles.length].back;
-    }
-    tiles[index % tiles.length].back = !tiles[index % tiles.length].back;
-    index++;
-  }, 500);
-});
-
-onUnmounted(() => {
-  clearInterval(intervalId);
+      size,
+      back: !exampleStore.open,
+      selected: false,
+    }),
+  );
 });
 </script>
 

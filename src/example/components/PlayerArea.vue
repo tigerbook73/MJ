@@ -2,7 +2,9 @@
   <div class="column square bg-green-3">
     <!-- top -->
     <div class="hx-2 row">
-      <div class="wx-2"></div>
+      <div class="wx-2">
+        <q-toggle v-model="exampleStore.open" color="green" size="sm" class="q-mt-xs" label="明牌"></q-toggle>
+      </div>
 
       <player-area-top class="wx-20" />
       <div class="wx-2"></div>
@@ -34,6 +36,10 @@ import PlayerAreaTop from "./PlayerAreaTop.vue";
 import PlayerAreaMe from "./PlayerAreaMe.vue";
 import PlayerAreaVert from "./PlayerAreaVert.vue";
 import { Direction } from "../common/common";
+
+import { useExampleStore } from "../stores/example-store";
+
+const exampleStore = useExampleStore();
 </script>
 
 <style scoped lang="scss">

@@ -73,6 +73,9 @@ export const useExampleStore = defineStore("example-store", () => {
     refreshAppState();
   }
 
+  // show all tiles
+  const open = ref(false);
+
   return {
     appState,
     user,
@@ -80,6 +83,7 @@ export const useExampleStore = defineStore("example-store", () => {
     currentRoom,
     currentPosition,
     currentGame,
+    open,
     refreshAppState,
     setConnected,
     setSignedIn,
