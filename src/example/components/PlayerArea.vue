@@ -1,5 +1,5 @@
 <template>
-  <div class="column square bg-green-3">
+  <div v-if="exampleStore.currentGame" class="column square bg-green-3">
     <!-- top -->
     <div class="hx-2 row">
       <div class="wx-2">

@@ -32,10 +32,6 @@ const size = "md";
 const selectedTiles = ref<TileId[]>([]);
 
 const tiles = computed<GameTileProp[]>(() => {
-  if (!exampleStore.currentGame) {
-    return [];
-  }
-
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Bottom);
   const player = exampleStore.currentGame!.players[position]!;
   const tileIds = player.handTiles.slice();

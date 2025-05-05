@@ -25,10 +25,6 @@ const exampleStore = useExampleStore();
 const bottomToTop = props.direction === Direction.Right;
 
 const tiles = computed((): GameTileProp[] => {
-  if (!exampleStore.currentGame) {
-    return [];
-  }
-
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   const player = exampleStore.currentGame!.players[position];
   if (!player) {

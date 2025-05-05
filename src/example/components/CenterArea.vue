@@ -54,10 +54,12 @@ const positionLabel = {
   [Position.North]: "北",
   [Position.South]: "南",
 };
-const topLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Top)];
-const bottomLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Bottom)];
-const leftLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Left)];
-const rightLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Right)];
+const topLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Top)];
+const bottomLabel =
+  positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Bottom)];
+const leftLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Left)];
+const rightLabel =
+  positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Right)];
 
 // command buttons
 const btnCommand = computed(() => {

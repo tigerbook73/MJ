@@ -30,10 +30,6 @@ const size = "sm";
 const rightToLeft = computed(() => props.direction === Direction.Bottom);
 
 const upperRow = computed(() => {
-  if (!exampleStore.currentGame) {
-    return [];
-  }
-
   const remainder = props.direction === Direction.Bottom ? 0 : 1; // even elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   return exampleStore
@@ -50,10 +46,6 @@ const upperRow = computed(() => {
 });
 
 const lowerRow = computed(() => {
-  if (!exampleStore.currentGame) {
-    return [];
-  }
-
   const remainder = props.direction === Direction.Bottom ? 1 : 0; // odd elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   return exampleStore

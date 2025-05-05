@@ -20,12 +20,8 @@ const exampleStore = useExampleStore();
 const size = "md";
 
 const tiles = computed(() => {
-  if (!exampleStore.currentGame) {
-    return [];
-  }
-
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Top);
-  const player = exampleStore.currentGame.players[position];
+  const player = exampleStore.currentGame!.players[position];
   if (!player) {
     return [];
   }
