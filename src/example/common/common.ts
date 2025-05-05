@@ -29,4 +29,15 @@ export class CommonUtil {
       return ((myPosition + 3 + 4) % 4) as Position;
     }
   }
+
+  static extendArrayToLength<T>(array: T[], length: number, fillValue: T): T[] {
+    if (array.length >= length) {
+      return array;
+    }
+    const extendedArray = [...array];
+    for (let i = array.length; i < length; i++) {
+      extendedArray.push(fillValue);
+    }
+    return extendedArray;
+  }
 }

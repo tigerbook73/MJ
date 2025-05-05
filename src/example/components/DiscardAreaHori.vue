@@ -18,6 +18,7 @@ import GameTile, { GameTileProp } from "./GameTile.vue";
 import { computed } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
+import { TileCore } from "src/common/core/mj.tile-core";
 
 // define props
 const props = defineProps<{
@@ -31,10 +32,13 @@ const rightToLeft = computed(() => props.direction === Direction.Top);
 
 const upperRow = computed(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
+  const tileIds = CommonUtil.extendArrayToLength(
+    exampleStore.currentGame!.discards[position].tiles,
+    rowLength * 2,
+    TileCore.voidId,
+  );
   const tiles =
-    props.direction === Direction.Bottom
-      ? exampleStore.currentGame!.discards[position].tiles.slice(0, rowLength)
-      : exampleStore.currentGame!.discards[position].tiles.slice(rowLength, rowLength * 2);
+    props.direction === Direction.Bottom ? tileIds.slice(0, rowLength) : tileIds.slice(rowLength, rowLength * 2);
   return tiles.map(
     (tileId): GameTileProp => ({
       id: tileId,
@@ -48,10 +52,13 @@ const upperRow = computed(() => {
 
 const lowerRow = computed(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
+  const tileIds = CommonUtil.extendArrayToLength(
+    exampleStore.currentGame!.discards[position].tiles,
+    rowLength * 2,
+    TileCore.voidId,
+  );
   const tiles =
-    props.direction === Direction.Bottom
-      ? exampleStore.currentGame!.discards[position].tiles.slice(rowLength, rowLength * 2)
-      : exampleStore.currentGame!.discards[position].tiles.slice(0, rowLength);
+    props.direction === Direction.Bottom ? tileIds.slice(rowLength, rowLength * 2) : tileIds.slice(0, rowLength);
   return tiles.map(
     (tileId): GameTileProp => ({
       id: tileId,
