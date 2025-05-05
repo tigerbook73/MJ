@@ -93,7 +93,6 @@ async function handlePlayerClick(player: GameSeatProp) {
     $q.notify({
       type: "negative",
       message: "Seat is occupied",
-      position: "top",
     });
     return;
   }
@@ -128,6 +127,13 @@ async function handlePlayerClick(player: GameSeatProp) {
 
 const loading = ref(false);
 async function handleEnterGame() {
+  if (!exampleStore.currentRoom) {
+    $q.notify({
+      type: "negative",
+      message: "Please join a room first",
+    });
+    return;
+  }
   try {
     loading.value = true;
     await clientApi.enterGame(props.room.name);

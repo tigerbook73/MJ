@@ -1,10 +1,10 @@
 import { Position } from "src/common/core/mj.game";
 
 export enum Direction {
-  Right = "RIGHT",
-  Bottom = "BOTTOM",
-  Left = "LEFT",
-  Top = "TOP",
+  Top = "top",
+  Bottom = "bottom",
+  Right = "right",
+  Left = "left",
 }
 
 export class CommonUtil {
