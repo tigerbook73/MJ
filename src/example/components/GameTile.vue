@@ -7,7 +7,7 @@
 <script lang="ts">
 export interface GameTileProp {
   id: TileId;
-  position: "top" | "left" | "right" | "bottom";
+  direction: Direction;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   back?: boolean;
   selected?: boolean;
@@ -17,12 +17,13 @@ export interface GameTileProp {
 <script setup lang="ts">
 import { computed } from "vue";
 import { TileCore, type TileId } from "src/common/core/mj.tile-core";
+import { Direction } from "../common/common";
 
 const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {
   tile: () => ({
     // default values
     id: TileCore.voidId,
-    position: "bottom",
+    direction: Direction.Bottom,
     size: "sm",
     back: false,
     selected: false,
@@ -93,15 +94,15 @@ const tileClass = computed(() => ({
 }));
 
 const tileStyle = {
-  width: props.tile.position == "top" || props.tile.position == "bottom" ? width : height,
-  height: props.tile.position == "top" || props.tile.position == "bottom" ? height : width,
+  width: props.tile.direction == Direction.Top || props.tile.direction == Direction.Bottom ? width : height,
+  height: props.tile.direction == Direction.Top || props.tile.direction == Direction.Bottom ? height : width,
 };
 
 const imageClass = computed(() => ({
-  image_top: props.tile.position == "top",
-  image_bottom: props.tile.position == "bottom",
-  image_left: props.tile.position == "left",
-  image_right: props.tile.position == "right",
+  image_top: props.tile.direction == Direction.Top,
+  image_bottom: props.tile.direction == Direction.Bottom,
+  image_left: props.tile.direction == Direction.Left,
+  image_right: props.tile.direction == Direction.Right,
 }));
 </script>
 

@@ -10,9 +10,9 @@
 
     <!-- center -->
     <div class="hx-20 row">
-      <player-area-vert position="left" class="wx-2" />
+      <player-area-vert :direction="Direction.Left" class="wx-2" />
       <wall-area class="wx-20" />
-      <player-area-vert position="right" class="wx-2" />
+      <player-area-vert :direction="Direction.Right" class="wx-2" />
     </div>
 
     <!-- bottom -->
@@ -33,6 +33,7 @@ import WallArea from "../components/WallArea.vue";
 import PlayerAreaTop from "./PlayerAreaTop.vue";
 import PlayerAreaMe from "./PlayerAreaMe.vue";
 import PlayerAreaVert from "./PlayerAreaVert.vue";
+import { Direction } from "../common/common";
 </script>
 
 <style scoped lang="scss">
