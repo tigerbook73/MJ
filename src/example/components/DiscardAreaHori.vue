@@ -14,59 +14,60 @@ export default { name: "DiscardAreaHori" };
 </script>
 
 <script setup lang="ts">
-import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
-import { computed, onMounted, onUnmounted, reactive } from "vue";
-import { Direction } from "../common/common";
+import { computed } from "vue";
+import { CommonUtil, Direction } from "../common/common";
+import { useExampleStore } from "../stores/example-store";
+import { TileCore } from "src/common/core/mj.tile-core";
 
 // define props
 const props = defineProps<{
   direction: Direction.Top | Direction.Bottom;
 }>();
+
+const exampleStore = useExampleStore();
 const size = "sm";
 const rowLength = 12;
-
-const discardTiles = reactive(
-  Array.from({ length: rowLength * 2 }, (_, i): GameTileProp => {
-    return {
-      id: TileCore.voidId,
-      direction: props.direction,
-      size: size,
-      back: false,
-    };
-  }),
-);
 const rightToLeft = computed(() => props.direction === Direction.Top);
-const upperRow = computed(() =>
-  props.direction === Direction.Bottom
-    ? discardTiles.slice(0, rowLength)
-    : discardTiles.slice(rowLength, rowLength * 2),
-);
-const lowerRow = computed(() =>
-  props.direction === Direction.Bottom
-    ? discardTiles.slice(rowLength, rowLength * 2)
-    : discardTiles.slice(0, rowLength),
-);
 
-/**
- * the following is test code
- */
-let intervalId: NodeJS.Timeout;
-onMounted(() => {
-  let index = 0;
-  let action: "set" | "clear" = "set";
-  intervalId = setInterval(() => {
-    discardTiles[index % discardTiles.length].id =
-      action === "set" ? (index * 7) % TileCore.allTiles.length : TileCore.voidId;
-    index++;
-    if (index % discardTiles.length === 0) {
-      action = action === "set" ? "clear" : "set";
-    }
-  }, 500);
+const upperRow = computed(() => {
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
+  const tileIds = CommonUtil.extendArrayToLength(
+    exampleStore.currentGame!.discards[position].tiles,
+    rowLength * 2,
+    TileCore.voidId,
+  );
+  const tiles =
+    props.direction === Direction.Bottom ? tileIds.slice(0, rowLength) : tileIds.slice(rowLength, rowLength * 2);
+  return tiles.map(
+    (tileId): GameTileProp => ({
+      id: tileId,
+      direction: props.direction,
+      size,
+      back: false,
+      selected: false,
+    }),
+  );
 });
 
-onUnmounted(() => {
-  clearInterval(intervalId);
+const lowerRow = computed(() => {
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
+  const tileIds = CommonUtil.extendArrayToLength(
+    exampleStore.currentGame!.discards[position].tiles,
+    rowLength * 2,
+    TileCore.voidId,
+  );
+  const tiles =
+    props.direction === Direction.Bottom ? tileIds.slice(rowLength, rowLength * 2) : tileIds.slice(0, rowLength);
+  return tiles.map(
+    (tileId): GameTileProp => ({
+      id: tileId,
+      direction: props.direction,
+      size,
+      back: false,
+      selected: false,
+    }),
+  );
 });
 </script>
 

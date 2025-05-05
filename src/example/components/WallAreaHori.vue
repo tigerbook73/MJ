@@ -19,40 +19,46 @@ import { computed } from "vue";
 import { useExampleStore } from "../stores/example-store";
 import { CommonUtil, Direction } from "../common/common";
 
-const exampleStore = useExampleStore();
-
 // define props
 const props = defineProps<{
   direction: Direction.Bottom | Direction.Top;
 }>();
-const size = "sm";
 
+const exampleStore = useExampleStore();
+
+const size = "sm";
 const rightToLeft = computed(() => props.direction === Direction.Bottom);
+
 const upperRow = computed(() => {
+  const remainder = props.direction === Direction.Bottom ? 0 : 1; // even elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
-  const tiles = exampleStore.currentGame!.walls[position].tiles.map(
-    (tileId): GameTileProp => ({
-      id: tileId,
-      direction: props.direction,
-      size,
-      back: false,
-      selected: false,
-    }),
-  );
-  return props.direction === Direction.Bottom ? tiles.filter((_, i) => i % 2 == 0) : tiles.filter((_, i) => i % 2 == 1);
+  return exampleStore
+    .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
+    .map(
+      (tileId): GameTileProp => ({
+        id: tileId,
+        direction: props.direction,
+        size,
+        back: !exampleStore.open,
+        selected: false,
+      }),
+    );
 });
+
 const lowerRow = computed(() => {
+  const remainder = props.direction === Direction.Bottom ? 1 : 0; // odd elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
-  const tiles = exampleStore.currentGame!.walls[position].tiles.map(
-    (tileId): GameTileProp => ({
-      id: tileId,
-      direction: props.direction,
-      size,
-      back: false,
-      selected: false,
-    }),
-  );
-  return props.direction === Direction.Bottom ? tiles.filter((_, i) => i % 2 == 1) : tiles.filter((_, i) => i % 2 == 0);
+  return exampleStore
+    .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
+    .map(
+      (tileId): GameTileProp => ({
+        id: tileId,
+        direction: props.direction,
+        size,
+        back: !exampleStore.open,
+        selected: false,
+      }),
+    );
 });
 </script>
 
