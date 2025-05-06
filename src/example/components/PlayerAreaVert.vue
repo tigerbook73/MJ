@@ -11,46 +11,38 @@ export default { name: "PlayerAreaVert" };
 <script setup lang="ts">
 import { TileCore } from "src/common/core/mj.tile-core";
 import GameTile, { GameTileProp } from "./GameTile.vue";
-import { computed, onMounted, onUnmounted, reactive } from "vue";
+import { computed } from "vue";
+import { CommonUtil, Direction } from "../common/common";
+import { useExampleStore } from "../stores/example-store";
 
 // define props
 const props = defineProps<{
-  position: "left" | "right";
+  direction: Direction.Left | Direction.Right;
 }>();
-const size = "sm";
-const rowLength = 15;
 
-const tiles = reactive(
-  Array.from({ length: rowLength }, (_, i): GameTileProp => {
-    return {
-      id: (i * 4) % TileCore.allTiles.length,
-      position: props.position,
-      size: size,
-      back: false,
-    };
-  }),
-);
-tiles[13].id = TileCore.voidId;
+const exampleStore = useExampleStore();
 
-const bottomToTop = computed(() => props.position === "right");
+const bottomToTop = props.direction === Direction.Right;
 
-/**
- * the following is test code
- */
-let intervalId: NodeJS.Timeout;
-onMounted(() => {
-  let index = 0;
-  intervalId = setInterval(() => {
-    if (index !== 0) {
-      tiles[(index - 1) % tiles.length].back = !tiles[(index - 1) % tiles.length].back;
-    }
-    tiles[index % tiles.length].back = !tiles[index % tiles.length].back;
-    index++;
-  }, 500);
-});
+const tiles = computed((): GameTileProp[] => {
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
+  const player = exampleStore.currentGame!.players[position];
+  if (!player) {
+    return [];
+  }
 
-onUnmounted(() => {
-  clearInterval(intervalId);
+  const tileIds = player.handTiles.slice();
+  tileIds.push(TileCore.voidId);
+  tileIds.push(player.picked);
+  return tileIds.map(
+    (id): GameTileProp => ({
+      id,
+      direction: props.direction,
+      size: "sm",
+      back: !exampleStore.open,
+      selected: false,
+    }),
+  );
 });
 </script>
 

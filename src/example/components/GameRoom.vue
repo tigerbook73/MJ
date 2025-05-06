@@ -3,31 +3,44 @@
     <!-- top -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer v-if="northPlayer" :player="northPlayer" class="col-6" @click="handlePlayerClick(northPlayer)" />
+      <game-seat
+        v-if="northPlayer"
+        :player="northPlayer"
+        class="col-6"
+        @dblclick.stop="handlePlayerClick(northPlayer)"
+      />
       <q-space />
     </div>
 
     <!-- middle -->
     <div class="row col-6">
       <!-- left -->
-      <GamePlayer v-if="westPlayer" :player="westPlayer" class="col-3" @click="handlePlayerClick(westPlayer)" />
+      <game-seat v-if="westPlayer" :player="westPlayer" class="col-3" @dblclick.stop="handlePlayerClick(westPlayer)" />
 
       <!-- center -->
       <div class="col-6 column flex-center bg-green-3">
-        {{ props.room.name }}
-        <q-btn class="q-mt-sm" color="primary" label="Join" @click="handleEnterGame" />
+        <q-chip size="1rem" square>{{ props.room.name }}</q-chip>
+        <q-btn label="Enter Game" color="secondary" class="q-mt-md" :loading="loading" @click="handleEnterGame" />
       </div>
 
       <!-- right -->
-      <GamePlayer v-if="eastPlayer" :player="eastPlayer" class="col-3" @click="handlePlayerClick(eastPlayer)" />
+      <game-seat v-if="eastPlayer" :player="eastPlayer" class="col-3" @dblclick.stop="handlePlayerClick(eastPlayer)" />
     </div>
 
     <!-- bottom -->
     <div class="row col-3">
       <q-space />
-      <GamePlayer v-if="southPlayer" :player="southPlayer" class="col-6" @click="handlePlayerClick(southPlayer)" />
+      <game-seat
+        v-if="southPlayer"
+        :player="southPlayer"
+        class="col-6"
+        @dblclick.stop="handlePlayerClick(southPlayer)"
+      />
       <q-space />
     </div>
+
+    <!-- loading -->
+    <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
   </div>
 </template>
 
@@ -40,11 +53,11 @@ export interface GameRoomProp {
 </script>
 
 <script setup lang="ts">
-import GamePlayer, { GamePlayerProp } from "./GamePlayer.vue";
+import GameSeat, { GameSeatProp } from "./GameSeat.vue";
 import { useExampleStore } from "../stores/example-store";
 import { RoomModel } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
 import { UserType } from "src/common/models/common.types";
@@ -61,11 +74,11 @@ const eastPlayer = computed(() => props.room.players.find((player) => player.pos
 const westPlayer = computed(() => props.room.players.find((player) => player.position === Position.West) || null);
 const northPlayer = computed(() => props.room.players.find((player) => player.position === Position.North) || null);
 
-function handlePlayerClick(player: GamePlayerProp) {
-  // alread at the position
+async function handlePlayerClick(player: GameSeatProp) {
+  // already at the position
   if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
     try {
-      clientApi.leaveRoom(props.room.name);
+      await clientApi.leaveRoom(props.room.name);
     } catch (error) {
       $q.notify({
         type: "negative",
@@ -75,11 +88,21 @@ function handlePlayerClick(player: GamePlayerProp) {
     return;
   }
 
+  // position is occupied
+  if (player.type === UserType.Human) {
+    $q.notify({
+      type: "negative",
+      message: "Seat is occupied",
+    });
+    return;
+  }
+
   // position is available
   if (player.type === UserType.Bot) {
-    if (exampleStore.currentPosition) {
+    if (exampleStore.currentPosition !== null) {
+      // if the player is currently in a room, leave it
       try {
-        clientApi.leaveRoom(exampleStore.currentRoom!.name);
+        await clientApi.leaveRoom(exampleStore.currentRoom!.name);
       } catch (error) {
         $q.notify({
           type: "negative",
@@ -89,38 +112,38 @@ function handlePlayerClick(player: GamePlayerProp) {
       }
     }
 
+    // join the new room
     try {
-      clientApi.joinRoom(props.room.name, player.position);
+      await clientApi.joinRoom(props.room.name, player.position);
     } catch (error) {
       $q.notify({
         type: "negative",
         message: "Failed to join room",
       });
     }
-  }
-
-  if (exampleStore.currentPosition !== player.position && player.type !== UserType.Bot) {
-    try {
-      clientApi.leaveRoom(props.room.name);
-      clientApi.joinRoom(props.room.name, player.position);
-    } catch (error) {
-      $q.notify({
-        type: "negative",
-        message: "Failed to leave room",
-      });
-    }
     return;
   }
 }
 
-function handleEnterGame() {
+const loading = ref(false);
+async function handleEnterGame() {
+  if (!exampleStore.currentRoom) {
+    $q.notify({
+      type: "negative",
+      message: "Please join a room first",
+    });
+    return;
+  }
   try {
-    clientApi.enterGame(props.room.name);
+    loading.value = true;
+    await clientApi.enterGame(props.room.name);
   } catch (error) {
     $q.notify({
       type: "negative",
       message: "Failed to enter game",
     });
+  } finally {
+    loading.value = false;
   }
 }
 </script>

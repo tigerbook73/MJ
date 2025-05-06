@@ -3,21 +3,21 @@
     <!-- top -->
     <div class="hx-5 wx-full row">
       <div class="wx-5 hx-full"></div>
-      <discard-area-hori position="top" class="wx-14" />
+      <discard-area-hori :direction="Direction.Top" class="wx-14" />
       <div class="wx-5 hx-full"></div>
     </div>
 
     <!-- center -->
     <div class="hx-14 row">
-      <discard-area-vert position="left" class="wx-5" />
-      <div class="wx-14 bg-green"></div>
-      <discard-area-vert position="right" class="wx-5" />
+      <discard-area-vert :direction="Direction.Left" class="wx-5" />
+      <center-area class="wx-14" />
+      <discard-area-vert :direction="Direction.Right" class="wx-5" />
     </div>
 
     <!-- bottom -->
     <div class="hx-5 wx-full row">
       <div class="wx-5 hx-full"></div>
-      <discard-area-hori position="bottom" class="wx-14" />
+      <discard-area-hori :direction="Direction.Bottom" class="wx-14" />
       <div class="wx-5 hx-full"></div>
     </div>
   </div>
@@ -29,6 +29,8 @@ export default { name: "DiscardArea" };
 
 <script setup lang="ts">
 // define props
+import { Direction } from "../common/common";
+import CenterArea from "./CenterArea.vue";
 import DiscardAreaHori from "./DiscardAreaHori.vue";
 import DiscardAreaVert from "./DiscardAreaVert.vue";
 </script>
