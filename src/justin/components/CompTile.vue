@@ -1,8 +1,8 @@
 <template>
-  <div @click="select">
+  <div>
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
       <q-img
-        v-if="props.type.name && (!props.back || mjStore.open)"
+        v-if="props.type && (!props.back || mjStore.open)"
         :src="imgSrc"
         :ratio="1 / 1"
         fit="scale-down"
@@ -15,16 +15,11 @@
 
 <script setup lang="ts">
 import { computed, ref, StyleValue } from "vue";
-<<<<<<<< HEAD:src/simon/components/CompTile.vue
-import { useMjStore } from "src/simon/stores/mj-store";
-import { voidTileId } from "src/simon/core/mjCard";
-========
 import { useMjStore } from "src/justin/stores/mj-store";
->>>>>>>> origin/main:src/justin/components/CompTile.vue
 
 interface Props {
   id?: string;
-  type: { name: string; id: number; options: { selected: boolean } };
+  type: string;
   position?: string;
   size?: "small" | "large";
   back?: boolean;
@@ -33,7 +28,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
-  type: () => ({ name: "", id: voidTileId, options: { selected: false } }),
+  type: "",
   position: "bottom",
   size: "small",
   back: false,
@@ -80,56 +75,12 @@ const imageNames: Record<string, string> = {
 };
 
 const imgSrc = computed(() => {
-  return imageNames[props.type.name] ? `/svgs/Regular/${imageNames[props.type.name]}` : "/svgs/Black/Blank.svg";
+  return imageNames[props.type] ? `/svgs/Regular/${imageNames[props.type]}` : "/svgs/Black/Blank.svg";
 });
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
-<<<<<<<< HEAD:src/simon/components/CompTile.vue
-const tileClass = computed(() => {
-  if (props.back && !mjStore.open) {
-    return "mj-tile-back";
-  }
-  if (!props.type.name) {
-    return "";
-  }
-  if (props.type.options.selected) {
-    return "mj-tile-selected";
-  }
-  return "mj-tile";
-});
-const tileStyle = computed(() => {
-  if (props.position == "top") {
-    return {
-      width: width,
-      height: height,
-      position: "relative",
-      top: props.selected ? "20px" : "0px",
-    } as StyleValue;
-  } else if (props.position == "bottom") {
-    return {
-      width: width,
-      height: height,
-      position: "relative",
-      bottom: props.selected ? "20px" : "0px",
-    } as StyleValue;
-  } else if (props.position == "left") {
-    return {
-      width: props.position == "left" ? height : width,
-      height: props.position == "left" ? width : height,
-      position: "relative",
-      left: props.selected ? "20px" : "0px",
-    } as StyleValue;
-  }
-  return {
-    width: props.position == "right" ? height : width,
-    height: props.position == "right" ? width : height,
-    position: "relative",
-    right: props.selected ? "20px" : "0px",
-  } as StyleValue;
-});
-========
 const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
 const tileStyle = computed(
   () =>
@@ -163,7 +114,6 @@ function horizontalTrans(selected: boolean, position: string) {
     return "0px";
   }
 }
->>>>>>>> origin/main:src/justin/components/CompTile.vue
 
 const rotate: Record<string, string> = {
   top: "rotate(180deg)",
@@ -176,8 +126,6 @@ const imgStyle = ref({
   transform: rotate[props.position] || "none",
   position: "relative",
 });
-
-function select() {}
 </script>
 
 <style lang="scss">
@@ -189,18 +137,6 @@ function select() {}
   box-shadow: 1px 1px 1px #000;
   &:hover {
     background-color: #8f8f8f;
-    color: #f0f0f0;
-  }
-}
-
-.mj-tile-selected {
-  // margin: 1px;
-  background-color: #f0f000;
-  border: 1px solid #000;
-  border-radius: 5px;
-  box-shadow: 1px 1px 1px #000;
-  &:hover {
-    background-color: #f0f000;
     color: #f0f0f0;
   }
 }
