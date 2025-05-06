@@ -15,12 +15,8 @@
 
 <script setup lang="ts">
 import { computed, ref, StyleValue } from "vue";
-<<<<<<<< HEAD:src/simon/components/CompTile.vue
 import { useMjStore } from "src/simon/stores/mj-store";
 import { voidTileId } from "src/simon/core/mjCard";
-========
-import { useMjStore } from "src/justin/stores/mj-store";
->>>>>>>> origin/main:src/justin/components/CompTile.vue
 
 interface Props {
   id?: string;
@@ -86,7 +82,6 @@ const imgSrc = computed(() => {
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
-<<<<<<<< HEAD:src/simon/components/CompTile.vue
 const tileClass = computed(() => {
   if (props.back && !mjStore.open) {
     return "mj-tile-back";
@@ -129,41 +124,6 @@ const tileStyle = computed(() => {
     right: props.selected ? "20px" : "0px",
   } as StyleValue;
 });
-========
-const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
-const tileStyle = computed(
-  () =>
-    ({
-      width: props.position == "left" || props.position == "right" ? height : width,
-      height: props.position == "left" || props.position == "right" ? width : height,
-      position: "relative",
-      top: verticalTrans(props.selected, props.position),
-      left: horizontalTrans(props.selected, props.position),
-    }) as StyleValue,
-);
-function verticalTrans(selected: boolean, position: string) {
-  if (selected) {
-    if (position == "bottom") {
-      return "-15px";
-    }
-    if (position == "top") {
-      return "15px";
-    }
-    return "0px";
-  }
-}
-function horizontalTrans(selected: boolean, position: string) {
-  if (selected) {
-    if (position == "left") {
-      return "15px";
-    }
-    if (position == "right") {
-      return "-15px";
-    }
-    return "0px";
-  }
-}
->>>>>>>> origin/main:src/justin/components/CompTile.vue
 
 const rotate: Record<string, string> = {
   top: "rotate(180deg)",
