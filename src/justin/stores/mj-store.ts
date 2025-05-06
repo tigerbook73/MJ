@@ -2,8 +2,14 @@ import { defineStore } from "pinia";
 import { Game, Player, Position } from "src/common/core/mj.game";
 import { TileCore, TileId } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/core/mjGame";
-import { IDTileList } from "src/core/mjTile";
 import { ref } from "vue";
+
+export enum AppState {
+  Unconnected = "UNCONNECTED",
+  UnSignedIn = "UNSIGNED_IN",
+  InLobby = "IN_LOBBY",
+  InGame = "IN_GAME",
+}
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
@@ -39,12 +45,8 @@ export const useMjStore = defineStore("mj", () => {
     handTileRefresh();
   }
 
-  // function mapTile(tileID: number) {
-  //   return TileCore.fromId(tileID);
-  // }
-
-  function IDtoName(tileID: number) {
-    return IDTileList[tileID];
+  function IDtoName(id: number) {
+    return IDTileList[id];
   }
 
   function wallRefresh() {
@@ -73,8 +75,6 @@ export const useMjStore = defineStore("mj", () => {
     return (position === mjGame.current?.position) === true;
   }
 
-  mjGame.init([Position.East]);
-  mjGame.start();
   refresh();
 
   return {
@@ -111,3 +111,142 @@ export const useMjStore = defineStore("mj", () => {
     refresh,
   };
 });
+
+export const IDTileList: string[] = [
+  "m1",
+  "m1",
+  "m1",
+  "m1",
+  "m2",
+  "m2",
+  "m2",
+  "m2",
+  "m3",
+  "m3",
+  "m3",
+  "m3",
+  "m4",
+  "m4",
+  "m4",
+  "m4",
+  "m5",
+  "m5",
+  "m5",
+  "m5",
+  "m6",
+  "m6",
+  "m6",
+  "m6",
+  "m7",
+  "m7",
+  "m7",
+  "m7",
+  "m8",
+  "m8",
+  "m8",
+  "m8",
+  "m9",
+  "m9",
+  "m9",
+  "m9",
+  "p1",
+  "p1",
+  "p1",
+  "p1",
+  "p2",
+  "p2",
+  "p2",
+  "p2",
+  "p3",
+  "p3",
+  "p3",
+  "p3",
+  "p4",
+  "p4",
+  "p4",
+  "p4",
+  "p5",
+  "p5",
+  "p5",
+  "p5",
+  "p6",
+  "p6",
+  "p6",
+  "p6",
+  "p7",
+  "p7",
+  "p7",
+  "p7",
+  "p8",
+  "p8",
+  "p8",
+  "p8",
+  "p9",
+  "p9",
+  "p9",
+  "p9",
+  "s1",
+  "s1",
+  "s1",
+  "s1",
+  "s2",
+  "s2",
+  "s2",
+  "s2",
+  "s3",
+  "s3",
+  "s3",
+  "s3",
+  "s4",
+  "s4",
+  "s4",
+  "s4",
+  "s5",
+  "s5",
+  "s5",
+  "s5",
+  "s6",
+  "s6",
+  "s6",
+  "s6",
+  "s7",
+  "s7",
+  "s7",
+  "s7",
+  "s8",
+  "s8",
+  "s8",
+  "s8",
+  "s9",
+  "s9",
+  "s9",
+  "s9",
+  "z1",
+  "z1",
+  "z1",
+  "z1",
+  "z2",
+  "z2",
+  "z2",
+  "z2",
+  "z3",
+  "z3",
+  "z3",
+  "z3",
+  "z4",
+  "z4",
+  "z4",
+  "z4",
+  "z5",
+  "z5",
+  "z5",
+  "z5",
+  "z6",
+  "z6",
+  "z6",
+  "z6",
+  "z7",
+  "z7",
+  "z7",
+  "z7",
+];

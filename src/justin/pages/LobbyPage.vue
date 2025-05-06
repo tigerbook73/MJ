@@ -56,12 +56,21 @@ const router = useRouter();
 const MjStore = useMjStore();
 
 const selected = ref({ roomname: "", pos: Position.East });
+const currentRoom = ref("");
+const currentPos = ref(Position.East);
 const display = ref("null");
+const in_room = ref(false);
 
 const handleSelected = (room: RoomProp, player: MyPlayer) => {
   display.value = `room: ${player.name} position: ${player.pos}`;
   selected.value.roomname = room.name;
   selected.value.pos = player.pos;
+  if (!in_room.value) {
+    joinRoom();
+  } else {
+    leaveRoom();
+  }
+  refreshRoom();
 };
 
 const rooms = ref<RoomProp[]>([]);
@@ -105,14 +114,19 @@ async function deleteRoom() {
 async function joinRoom() {
   try {
     const room = await clientApi.joinRoom(selected.value.roomname, selected.value.pos);
-    selected.value.roomname = room.name;
+    currentRoom.value = room.name;
+    currentPos.value = selected.value.pos;
+    in_room.value = true;
   } catch (error: any) {
     window.alert("join room failed");
   }
 }
+
 async function leaveRoom() {
   try {
-    await clientApi.leaveRoom(selected.value.roomname);
+    await clientApi.leaveRoom(currentRoom.value);
+    in_room.value = false;
+    selected.value.roomname = "";
   } catch (error: any) {
     window.alert("leave room failed");
   }
@@ -120,7 +134,7 @@ async function leaveRoom() {
 
 async function enterGame() {
   try {
-    const data = await clientApi.enterGame(selected.value.roomname);
+    const data = await clientApi.enterGame(currentRoom.value);
     if (data.game) {
       setGame(data.game);
       MjStore.refresh();

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { mjGame } from "src/core/mjGame";
+// import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({
@@ -21,7 +21,7 @@ async function pick() {
 }
 
 async function discard() {
-  mjGame.drop(userMj.selectedTile);
+  // mjGame.drop(userMj.selectedTile);
   userMj.refresh();
 }
 
