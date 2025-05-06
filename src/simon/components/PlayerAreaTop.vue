@@ -19,7 +19,7 @@ import { useMjStore } from "src/simon/stores/mj-store";
 defineOptions({
   name: "PlayerAreaTop",
 });
-import CompTile from "components/CompTile.vue";
+import CompTile from "src/simon/components/CompTile.vue";
 
 const userMj = useMjStore();
 </script>

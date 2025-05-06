@@ -109,14 +109,14 @@ export const useMjStore = defineStore("mj", () => {
     //   id: mjGame.players[0].pick.id,
     //   options: { selected: false },
     // };
-    canHu.value = mjGame.canHu(mjGame.current?.handTiles ?? []);
+    canHu.value = TileCore.canHu(mjGame.current?.handTiles ?? []);
     current.value = mjGame.current;
     // paused.value = mjGame.isPaused();
   }
 
   mjGame.init(activePositions);
 
-  canHu.value = mjGame.canHu(current.value?.handTiles ?? []);
+  canHu.value = TileCore.canHu(current.value?.handTiles ?? []);
   return {
     // state
     open,

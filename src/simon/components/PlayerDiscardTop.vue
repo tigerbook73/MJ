@@ -14,7 +14,7 @@
 defineOptions({
   name: "PlayerDiscardTop",
 });
-import CompTile from "components/CompTile.vue";
+import CompTile from "src/simon/components/CompTile.vue";
 
 import { useMjStore } from "src/simon/stores/mj-store";
 

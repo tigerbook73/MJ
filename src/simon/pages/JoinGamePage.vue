@@ -15,7 +15,7 @@
 </template>
 
 <script setup lang="ts">
-import GameRoom from "src/components/GameRoom.vue";
+import GameRoom from "src/simon/components/GameRoom.vue";
 import { useRouter } from "vue-router";
 import { userStore } from "src/simon/stores/user-store";
 import { computed, ref } from "vue";
@@ -29,7 +29,7 @@ const store = userStore();
 const router = useRouter();
 const useRoomStore = roomStore();
 if (!store.user) {
-  router.push("/sign-in");
+  router.push("/simon/sign-in");
 }
 /**
  * define room interface

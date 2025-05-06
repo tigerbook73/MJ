@@ -67,7 +67,7 @@ async function login() {
       store.user.password = password.value;
 
       useAppStore.setAppState(AppState.InLobby);
-      router.push("/join-game");
+      router.push("/simon/join-game");
     } else {
       store.user = null;
       useAppStore.setAppState(AppState.NotLoggedIn);

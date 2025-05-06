@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import GameArea from "components/GameArea.vue";
+import GameArea from "src/simon/components/GameArea.vue";
 import { computed, ref } from "vue";
 
 defineOptions({

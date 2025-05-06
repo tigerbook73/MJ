@@ -28,15 +28,15 @@ defineOptions({
   name: "GameArea",
 });
 
-import BoardArea from "components/BoardArea.vue";
-import GameAreaA from "components/GameAreaA.vue";
-import GameAreaB from "components/GameAreaB.vue";
-import GameAreaC from "components/GameAreaC.vue";
-import GameAreaD from "components/GameAreaD.vue";
-import PlayerAreaBottom from "components/PlayerAreaBottom.vue";
-import PlayerAreaLeft from "components/PlayerAreaLeft.vue";
-import PlayerAreaRight from "components/PlayerAreaRight.vue";
-import PlayerAreaTop from "components/PlayerAreaTop.vue";
+import BoardArea from "src/simon/components/BoardArea.vue";
+import GameAreaA from "src/simon/components/GameAreaA.vue";
+import GameAreaB from "src/simon/components/GameAreaB.vue";
+import GameAreaC from "src/simon/components/GameAreaC.vue";
+import GameAreaD from "src/simon/components/GameAreaD.vue";
+import PlayerAreaBottom from "src/simon/components/PlayerAreaBottom.vue";
+import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
+import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
+import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
 import { Game, Position } from "src/common/core/mj.game";
 import { GameEvent } from "src/common/protocols/apis.models";

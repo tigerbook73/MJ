@@ -32,6 +32,6 @@ async function connect() {
   await wait(1000);
   loading.value = false;
 
-  router.push("/sign-in");
+  router.push("/simon/sign-in");
 }
 </script>

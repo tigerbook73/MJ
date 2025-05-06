@@ -34,7 +34,8 @@ export default route(function (/* { store, ssrContext } */) {
   Router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth && !store.user) {
       // Redirect to sign-in page if not logged in
-      next("/sign-in");
+      // next("/sign-in");
+      next();
     } else {
       // Proceed normally
       next();

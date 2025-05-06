@@ -1,18 +1,18 @@
+import exampleRoutes from "src/example/router/routes";
+import simonRoutes from "src/simon/router/routes";
 import { RouteRecordRaw } from "vue-router";
 
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    children: [
-      { path: "", component: () => import("pages/ConnectedPage.vue") },
-      { path: "sign-in", component: () => import("pages/LoginPage.vue") },
-      { path: "join-game", component: () => import("pages/JoinGamePage.vue"), meta: { requiresAuth: true } },
-      { path: "game-page", component: () => import("pages/GamePage.vue") },
-      { path: "index-page", component: () => import("pages/IndexPage.vue") },
-      { path: "client-page", component: () => import("pages/ClientPage.vue") },
-    ],
+    component: () => import("src/pages/ErrorNotFound.vue"),
   },
+
+  // example routes
+  ...exampleRoutes,
+
+  // simon routes
+  ...simonRoutes,
 
   // Always leave this as last one,
   // but you can also remove it

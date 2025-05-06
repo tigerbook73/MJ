@@ -71,16 +71,16 @@ watch(
   (state) => {
     switch (state) {
       case AppState.NotConnected:
-        router.push("/");
+        router.push("/simon/");
         break;
       case AppState.NotLoggedIn:
-        router.push("/sign-in");
+        router.push("/simon/sign-in");
         break;
       case AppState.InLobby:
-        router.push("/join-game");
+        router.push("/simon/join-game");
         break;
       case AppState.InGame:
-        router.push("/game-page");
+        router.push("/simon/game-page");
         break;
     }
   },

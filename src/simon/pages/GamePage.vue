@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import GameArea from "components/GameArea.vue";
+import GameArea from "src/simon/components/GameArea.vue";
 import { useQuasar } from "quasar";
 import { GameState, Position } from "src/common/core/mj.game";
 import { mjGame } from "src/simon/core/mjGame";

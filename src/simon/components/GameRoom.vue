@@ -95,7 +95,7 @@ async function enterGame() {
   try {
     const response = await clientApi.enterGame(props.roomName);
     if (response) {
-      router.push("/game-page");
+      router.push("/simon/game-page");
     } else {
       alert(`Failed to start game: ${response}`);
     }
