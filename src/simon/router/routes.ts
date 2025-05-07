@@ -10,7 +10,6 @@ const simonRoutes: RouteRecordRaw[] = [
       { path: "join-game", component: () => import("src/simon/pages/JoinGamePage.vue"), meta: { requiresAuth: true } },
       { path: "game-page", component: () => import("src/simon/pages/GamePage.vue") },
       { path: "index-page", component: () => import("src/simon/pages/IndexPage.vue") },
-      { path: "client-page", component: () => import("src/simon/pages/ClientPage.vue") },
     ],
   },
 ];
