@@ -6,7 +6,7 @@ import justinRoutes from "../justin/router/routes";
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    component: () => import("src/pages/ErrorNotFound.vue"),
+    component: () => import("src/pages/LandingPage.vue"),
   },
 
   // example routes
