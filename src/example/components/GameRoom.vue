@@ -18,9 +18,18 @@
       <game-seat v-if="westPlayer" :player="westPlayer" class="col-3" @dblclick.stop="handlePlayerClick(westPlayer)" />
 
       <!-- center -->
-      <div class="col-6 column flex-center bg-green-3">
+      <div class="col-6 column flex-center bg-green-3" :class="{ 'bg-yellow-3': props.room.state !== RoomStatus.Open }">
         <q-chip size="1rem" square>{{ props.room.name }}</q-chip>
-        <q-btn label="Enter Game" color="secondary" class="q-mt-md" :loading="loading" @click="handleEnterGame" />
+        <q-btn
+          v-if="props.room.state === RoomStatus.Open"
+          :disable="props.room.name !== exampleStore.currentRoom?.name"
+          label="Enter Game"
+          color="secondary"
+          class="q-mt-md"
+          :loading="loading"
+          @click="handleEnterGame"
+        />
+        <q-chip v-else size="1rem" square>Playing ...</q-chip>
       </div>
 
       <!-- right -->
@@ -55,7 +64,7 @@ export interface GameRoomProp {
 <script setup lang="ts">
 import GameSeat, { GameSeatProp } from "./GameSeat.vue";
 import { useExampleStore } from "../stores/example-store";
-import { RoomModel } from "src/common/models/room.model";
+import { RoomModel, RoomStatus } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
 import { computed, ref } from "vue";
 import { clientApi } from "src/client/client-api";
@@ -75,6 +84,10 @@ const westPlayer = computed(() => props.room.players.find((player) => player.pos
 const northPlayer = computed(() => props.room.players.find((player) => player.position === Position.North) || null);
 
 async function handlePlayerClick(player: GameSeatProp) {
+  if (props.room.state !== RoomStatus.Open) {
+    return;
+  }
+
   // already at the position
   if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
     try {
