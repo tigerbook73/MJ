@@ -37,7 +37,7 @@ const seatClass = computed(() => {
     //
     "bg-yellow-3": highlighted,
     "bg-blue-5": !highlighted && isHuman,
-    "bg-brown-e": !isHuman,
+    "bg-brown-3": !isHuman,
   };
 });
 
