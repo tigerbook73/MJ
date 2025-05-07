@@ -15,7 +15,7 @@
           :key="tile.id"
           :tile="tile"
           @click.stop="handleClick(tile.id)"
-          @dblclick.stop="dropTile(tile.id)"
+          @dblclick.stop="handleDblClick(tile.id)"
         ></game-tile>
       </div>
     </div>
@@ -159,25 +159,39 @@ function handleClick(tileId: TileId) {
   }
 }
 
+function handleDblClick(tileId: TileId) {
+  if (tileId === TileCore.voidId) {
+    return;
+  }
+
+  // in state my turn
+  if (state.value === State.MyTurn) {
+    setSelected(tileId);
+    handleDrop();
+    return;
+  }
+
+  // in state waitiing pass, chi / peng / hu / gang is not supported now
+  if (state.value === State.WaitingPass) {
+    // ...
+  }
+}
+
 //
 // drop tile feature
 //
 const showDrop = computed<ShowState>(() => {
   return {
     show: state.value === State.MyTurn,
-    disabled: selectedTiles.value.length === 0,
+    disabled: selectedTiles.value.length !== 1,
   };
 });
 
-// double click to drop
-function dropTile(tileId: TileId) {
-  if (tileId === TileCore.voidId) {
-    return;
-  }
-
+//
+function handleDrop() {
   if (canDo(showDrop.value)) {
     try {
-      clientApi.actionDrop(tileId); // Use the tileId parameter instead of selectedTiles.value[0]
+      clientApi.actionDrop(selectedTiles.value[0]);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -187,11 +201,6 @@ function dropTile(tileId: TileId) {
       });
     }
   }
-}
-
-// drop button
-function handleDrop() {
-  dropTile(selectedTiles.value[0]);
 }
 
 //
