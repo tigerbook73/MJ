@@ -1,13 +1,11 @@
 <template>
-  <div
-    :class="['column flex-center area-player', userMj.isCurrentPlayer(userMj.my_pos % 4) ? 'bg-green-4' : 'bg-green-0']"
-  >
+  <div :class="['column flex-center area-player', 'bg-green-0']">
     <div class="row flex-center">
       <comp-tile
-        v-for="(tile, index) in userMj.players[0].handTiles"
+        v-for="(tile, index) in mjStore.handTileBottom"
         :key="index"
-        :type="userMj.IDtoName(tile)"
-        :selected="tile === userMj.selectedTile"
+        :type="mjStore.IDtoName(tile)"
+        :selected="tile === mjStore.selectedTile"
         @click="onClick(tile)"
         position="bottom"
         size="large"
@@ -25,14 +23,14 @@ import CompTile from "src/justin/components/CompTile.vue";
 import { TileCore } from "src/common/core/mj.tile-core";
 import { useMjStore } from "src/justin/stores/mj-store";
 
-const userMj = useMjStore();
+const mjStore = useMjStore();
 
 function onClick(tile: number) {
   //
-  if (userMj.selectedTile != tile) {
-    userMj.selectedTile = tile;
+  if (mjStore.selectedTile != tile) {
+    mjStore.selectedTile = tile;
   } else {
-    userMj.selectedTile = TileCore.voidTile.id;
+    mjStore.selectedTile = TileCore.voidTile.id;
   }
 }
 </script>

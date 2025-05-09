@@ -1,16 +1,11 @@
 <template>
-  <div
-    :class="[
-      'column flex-center area-player',
-      userMj.isCurrentPlayer((userMj.my_pos + 3) % 4) ? 'bg-green-4' : 'bg-green-0',
-    ]"
-  >
+  <div :class="['column flex-center area-player', 'bg-green-0']">
     <div class="row flex-center w-5">
       <comp-tile
-        v-for="(tile, index) in userMj.players[3].handTiles"
+        v-for="(tile, index) in mjStore.handTileLeft"
         :key="index"
-        :type="userMj.IDtoName(tile)"
-        :selected="tile === userMj.selectedTile"
+        :type="mjStore.IDtoName(tile)"
+        :selected="tile === mjStore.selectedTile"
         position="left"
         size="large"
       ></comp-tile>
@@ -26,7 +21,7 @@ defineOptions({
   name: "PlayerAreaLeft",
 });
 
-const userMj = useMjStore();
+const mjStore = useMjStore();
 </script>
 
 <style scoped>

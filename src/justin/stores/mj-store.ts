@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { Game, Player, Position } from "src/common/core/mj.game";
 import { TileCore, TileId } from "src/common/core/mj.tile-core";
-import { mjGame } from "src/core/mjGame";
+import { RoomModel } from "src/common/models/room.model";
 import { ref } from "vue";
 
 export enum AppState {
@@ -13,6 +13,9 @@ export enum AppState {
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
+  const room = ref<RoomModel | null>(null);
+  const roomList = ref<RoomModel[]>([]);
+  const position = ref<Position | null>(null);
   const open = ref(false as boolean);
   const status = ref(false as boolean);
   const isWinning = ref(false as boolean);
@@ -27,17 +30,17 @@ export const useMjStore = defineStore("mj", () => {
   const wallNorth = ref([] as TileId[]);
   const wallList = [wallEast, wallSouth, wallWest, wallNorth];
 
-  const handTileEast = ref([] as TileId[]);
-  const handTileSouth = ref([] as TileId[]);
-  const handTileWest = ref([] as TileId[]);
-  const handTIleNorth = ref([] as TileId[]);
-  const handList = [handTileEast, handTileSouth, handTileWest, handTIleNorth];
+  const handTileBottom = ref([] as TileId[]);
+  const handTileRight = ref([] as TileId[]);
+  const handTileTop = ref([] as TileId[]);
+  const handTileLeft = ref([] as TileId[]);
+  const handList = [handTileBottom, handTileRight, handTileTop, handTileLeft];
 
-  const discardEast = ref([] as TileId[]);
-  const discardSouth = ref([] as TileId[]);
-  const discardWest = ref([] as TileId[]);
-  const discardNorth = ref([] as TileId[]);
-  const discardList = [discardEast, discardSouth, discardWest, discardNorth];
+  const discardBottom = ref([] as TileId[]);
+  const discardRight = ref([] as TileId[]);
+  const discardTop = ref([] as TileId[]);
+  const discardLeft = ref([] as TileId[]);
+  const discardList = [discardBottom, discardRight, discardTop, discardLeft];
 
   function refresh() {
     wallRefresh();
@@ -50,13 +53,13 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   function wallRefresh() {
-    mjGame.walls.forEach((wall, index) => {
+    game.value?.walls.forEach((wall, index) => {
       wallList[index].value = wall.tiles;
     });
   }
 
   function playerDiscardRefresh() {
-    mjGame.discards.forEach((discard, index) => {
+    game.value?.discards.forEach((discard, index) => {
       discardList[index].value = discard.tiles;
     });
   }
@@ -66,46 +69,53 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   function handTileRefresh() {
-    mjGame.players.forEach((player, index) => {
+    game.value?.players.forEach((player, index) => {
       handList[index].value = player?.handTiles || [];
     });
   }
 
-  function isCurrentPlayer(position: number) {
-    return (position === mjGame.current?.position) === true;
+  function setGame(value: Game | null) {
+    game.value = value;
   }
+
+  // function isCurrentPlayer(position: number) {
+  //   return (position === game.value.current?.position) === true;
+  // }
 
   refresh();
 
   return {
     // state
     game,
+    room,
+    roomList,
+    position,
     open,
+    my_pos,
+
     wallWest,
     wallSouth,
     wallEast,
     wallNorth,
 
-    my_pos,
-    handTileEast,
-    handTileSouth,
-    handTileWest,
-    handTIleNorth,
+    handTileBottom,
+    handTileRight,
+    handTileTop,
+    handTileLeft,
 
-    discardList,
-    discardEast,
-    discardSouth,
-    discardWest,
-    discardNorth,
+    discardBottom,
+    discardRight,
+    discardTop,
+    discardLeft,
 
     players,
     status,
     selectedTile,
 
+    setGame,
     IDtoName,
 
     clearSelected,
-    isCurrentPlayer,
     isWinning,
 
     refresh,

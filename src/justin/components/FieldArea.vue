@@ -8,7 +8,7 @@
 
     <div class="row h-18">
       <player-discard-left class="w-16 bg-grey-8"></player-discard-left>
-      <div class="w-18 column flex-center" :class="userMj.isWinning ? 'bg-green-4' : 'bg-grey-6'">
+      <div class="w-18 column flex-center" :class="mjStore.isWinning ? 'bg-green-4' : 'bg-grey-6'">
         <div>text</div>
       </div>
       <player-discard-right class="w-16 bg-grey-8"></player-discard-right>
@@ -32,5 +32,5 @@ import { useMjStore } from "src/justin/stores/mj-store";
 defineOptions({
   name: "FieldArea",
 });
-const userMj = useMjStore();
+const mjStore = useMjStore();
 </script>
