@@ -19,19 +19,19 @@ defineOptions({
 
 import { wait } from "src/utils/timer";
 import { ref } from "vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 
 const address = ref("localHost");
 
 const loading = ref(false);
 
-const router = useRouter();
+// const router = useRouter();
 
 async function connect() {
   loading.value = true;
   await wait(1000);
   loading.value = false;
 
-  router.push("/simon/sign-in");
+  // router.push("/simon/sign-in");
 }
 </script>

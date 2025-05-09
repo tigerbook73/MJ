@@ -15,11 +15,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+
 import { clientApi } from "src/client/client-api";
 import { UserModel } from "src/common/models/user.model";
 import { userStore } from "src/simon/stores/user-store";
-import { appStore, AppState } from "src/simon/stores/app-store";
 import { useQuasar } from "quasar";
 
 defineOptions({ name: "LoginPage" });
@@ -27,11 +26,8 @@ defineOptions({ name: "LoginPage" });
 const email = ref("a@a.com");
 const password = ref("password");
 const loading = ref(false);
-
-const router = useRouter();
 const $q = useQuasar();
 const store = userStore();
-const useAppStore = appStore();
 
 onMounted(() => {
   if (store.user) {
@@ -66,17 +62,16 @@ async function login() {
       store.user.email = email.value;
       store.user.password = password.value;
 
-      useAppStore.setAppState(AppState.InLobby);
-      router.push("/simon/join-game");
+      store.setSignedIn(true);
     } else {
       store.user = null;
-      useAppStore.setAppState(AppState.NotLoggedIn);
+      store.setSignedIn(false);
       $q.notify({ type: "negative", message: "Login failed: " + response });
     }
   } catch (error) {
     console.error("Sign-in error:", error);
     store.user = null;
-    useAppStore.setAppState(AppState.NotLoggedIn);
+    store.setSignedIn(false);
     $q.notify({ type: "negative", message: "An error occurred while logging in" });
   } finally {
     loading.value = false;

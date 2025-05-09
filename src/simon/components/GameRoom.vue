@@ -51,7 +51,7 @@
 import { UserType } from "src/common/models/common.types";
 
 import { computed } from "vue";
-import { useRouter } from "vue-router";
+// import { useRouter } from "vue-router";
 import PositionPlayer from "./PositionPlayer.vue";
 import { PlayerModel } from "src/common/models/player.model";
 import { Position } from "src/common/core/mj.game";
@@ -84,7 +84,7 @@ const eastPlayer = computed(() => {
   return props.players.find((p) => p.position === Position.East) as PlayerModel;
 });
 
-const router = useRouter();
+// const router = useRouter();
 
 const canStartGame = computed(() => {
   return props.players.some((player) => player.type === UserType.Human);
@@ -95,7 +95,7 @@ async function enterGame() {
   try {
     const response = await clientApi.enterGame(props.roomName);
     if (response) {
-      router.push("/simon/game-page");
+      // router.push("/simon/game-page");
     } else {
       alert(`Failed to start game: ${response}`);
     }
