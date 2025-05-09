@@ -16,25 +16,6 @@
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="logout"
           >Sign Out</q-btn
         >
-        <q-btn
-          flat
-          class="q-pa-sm flex-center bg-white"
-          style="font-size: large; font-weight: bold"
-          @click="refreshRoom"
-          >Refresh</q-btn
-        >
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="createRoom"
-          >New Room</q-btn
-        >
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="deleteRoom"
-          >Delete Room</q-btn
-        >
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="joinRoom"
-          >Join</q-btn
-        >
-        <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="leaveRoom"
-          >Leave</q-btn
-        >
         <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="enterGame"
           >EnterGame</q-btn
         >
@@ -45,7 +26,7 @@
 
 <script setup lang="ts">
 import LobbyDiv, { MyPlayer, RoomProp } from "src/justin/components/LobbyDiv.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
@@ -53,7 +34,7 @@ import { setGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
 
 const router = useRouter();
-const MjStore = useMjStore();
+const mjStore = useMjStore();
 
 const selected = ref({ roomname: "", pos: Position.East });
 const currentRoom = ref("");
@@ -70,44 +51,24 @@ const handleSelected = (room: RoomProp, player: MyPlayer) => {
   } else {
     leaveRoom();
   }
-  refreshRoom();
 };
 
-const rooms = ref<RoomProp[]>([]);
-async function refreshRoom() {
-  rooms.value = (await clientApi.listRoom()).map((room) => ({
+const rooms = computed(() => {
+  return mjStore.roomList.map((room) => ({
     name: room.name,
     players: room.players.map((player) => ({
       name: player.userName,
       pos: player.position,
     })),
   }));
-}
-
-refreshRoom();
+});
 
 async function logout() {
   try {
     await clientApi.signOut();
     router.push("/justin/login");
   } catch (error: any) {
-    window.alert("logout failed");
-  }
-}
-
-async function createRoom() {
-  try {
-    const room = await clientApi.createRoom(selected.value.roomname);
-    selected.value = { pos: Position.East, roomname: room.name };
-  } catch (error: any) {
-    window.alert("create room failed");
-  }
-}
-async function deleteRoom() {
-  try {
-    await clientApi.deleteRoom(selected.value.roomname);
-  } catch (error: any) {
-    window.alert("delete room failed");
+    window.alert(error.message);
   }
 }
 
@@ -137,11 +98,11 @@ async function enterGame() {
     const data = await clientApi.enterGame(currentRoom.value);
     if (data.game) {
       setGame(data.game);
-      MjStore.refresh();
+      mjStore.refresh();
     }
     router.push("/justin/game");
   } catch (error: any) {
-    window.alert("enter game failed");
+    window.alert(error.message);
   }
 }
 </script>

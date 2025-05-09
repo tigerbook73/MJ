@@ -14,15 +14,15 @@ import { useMjStore } from "src/justin/stores/mj-store";
 defineOptions({
   name: "GameAreaD",
 });
-const userMj = useMjStore();
+const mjStore = useMjStore();
 
 async function pick() {
-  userMj.refresh();
+  mjStore.refresh();
 }
 
 async function discard() {
-  // mjGame.drop(userMj.selectedTile);
-  userMj.refresh();
+  // mjGame.drop(mjStore.selectedTile);
+  mjStore.refresh();
 }
 
 async function hu() {

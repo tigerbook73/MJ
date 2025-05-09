@@ -1,9 +1,9 @@
 <template>
   <div class="column reverse wrap items-start content-start full-height">
     <comp-tile
-      v-for="(tile, index) in userMj.discardSouth"
+      v-for="(tile, index) in mjStore.discardRight"
       :key="index"
-      :type="userMj.IDtoName(tile)"
+      :type="mjStore.IDtoName(tile)"
       position="right"
       size="small"
     ></comp-tile>
@@ -18,5 +18,5 @@ defineOptions({
 import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
 
-const userMj = useMjStore();
+const mjStore = useMjStore();
 </script>
