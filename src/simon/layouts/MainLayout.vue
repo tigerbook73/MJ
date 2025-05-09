@@ -27,23 +27,26 @@ import { appStore, AppState } from "src/simon/stores/app-store";
 import { userStore } from "src/simon/stores/user-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { useMjStore } from "src/simon/stores/mj-store";
-import { gameStore } from "src/simon/stores/game-store";
 
 const router = useRouter();
 const useAppStore = appStore();
 const useUserStore = userStore();
 const useRoomStore = roomStore();
 const mjstore = useMjStore();
-const useGameStore = gameStore();
+const useGameStore = useMjStore();
 
 // 👂 Socket connection status
 
 clientApi.gameSocket.onConnect(() => {
-  useAppStore.setAppState(AppState.NotLoggedIn);
+  useAppStore.setConnected(true);
 });
 
 clientApi.gameSocket.onDisconnect(() => {
-  useAppStore.setAppState(AppState.NotConnected);
+  useAppStore.setConnected(false);
+  useRoomStore.roomList = [];
+  useRoomStore.currentRoom = null;
+  useRoomStore.currentPosition = null;
+  useGameStore.setCurrentGame(null);
 });
 
 // 👂 Game event handler
@@ -58,11 +61,10 @@ clientApi.gameSocket.onReceive((event) => {
 
   const game = clientApi.findMyGame(parsed);
   if (game) {
+    useGameStore.setCurrentGame(game);
     mjstore.refresh();
-    useAppStore.setAppState(AppState.InGame);
   } else {
-    useGameStore.setGame(null);
-    useAppStore.setAppState(AppState.InLobby);
+    useGameStore.setCurrentGame(null);
   }
 });
 

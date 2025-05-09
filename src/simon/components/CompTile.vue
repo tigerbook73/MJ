@@ -16,7 +16,8 @@
 <script setup lang="ts">
 import { computed, ref, StyleValue } from "vue";
 import { useMjStore } from "src/simon/stores/mj-store";
-import { voidTileId } from "src/simon/core/mjCard";
+import { TileCore } from "src/common/core/mj.tile-core";
+// import { voidTileId } from "src/simon/core/mjCard";
 
 interface Props {
   id?: string;
@@ -29,7 +30,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   id: "",
-  type: () => ({ name: "", id: voidTileId, options: { selected: false } }),
+  type: () => ({ name: "", id: TileCore.voidId, options: { selected: false } }),
   position: "bottom",
   size: "small",
   back: false,

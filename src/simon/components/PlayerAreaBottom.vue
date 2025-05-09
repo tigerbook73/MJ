@@ -53,12 +53,12 @@ import { useMjStore } from "src/simon/stores/mj-store";
 //    */
 // }
 
-import { voidTileId } from "src/simon/core/mjCard";
 import { Position } from "src/common/core/mj.game";
+import { TileCore } from "src/common/core/mj.tile-core";
 
 function onClick(tile: (typeof userMj.p4Cards)[0]) {
   if (userMj.selectedCard.id == tile.id) {
-    userMj.selectedCard = { name: "", id: voidTileId, options: { selected: false } };
+    userMj.selectedCard = { name: "", id: TileCore.voidId, options: { selected: false } };
     return;
   }
   userMj.selectedCard = tile;

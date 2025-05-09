@@ -16,21 +16,17 @@
 
 <script setup lang="ts">
 import GameRoom from "src/simon/components/GameRoom.vue";
-import { useRouter } from "vue-router";
-import { userStore } from "src/simon/stores/user-store";
+// import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 // import { PlayerModel } from "src/common/models/player.model";
 import { clientApi } from "src/client/client-api";
 import { roomStore } from "src/simon/stores/room-store";
+
 defineOptions({
   name: "JoinGamePage",
 });
-const store = userStore();
-const router = useRouter();
+// const router = useRouter();
 const useRoomStore = roomStore();
-if (!store.user) {
-  router.push("/simon/sign-in");
-}
 /**
  * define room interface
  * define rooms array ref var
