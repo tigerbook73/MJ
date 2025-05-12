@@ -43,7 +43,6 @@ async function signIn() {
     await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
     exampleStore.setSignedIn(true);
   } catch {
-    exampleStore.user.password = "";
     exampleStore.setSignedIn(false);
 
     $q.notify({

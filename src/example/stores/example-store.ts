@@ -32,6 +32,7 @@ export const useExampleStore = defineStore("example-store", () => {
 
     // reset other value
     signedIn.value = false;
+    user.value.password = "";
     roomList.value = [];
     currentRoom.value = null;
     currentPosition.value = null;

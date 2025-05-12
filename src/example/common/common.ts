@@ -30,6 +30,21 @@ export class CommonUtil {
     }
   }
 
+  static mapDirection(myPosition: Position, position: Position): Direction {
+    //        TOP
+    // LEFT         RIGHT
+    //       BOTTOM (myPostion)
+    //
+    // Position: East/0 -> South/1 -> West/2 -> North/4
+    // position === myPosition => bottom
+    // position === (myPosition + 1) %4 => left
+    // position === (myPosition + 2) %4 => top
+    // position === (myPosition + 3) %4 => right
+
+    const directionMap = ["bottom", "left", "top", "right"];
+    return directionMap[((position - myPosition + 4) % 4) as Position] as Direction;
+  }
+
   static extendArrayToLength<T>(array: T[], length: number, fillValue: T): T[] {
     if (array.length >= length) {
       return array;

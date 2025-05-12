@@ -109,10 +109,6 @@ clientApi.gameSocket.onConnect(() => {
 });
 clientApi.gameSocket.onDisconnect(() => {
   exampleStore.setConnected(false);
-  exampleStore.roomList = [];
-  exampleStore.currentRoom = null;
-  exampleStore.currentPosition = null;
-  exampleStore.setCurrentGame(null);
 });
 
 // game event
