@@ -11,23 +11,17 @@ export interface GameSeatProp extends PlayerModel {}
 </script>
 
 <script setup lang="ts">
-import { Position } from "src/common/core/mj.game";
 import { PlayerModel } from "src/common/models/player.model";
 import { computed } from "vue";
 import { useExampleStore } from "../stores/example-store";
 import { UserType } from "src/common/models/common.types";
+import { CommonUtil } from "../common/common";
+
+const props = defineProps<{ player: GameSeatProp }>();
 
 const exampleStore = useExampleStore();
 
-const positionName = computed(() => {
-  const posMap = {
-    [Position.East]: "東",
-    [Position.West]: "西",
-    [Position.North]: "北",
-    [Position.South]: "南",
-  };
-  return posMap[props.player.position];
-});
+const positionName = CommonUtil.positionToText(props.player.position);
 
 const seatClass = computed(() => {
   const highlighted =
@@ -40,6 +34,4 @@ const seatClass = computed(() => {
     "bg-brown-3": !isHuman,
   };
 });
-
-const props = defineProps<{ player: GameSeatProp }>();
 </script>

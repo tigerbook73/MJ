@@ -48,18 +48,18 @@ const $q = useQuasar();
 const exampleStore = useExampleStore();
 
 // direction labels
-const positionLabel = {
-  [Position.East]: "東",
-  [Position.West]: "西",
-  [Position.North]: "北",
-  [Position.South]: "南",
-};
-const topLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Top)];
-const bottomLabel =
-  positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Bottom)];
-const leftLabel = positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Left)];
-const rightLabel =
-  positionLabel[CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Right)];
+const topLabel = CommonUtil.positionToText(
+  CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Top),
+);
+const bottomLabel = CommonUtil.positionToText(
+  CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Bottom),
+);
+const leftLabel = CommonUtil.positionToText(
+  CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Left),
+);
+const rightLabel = CommonUtil.positionToText(
+  CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.East, Direction.Right),
+);
 
 // command buttons
 const btnCommand = computed(() => {
