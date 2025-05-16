@@ -10,9 +10,8 @@
   - [ ] replace alert with more user-friendly message
 - [ ] Fea: leave and join game
 - [ ] Fea: 在mainlayout中增加功能，订阅server event事件
-    - 如果当前在游戏中，则自动跳到game-page,
-    - 如果当前在大厅中, 则自动跳到join-game
-
+  - 如果当前在游戏中，则自动跳到game-page,
+  - 如果当前在大厅中, 则自动跳到join-game
 
 <!-- 在mainlayout中增加功能，订阅server event事件
 
@@ -22,3 +21,5 @@ onReceive((event) => {
   else if (event.game.status === list room)
     router.push('/join-game')
 }) -->
+
+ok
