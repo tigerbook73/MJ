@@ -12,7 +12,7 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "jest",
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
-    "dev": "./cp-common.sh && quasar dev",
+    "dev": "sh ./cp-common.sh && quasar dev",
     "start": "quasar dev",
     "build": "quasar build"
   },
