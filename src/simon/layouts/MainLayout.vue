@@ -24,15 +24,13 @@ import { useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
 
 import { appStore, AppState } from "src/simon/stores/app-store";
-import { userStore } from "src/simon/stores/user-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { useMjStore } from "src/simon/stores/mj-store";
+import { GameEvent } from "src/common/protocols/apis.models";
 
 const router = useRouter();
 const useAppStore = appStore();
-const useUserStore = userStore();
 const useRoomStore = roomStore();
-const mjstore = useMjStore();
 const useGameStore = useMjStore();
 
 // 👂 Socket connection status
@@ -43,26 +41,24 @@ clientApi.gameSocket.onConnect(() => {
 
 clientApi.gameSocket.onDisconnect(() => {
   useAppStore.setConnected(false);
-  useRoomStore.roomList = [];
-  useRoomStore.currentRoom = null;
-  useRoomStore.currentPosition = null;
-  useGameStore.setCurrentGame(null);
+  // useRoomStore.roomList = [];
+  // useRoomStore.currentRoom = null;
+  // useRoomStore.currentPosition = null;
+  // useGameStore.setCurrentGame(null);
 });
 
 // 👂 Game event handler
-clientApi.gameSocket.onReceive((event) => {
+clientApi.gameSocket.onReceive((event: GameEvent) => {
   const parsed = clientApi.parseEvent(event);
 
-  if (!useUserStore.user) {
-    return; // not logged in, ignore
-  }
-
   useRoomStore.setRooms(parsed.data.rooms);
+  useRoomStore.currentRoom = clientApi.findMyRoom(event);
+  useRoomStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
 
   const game = clientApi.findMyGame(parsed);
   if (game) {
     useGameStore.setCurrentGame(game);
-    mjstore.refresh();
+    useGameStore.refresh();
   } else {
     useGameStore.setCurrentGame(null);
   }
