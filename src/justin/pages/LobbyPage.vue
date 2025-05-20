@@ -1,22 +1,22 @@
 <template>
   <q-page class="q-pa-md column flex-center bg-blue-grey-5">
     <div class="row" style="width: 80%; min-height: 500px">
-      <q-card class="q-pa-md col-5 row flex-center bg-green-2">
-        <div class="q-pa-md column flex-center" style="width: 80%; margin: 5px">
-          <LobbyDiv
+      <q-card class="q-pa-md col-5 row flex-center bg-green-2" style="align-items: start">
+        <div class="q-pa-md column flex-center" style="width: 80%; margin: 5px; align-items: start">
+          <!-- <LobbyDiv
             v-for="(room, index) in rooms"
             :key="index"
             :room="room"
             @selected="(player) => handleSelected(room, player)"
-          />
+          /> -->
           <div
-            class="row fit q-pa-md"
-            style="font-size: x-large; font-weight: 500"
+            class="row fit q-pa-md room-hover"
+            style="font-size: x-large; font-weight: 500; cursor: pointer"
             v-for="(room, index) in rooms"
             :key="index"
             :roomname="room.name"
-            @click="selectRoom(room)"
-            :class="{ selected: room.name === tempSelectRoom }"
+            @dblclick="enterRoom(room)"
+            :class="{ current: room.name === currentRoom }"
           >
             {{ room.name }}
           </div>
@@ -29,9 +29,9 @@
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
               @click="selectPos(Position.North)"
-              :class="{ selected: Position.North === tempSelectPos }"
+              :class="{ selected: Position.North === selectedPos }"
             >
-              North
+              North: {{ mjStore.room?.players[Position.North] }}
             </div>
           </div>
           <div class="column col-4 flex-center">
@@ -39,18 +39,18 @@
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
               @click="selectPos(Position.West)"
-              :class="{ selected: Position.West === tempSelectPos }"
+              :class="{ selected: Position.West === selectedPos }"
             >
-              West
+              West: {{ mjStore.room?.players[Position.West] }}
             </div>
 
             <div
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
               @click="selectPos(Position.East)"
-              :class="{ selected: Position.East === tempSelectPos }"
+              :class="{ selected: Position.East === selectedPos }"
             >
-              East
+              East: {{ mjStore.room?.players[Position.East] }}
             </div>
           </div>
           <div class="row col-4 flex-center">
@@ -58,9 +58,9 @@
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
               @click="selectPos(Position.South)"
-              :class="{ selected: Position.South === tempSelectPos }"
+              :class="{ selected: Position.South === selectedPos }"
             >
-              South
+              South: {{ mjStore.room?.players[Position.South] }}
             </div>
           </div>
         </div>
@@ -97,8 +97,8 @@ import { useMjStore } from "src/justin/stores/mj-store";
 const router = useRouter();
 const mjStore = useMjStore();
 
-const tempSelectRoom = ref("");
-const tempSelectPos = ref<Position | null>(null);
+const selectedRoom = ref("");
+const selectedPos = ref<Position | null>(null);
 
 const selected = ref({ roomname: "", pos: Position.East | -1 });
 const currentRoom = ref("");
@@ -128,21 +128,33 @@ const rooms = computed(() => {
 });
 
 function selectRoom(room: RoomProp) {
-  if (room.name != tempSelectRoom.value) {
-    tempSelectRoom.value = room.name;
+  if (room.name != selectedRoom.value) {
+    selectedRoom.value = room.name;
     selected.value.roomname = room.name;
   } else {
-    tempSelectRoom.value = "";
+    selectedRoom.value = "";
     selected.value.roomname = "";
   }
 }
 
+async function enterRoom(room: RoomProp) {
+  if (!in_room.value) {
+    in_room.value = true;
+    currentRoom.value = room.name;
+  } else if (room.name === currentRoom.value) {
+    in_room.value = false;
+    currentRoom.value = "";
+  } else {
+    currentRoom.value = room.name;
+  }
+}
+
 function selectPos(pos: Position) {
-  if (pos != tempSelectPos.value) {
-    tempSelectPos.value = pos;
+  if (pos != selectedPos.value) {
+    selectedPos.value = pos;
     selected.value.pos = pos;
   } else {
-    tempSelectPos.value = null;
+    selectedPos.value = null;
     selected.value.pos = -1;
   }
 }
@@ -194,8 +206,15 @@ async function enterGame() {
 </script>
 
 <style scoped>
-.selected {
-  background-color: green;
-  color: white; /* 可选，更清晰 */
+.room-hover {
+  transition: background-color 0.2s;
+}
+.room-hover:hover {
+  background-color: lightblue; /* light green */
+}
+
+.current {
+  background-color: lightcoral;
+  color: black;
 }
 </style>
