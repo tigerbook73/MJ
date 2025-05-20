@@ -5,6 +5,8 @@ import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/simon/core/mjGame";
 import { ref } from "vue";
 import { appStore } from "./app-store";
+import { roomStore } from "./room-store";
+import { userStore } from "./user-store";
 
 interface HandCard {
   name: string;
@@ -63,6 +65,13 @@ function copy(playerIndex: number) {
 //     return ((myPosition + 3 + 4) % 4) as Position;
 //   }
 // }
+function rearrangePlayers(myPos: number) {
+  const players = [...mjGame.players]; // 原始顺序
+  const start = players.findIndex((p) => p?.position === myPos);
+  if (start === -1) return;
+  const reordered = [players[start], players[(start + 1) % 4], players[(start + 2) % 4], players[(start + 3) % 4]];
+  mjGame.players = reordered;
+}
 
 export const useMjStore = defineStore("mj", () => {
   // game info
@@ -86,8 +95,6 @@ export const useMjStore = defineStore("mj", () => {
 
   // const paused = ref(false);
 
-  // const myPosition = ref(.myPosition);
-
   const topWall = ref([] as HandCard[]);
   const bottomWall = ref([] as HandCard[]);
   const rightWall = ref([] as HandCard[]);
@@ -96,17 +103,23 @@ export const useMjStore = defineStore("mj", () => {
   const p1Cards = ref([] as HandCard[]);
   const p2Cards = ref([] as HandCard[]);
   const p3Cards = ref([] as HandCard[]);
-  const p4Cards = ref([] as HandCard[]); // 以前是mycards
+  const pBottomCards = ref([] as HandCard[]); // 以前是mycards
 
   const p1DiscardCards = ref([] as HandCard[]);
   const p2DiscardCards = ref([] as HandCard[]);
   const p3DiscardCards = ref([] as HandCard[]);
-  const p4DiscardCards = ref([] as HandCard[]); // 以前是 myDiscardCards
+  const pBottomDiscardCards = ref([] as HandCard[]); // 以前是 myDiscardCards
 
   const myLatestPickCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
   const selectedCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
-
   function refresh() {
+    const myPlayer = mjGame.players.find((player) => {
+      if (!player || player.position === undefined) return false;
+      const matchedPlayer = roomStore().currentRoom?.findPlayerByPosition(player.position);
+      return matchedPlayer?.userName === userStore().user?.name;
+    });
+    if (!myPlayer) return;
+    rearrangePlayers(myPlayer.position);
     topWall.value = mjGame.walls[0].tiles.map((tileId) => {
       return mapTile(tileId);
     });
@@ -119,14 +132,14 @@ export const useMjStore = defineStore("mj", () => {
     leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    p4Cards.value = copy(0); // 以前是mycards
+    pBottomCards.value = copy(0); // 以前是mycards
     p1Cards.value = copy(1);
 
     p2Cards.value = copy(2);
     p3Cards.value = copy(3);
 
     //以前是myDiscardCards
-    p4DiscardCards.value = mjGame.discards[0].tiles.map((tileId) => {
+    pBottomDiscardCards.value = mjGame.discards[0].tiles.map((tileId) => {
       return mapTile(tileId);
     });
     p1DiscardCards.value = mjGame.discards[1].tiles.map((tileId) => {
@@ -170,8 +183,8 @@ export const useMjStore = defineStore("mj", () => {
     p2DiscardCards,
     p3Cards,
     p3DiscardCards,
-    p4Cards,
-    p4DiscardCards,
+    pBottomCards,
+    pBottomDiscardCards,
     myLatestPickCard,
     canHu,
     selectedCard,

@@ -1,11 +1,15 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <!-- <q-toolbar>
+      <q-toolbar>
         <q-toolbar-title> MJ App </q-toolbar-title>
 
-        <div>MJ v0.1</div>
-      </q-toolbar> -->
+        <div class="row q-gutter-sm items-center">
+          <div>{{ useUserStore.user?.email }}</div>
+          <q-btn v-if="useAppStore.appState === AppState.InGame" dense flat label="Quit Game" @click="quitGame" />
+          <q-btn v-if="useAppStore.appState === AppState.InLobby" dense flat label="Sign Out" @click="signOut" />
+        </div>
+      </q-toolbar>
     </q-header>
 
     <q-page-container>
@@ -27,14 +31,38 @@ import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { useMjStore } from "src/simon/stores/mj-store";
 import { GameEvent } from "src/common/protocols/apis.models";
+import { userStore } from "../stores/user-store";
 
 const router = useRouter();
 const useAppStore = appStore();
 const useRoomStore = roomStore();
 const useGameStore = useMjStore();
-
+const useUserStore = userStore();
 // 👂 Socket connection status
 
+async function signOut() {
+  try {
+    await clientApi.signOut();
+    useUserStore.user = null;
+    useUserStore.setSignedIn(false);
+  } catch (error) {
+    console.error("Error signing out:", error);
+  }
+}
+
+async function quitGame() {
+  if (useRoomStore.currentRoom === null) {
+    return;
+  }
+  try {
+    await clientApi.quitGame(useRoomStore.currentRoom.name);
+    useRoomStore.currentRoom = null;
+    useRoomStore.currentPosition = null;
+    useGameStore.setCurrentGame(null);
+  } catch (error) {
+    console.error("Error quitting game:", error);
+  }
+}
 clientApi.gameSocket.onConnect(() => {
   useAppStore.setConnected(true);
 });

@@ -40,6 +40,7 @@ async function joinRoom() {
     const response = await clientApi.joinRoom(props.player.roomName, props.player.position);
 
     if (response) {
+      userStore().myPosition = props.player.position;
       emits("update");
     } else {
       alert(`Failed to join room: ${response}`);
