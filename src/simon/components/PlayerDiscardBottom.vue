@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <comp-tile v-for="(tile, index) in userMj.p4DiscardCards" :key="index" :type="tile" size="small"></comp-tile>
+    <comp-tile v-for="(tile, index) in userMj.pBottomDiscardCards" :key="index" :type="tile" size="small"></comp-tile>
   </div>
 </template>
 

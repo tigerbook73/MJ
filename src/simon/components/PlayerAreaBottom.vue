@@ -2,7 +2,7 @@
   <div :class="['column flex-center area-player', userMj.current?.position !== 0 ? 'bg-blue' : 'bg-red']">
     <div class="row flex-center">
       <comp-tile
-        v-for="(tile, index) in userMj.p4Cards"
+        v-for="(tile, index) in userMj.pBottomCards"
         :key="index"
         :type="tile"
         size="large"
@@ -56,7 +56,7 @@ import { useMjStore } from "src/simon/stores/mj-store";
 import { Position } from "src/common/core/mj.game";
 import { TileCore } from "src/common/core/mj.tile-core";
 
-function onClick(tile: (typeof userMj.p4Cards)[0]) {
+function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   if (userMj.selectedCard.id == tile.id) {
     userMj.selectedCard = { name: "", id: TileCore.voidId, options: { selected: false } };
     return;

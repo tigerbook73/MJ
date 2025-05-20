@@ -6,6 +6,7 @@ import { appStore } from "./app-store";
 export const userStore = defineStore("user", () => {
   // user info
   const user = ref<UserModel | null>(null);
+  const myPosition = ref<number | null>(null);
 
   // signed in state
   const signedIn = ref(false);
@@ -43,5 +44,6 @@ export const userStore = defineStore("user", () => {
     setSignedIn,
     clearUser,
     isLoggedIn,
+    myPosition,
   };
 });
