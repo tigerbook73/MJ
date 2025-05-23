@@ -12,12 +12,13 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "jest",
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
-    "dev": "sh ./cp-common.sh && quasar dev",
+    "dev": "quasar dev",
     "start": "quasar dev",
     "build": "quasar build",
     "postinstall": "quasar prepare"
   },
   "dependencies": {
+    "@mj/shared": "*",
     "@quasar/extras": "^1.16.4",
     "axios": "^1.2.1",
     "dayjs": "^1.11.13",
