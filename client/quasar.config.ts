@@ -78,7 +78,7 @@ export default defineConfig((/* ctx */) => {
       ],
 
       alias: {
-        "@common": fileURLToPath(new URL("../server/src/common", import.meta.url)),
+        "@common": fileURLToPath(new URL("src/common", import.meta.url)),
       },
     },
 
