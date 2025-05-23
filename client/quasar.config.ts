@@ -60,9 +60,7 @@ export default defineConfig((/* ctx */) => {
       // polyfillModulePreload: true,
       // distDir
 
-      alias: {
-        "@common": fileURLToPath(new URL("../server/src/common", import.meta.url)),
-      },
+      // extendViteConf (viteConf) {},
       // viteVuePluginOptions: {},
 
       vitePlugins: [
@@ -78,6 +76,10 @@ export default defineConfig((/* ctx */) => {
           { server: false },
         ],
       ],
+
+      alias: {
+        "@common": fileURLToPath(new URL("../server/src/common", import.meta.url)),
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
