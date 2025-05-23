@@ -53,7 +53,7 @@ import { UserType } from "src/common/models/common.types";
 import { computed } from "vue";
 // import { useRouter } from "vue-router";
 import PositionPlayer from "./PositionPlayer.vue";
-import { PlayerModel } from "src/common/models/player.model";
+import type { PlayerModel } from "src/common/models/player.model";
 import { Position } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 
@@ -97,7 +97,7 @@ async function enterGame() {
     if (response) {
       // router.push("/simon/game-page");
     } else {
-      alert(`Failed to start game: ${response}`);
+      alert(`Failed to start game: ${JSON.stringify(response)}`);
     }
   } catch (error) {
     console.error("Error enter game:", error);

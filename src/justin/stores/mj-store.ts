@@ -1,7 +1,9 @@
 import { defineStore } from "pinia";
-import { Game, Player, Position } from "src/common/core/mj.game";
-import { TileCore, TileId } from "src/common/core/mj.tile-core";
-import { RoomModel } from "src/common/models/room.model";
+import type { Game, Player } from "src/common/core/mj.game";
+import { Position } from "src/common/core/mj.game";
+import type { TileId } from "src/common/core/mj.tile-core";
+import { TileCore } from "src/common/core/mj.tile-core";
+import type { RoomModel } from "src/common/models/room.model";
 import { ref } from "vue";
 
 export enum AppState {
@@ -21,7 +23,7 @@ export const useMjStore = defineStore("mj", () => {
   const isWinning = ref(false as boolean);
 
   const players = ref([] as Player[]);
-  const selectedTile = ref(TileCore.voidTile.id as TileId);
+  const selectedTile = ref(TileCore.voidTile.id);
   const my_pos = ref(Position.East as Position);
 
   const wallEast = ref([] as TileId[]);

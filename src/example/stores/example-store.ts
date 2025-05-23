@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import { Game, Position } from "src/common/core/mj.game";
-import { RoomModel } from "src/common/models/room.model";
+import type { Game, Position } from "src/common/core/mj.game";
+import type { RoomModel } from "src/common/models/room.model";
 import { ref } from "vue";
 
 export enum AppState {

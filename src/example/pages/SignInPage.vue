@@ -22,7 +22,7 @@ import { onBeforeMount, ref } from "vue";
 const exampleStore = useExampleStore();
 const $q = useQuasar();
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   if (exampleStore.appState !== AppState.UnSignedIn) {
     return;
   }

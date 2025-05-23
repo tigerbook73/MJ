@@ -14,7 +14,8 @@ export default { name: "DiscardAreaVert" };
 </script>
 
 <script setup lang="ts">
-import GameTile, { GameTileProp } from "./GameTile.vue";
+import type { GameTileProp } from "./GameTile.vue";
+import GameTile from "./GameTile.vue";
 import { computed } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";

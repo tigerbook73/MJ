@@ -47,7 +47,7 @@ import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
-import { GameEvent } from "src/common/protocols/apis.models";
+import type { GameEvent } from "src/common/protocols/apis.models";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -97,7 +97,7 @@ async function quitGame() {
   }
 
   try {
-    await clientApi.quitGame(exampleStore.currentRoom!.name);
+    await clientApi.quitGame(exampleStore.currentRoom.name);
   } catch (e) {
     console.error(e);
   }

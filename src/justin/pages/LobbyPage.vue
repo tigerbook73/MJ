@@ -31,7 +31,7 @@
               @dblclick="selectPos(Position.North)"
               :class="{ selected: Position.North === selectedPos }"
             >
-              North {{ rooms[roomNumber].players[Position.North].name }}
+              North {{ rooms[roomNumber]?.players[Position.North]?.name }}
             </div>
           </div>
           <div class="column col-4 flex-center">
@@ -86,18 +86,19 @@
 </template>
 
 <script setup lang="ts">
-import { RoomProp } from "src/justin/components/LobbyDiv.vue";
+import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { setGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
-import { RoomModel } from "src/common/models/room.model";
+import type { RoomModel } from "src/common/models/room.model";
 
 const router = useRouter();
 const mjStore = useMjStore();
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const selectedRoom = ref<RoomProp | null>(null);
 const selectedPos = ref<Position | null>(null);
 const roomNumber = ref(0);
@@ -131,7 +132,7 @@ const rooms = computed(() => {
   }));
 });
 
-async function selectRoom(room: RoomProp, index: number) {
+function selectRoom(room: RoomProp, index: number) {
   if (!in_room.value) {
     in_room.value = true;
     selectedRoom.value = room;
@@ -180,7 +181,7 @@ async function joinRoom() {
     currentRoom.value.players = room.players;
     currentPos.value = selected.value.pos;
     in_room.value = true;
-  } catch (error: any) {
+  } catch {
     window.alert("join room failed");
   }
 }
@@ -196,7 +197,7 @@ async function leaveRoom() {
     selected.value.roomname = "";
     currentRoom.value = null;
     currentPos.value = null;
-  } catch (error: any) {
+  } catch {
     window.alert("leave room failed");
   }
 }

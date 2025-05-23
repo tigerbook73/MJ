@@ -62,9 +62,11 @@ export interface GameRoomProp {
 </script>
 
 <script setup lang="ts">
-import GameSeat, { GameSeatProp } from "./GameSeat.vue";
+import type { GameSeatProp } from "./GameSeat.vue";
+import GameSeat from "./GameSeat.vue";
 import { useExampleStore } from "../stores/example-store";
-import { RoomModel, RoomStatus } from "src/common/models/room.model";
+import type { RoomModel} from "src/common/models/room.model";
+import { RoomStatus } from "src/common/models/room.model";
 import { Position } from "src/common/core/mj.game";
 import { computed, ref } from "vue";
 import { clientApi } from "src/client/client-api";

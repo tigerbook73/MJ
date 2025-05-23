@@ -2,7 +2,7 @@
   <div class="row flex-center">
     <div class="wx-20 row flex-center">
       <div class="col">
-        <div v-for="set in openTiles" :key="set[0].id" class="row items-center q-gutter-xs">
+        <div v-for="set in openTiles" :key="set[0]!.id" class="row items-center q-gutter-xs">
           <div class="row items-center">
             <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
           </div>
@@ -48,11 +48,14 @@ function canDo(showState: ShowState) {
 </script>
 
 <script setup lang="ts">
-import { TileCore, TileId } from "src/common/core/mj.tile-core";
-import GameTile, { GameTileProp } from "./GameTile.vue";
+import type { TileId } from "src/common/core/mj.tile-core";
+import { TileCore } from "src/common/core/mj.tile-core";
+import type { GameTileProp } from "./GameTile.vue";
+import GameTile from "./GameTile.vue";
 import { computed, ref } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
+import type { Position } from "src/common/core/mj.game";
 import { GameState } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
@@ -269,7 +272,7 @@ const showPeng = computed<ShowState>(() => {
   }
 
   const player = exampleStore.currentGame!.players[exampleStore.currentPosition!]!;
-  const latestTile = exampleStore.currentGame!.latestTile!;
+  const latestTile = exampleStore.currentGame!.latestTile;
   return {
     show: TileCore.canPeng(player.handTiles, latestTile),
     disabled:
@@ -304,7 +307,7 @@ const showGang = computed<ShowState>(() => {
   }
 
   const player = exampleStore.currentGame!.players[exampleStore.currentPosition!]!;
-  const latestTile = exampleStore.currentGame!.latestTile!;
+  const latestTile = exampleStore.currentGame!.latestTile;
   return {
     show: TileCore.canGang(player.handTiles, latestTile),
     disabled:
@@ -347,14 +350,14 @@ const showChi = computed<ShowState>(() => {
     nextPosition = (nextPosition - 1 + 4) % 4;
   }
   // player is the next player
-  if (player.position !== nextPosition) {
+  if (player.position !== (nextPosition as Position)) {
     return {
       show: false,
       disabled: false,
     };
   }
 
-  const latestTile = exampleStore.currentGame!.latestTile!;
+  const latestTile = exampleStore.currentGame!.latestTile;
   return {
     show: TileCore.canChi(player.handTiles, latestTile),
     disabled:

@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-export interface GameSeatProp extends PlayerModel {}
+export type GameSeatProp = PlayerModel;
 </script>
 
 <script setup lang="ts">
-import { PlayerModel } from "src/common/models/player.model";
+import type { PlayerModel } from "src/common/models/player.model";
 import { computed } from "vue";
 import { useExampleStore } from "../stores/example-store";
 import { UserType } from "src/common/models/common.types";

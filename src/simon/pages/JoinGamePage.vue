@@ -62,7 +62,7 @@ async function refreshRooms() {
       // }));
       useRoomStore.setRooms(response);
     } else {
-      alert(`Failed to fetch rooms: ${response}`);
+      alert(`Failed to fetch rooms: ${JSON.stringify(response)}`);
     }
   } catch (error) {
     console.error("Error fetching rooms:", error);
