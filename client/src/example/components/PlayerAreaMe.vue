@@ -48,15 +48,15 @@ function canDo(showState: ShowState) {
 </script>
 
 <script setup lang="ts">
-import type { TileId } from "@mj/shared/common/core/mj.tile-core";
-import { TileCore } from "@mj/shared/common/core/mj.tile-core";
+import type { TileId } from "@common/core/mj.tile-core";
+import { TileCore } from "@common/core/mj.tile-core";
 import type { GameTileProp } from "./GameTile.vue";
 import GameTile from "./GameTile.vue";
 import { computed, ref } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
-import type { Position } from "@mj/shared/common/core/mj.game";
-import { GameState } from "@mj/shared/common/core/mj.game";
+import { Position } from "@common/core/mj.game";
+import { GameState } from "@common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
 
@@ -66,7 +66,7 @@ const exampleStore = useExampleStore();
 const size = "md";
 
 const handTiles = computed<GameTileProp[]>(() => {
-  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Bottom);
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.None, Direction.Bottom);
   const player = exampleStore.currentGame!.players[position]!;
   const tileIds = player.handTiles.slice();
   tileIds.push(TileCore.voidId);
@@ -83,7 +83,7 @@ const handTiles = computed<GameTileProp[]>(() => {
 });
 
 const openTiles = computed<GameTileProp[][]>(() => {
-  const position = CommonUtil.mapPosition(exampleStore.currentPosition!, Direction.Bottom);
+  const position = CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.None, Direction.Bottom);
   const player = exampleStore.currentGame!.players[position]!;
   const tiless = player.openedSets.map((set): GameTileProp[] =>
     set.tiles.map((tile): GameTileProp => {

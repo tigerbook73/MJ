@@ -1,4 +1,4 @@
-import { ClientApi } from "@mj/shared/common/protocols/apis.models";
-import { GameSocket } from "@mj/shared/common/protocols/game-socket";
+import { ClientApi } from "../../../server/src/common/protocols/apis.models";
+import { GameSocket } from "../../../server/src/common/protocols/game-socket";
 
 export const clientApi = new ClientApi(new GameSocket());

@@ -2,6 +2,7 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file
 
 import { defineConfig } from "#q-app/wrappers";
+import { fileURLToPath } from "url";
 
 export default defineConfig((/* ctx */) => {
   return {
@@ -59,7 +60,9 @@ export default defineConfig((/* ctx */) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      alias: {
+        "@common": fileURLToPath(new URL("../server/src/common", import.meta.url)),
+      },
       // viteVuePluginOptions: {},
 
       vitePlugins: [

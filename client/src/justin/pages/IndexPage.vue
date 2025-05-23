@@ -9,8 +9,8 @@
 <script setup lang="ts">
 import GameArea from "src/justin/components/GameArea.vue";
 import { clientApi } from "src/client/client-api";
-import { Position } from "@mj/shared/common/core/mj.game";
-import type { GameEvent } from "@mj/shared/common/protocols/apis.models";
+import { Position } from "@common/core/mj.game";
+import type { GameEvent } from "@common/protocols/apis.models";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
 

@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Game } from "@mj/shared/common/core/mj.game";
+import type { Game } from "@common/core/mj.game";
 import { ref } from "vue";
 
 export const gameStore = defineStore("game", () => {

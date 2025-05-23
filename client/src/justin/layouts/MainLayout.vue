@@ -39,7 +39,7 @@
 
 <script setup lang="ts">
 import { clientApi } from "src/client/client-api";
-import type { GameEvent } from "@mj/shared/common/protocols/apis.models";
+import type { GameEvent } from "@common/protocols/apis.models";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { ref } from "vue";
 import { useRouter } from "vue-router";

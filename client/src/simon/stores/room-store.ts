@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
-import type { RoomModel } from "@mj/shared/common/models/room.model";
-import type { Position } from "@mj/shared/common/core/mj.game";
+import type { RoomModel } from "@common/models/room.model";
+import type { Position } from "@common/core/mj.game";
 import { ref } from "vue";
 
 export const roomStore = defineStore("room", () => {

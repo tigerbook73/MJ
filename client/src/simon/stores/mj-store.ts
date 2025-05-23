@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import type { Game, Player, Position } from "@mj/shared/common/core/mj.game";
+import type { Game, Player, Position } from "@common/core/mj.game";
 // import { Position } from "@mj/shared/common/core/mj.game";
-import { TileCore } from "@mj/shared/common/core/mj.tile-core";
+import { TileCore } from "@common/core/mj.tile-core";
 import { mjGame } from "src/simon/core/mjGame";
 import { ref } from "vue";
 import { appStore } from "./app-store";

@@ -1,4 +1,4 @@
-import { Game } from "@mj/shared/common/core/mj.game";
+import { Game } from "@common/core/mj.game";
 
 export class MjGame extends Game {
   constructor() {

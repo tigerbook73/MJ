@@ -53,8 +53,8 @@ import { useMjStore } from "src/simon/stores/mj-store";
 //    */
 // }
 
-import { Position } from "@mj/shared/common/core/mj.game";
-import { TileCore } from "@mj/shared/common/core/mj.tile-core";
+import { Position } from "@common/core/mj.game";
+import { TileCore } from "@common/core/mj.tile-core";
 
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   if (userMj.selectedCard.id == tile.id) {

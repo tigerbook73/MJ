@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { GameState, Position } from "@mj/shared/common/core/mj.game";
+import { GameState, Position } from "@common/core/mj.game";
 import { useExampleStore } from "../stores/example-store";
 import { CommonUtil, Direction } from "../common/common";
 import { computed } from "vue";

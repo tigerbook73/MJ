@@ -89,11 +89,11 @@
 import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
-import { Position } from "@mj/shared/common/core/mj.game";
+import { Position } from "@common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { setGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
-import type { RoomModel } from "@mj/shared/common/models/room.model";
+import type { RoomModel } from "@common/models/room.model";
 
 const router = useRouter();
 const mjStore = useMjStore();

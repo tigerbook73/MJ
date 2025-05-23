@@ -17,9 +17,9 @@
 
 <script setup lang="ts">
 import { computed, defineProps, ref } from "vue";
-import { UserType } from "@mj/shared/common/models/common.types";
+import { UserType } from "@common/models/common.types";
 import { userStore } from "src/simon/stores/user-store";
-import type { PlayerModel } from "@mj/shared/common/models/player.model";
+import type { PlayerModel } from "@common/models/player.model";
 import { clientApi } from "src/client/client-api";
 
 const props = defineProps<{
