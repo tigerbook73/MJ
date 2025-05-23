@@ -5,6 +5,9 @@
     "lint": "cd client && yarn lint && cd ../server && yarn lint",
     "dev-client": "cd client && yarn dev",
     "dev-server": "cd server && yarn dev",
+    "build-client": "cd client && yarn build",
+    "build-server": "cd server && yarn build",
+    "build": "yarn build-client && yarn build-server",
     "postinstall": "node link.js"
   },
   "workspaces": [
