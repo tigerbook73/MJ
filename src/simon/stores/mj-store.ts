@@ -1,19 +1,18 @@
 import { defineStore } from "pinia";
-import type { Game, Player, Position } from "src/common/core/mj.game";
+import type { Game, Position } from "src/common/core/mj.game";
 // import { Position } from "src/common/core/mj.game";
 import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/simon/core/mjGame";
 import { ref } from "vue";
 import { appStore } from "./app-store";
 import { roomStore } from "./room-store";
-import { userStore } from "./user-store";
+
+const useRoomStore = roomStore();
 
 interface HandCard {
   name: string;
   id: number;
-  options: {
-    selected: boolean;
-  };
+  options: { selected: boolean };
 }
 
 export enum Direction {
@@ -25,11 +24,7 @@ export enum Direction {
 
 function mapTile(tileId: number): HandCard {
   const tile = TileCore.fromId(tileId);
-  return {
-    name: tile.name,
-    id: tile.id,
-    options: { selected: false },
-  };
+  return { name: tile.name, id: tile.id, options: { selected: false } };
 }
 
 function copy(playerIndex: number) {
@@ -43,39 +38,23 @@ function copy(playerIndex: number) {
     return cards;
   }
 
-  cards.splice(13, 0, {
-    name: "",
-    id: TileCore.voidTile.id,
-    options: { selected: false },
-  });
+  cards.splice(13, 0, { name: "", id: TileCore.voidTile.id, options: { selected: false } });
 
   // Append the 14th (picked) card at the end
   cards.push(mapTile(player.picked));
   return cards;
 }
 
-// function mapPosition(myPosition: number, direction: Direction): number {
-//   if (direction === Direction.Bottom) {
-//     return ((myPosition + 4) % 4) as Position;
-//   } else if (direction === Direction.Left) {
-//     return ((myPosition + 1 + 4) % 4) as Position;
-//   } else if (direction === Direction.Top) {
-//     return ((myPosition + 2 + 4) % 4) as Position;
-//   } else {
-//     return ((myPosition + 3 + 4) % 4) as Position;
-//   }
-// }
-function rearrangePlayers(myPos: number) {
-  const players = [...mjGame.players]; // 原始顺序
-  const start = players.findIndex((p) => p?.position === (myPos as Position));
-  if (start === -1) return;
-  const reordered = [
-    players[start],
-    players[(start + 1) % 4],
-    players[(start + 2) % 4],
-    players[(start + 3) % 4],
-  ] as Player[];
-  mjGame.players = reordered;
+export function mapPosition(myPosition: number, direction: Direction): number {
+  if (direction === Direction.Bottom) {
+    return ((myPosition + 4) % 4) as Position;
+  } else if (direction === Direction.Left) {
+    return ((myPosition + 1 + 4) % 4) as Position;
+  } else if (direction === Direction.Top) {
+    return ((myPosition + 2 + 4) % 4) as Position;
+  } else {
+    return ((myPosition + 3 + 4) % 4) as Position;
+  }
 }
 
 export const useMjStore = defineStore("mj", () => {
@@ -109,7 +88,6 @@ export const useMjStore = defineStore("mj", () => {
   const p2Cards = ref([] as HandCard[]);
   const p3Cards = ref([] as HandCard[]);
   const pBottomCards = ref([] as HandCard[]); // 以前是mycards
-
   const p1DiscardCards = ref([] as HandCard[]);
   const p2DiscardCards = ref([] as HandCard[]);
   const p3DiscardCards = ref([] as HandCard[]);
@@ -118,13 +96,6 @@ export const useMjStore = defineStore("mj", () => {
   const myLatestPickCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
   const selectedCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
   function refresh() {
-    const myPlayer = mjGame.players.find((player) => {
-      if (!player || player.position === undefined) return false;
-      const matchedPlayer = roomStore().currentRoom?.findPlayerByPosition(player.position);
-      return matchedPlayer?.userName === userStore().user?.name;
-    });
-    if (!myPlayer) return;
-    rearrangePlayers(myPlayer.position);
     topWall.value = mjGame.walls[0].tiles.map((tileId) => {
       return mapTile(tileId);
     });
@@ -137,27 +108,23 @@ export const useMjStore = defineStore("mj", () => {
     leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    pBottomCards.value = copy(0); // 以前是mycards
-    p1Cards.value = copy(1);
 
-    p2Cards.value = copy(2);
-    p3Cards.value = copy(3);
+    const myPos = useRoomStore.currentPosition;
 
-    //以前是myDiscardCards
-    pBottomDiscardCards.value = mjGame.discards[0].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-    p1DiscardCards.value = mjGame.discards[1].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
+    if (myPos === null) {
+      console.warn("myPos is null, cannot map player positions.");
+      return;
+    }
 
-    p2DiscardCards.value = mjGame.discards[2].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
+    pBottomCards.value = copy(mapPosition(myPos, Direction.Bottom));
+    p1Cards.value = copy(mapPosition(myPos, Direction.Left));
+    p2Cards.value = copy(mapPosition(myPos, Direction.Top));
+    p3Cards.value = copy(mapPosition(myPos, Direction.Right));
 
-    p3DiscardCards.value = mjGame.discards[3].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
+    pBottomDiscardCards.value = mjGame.discards[mapPosition(myPos, Direction.Bottom)].tiles.map(mapTile);
+    p1DiscardCards.value = mjGame.discards[mapPosition(myPos, Direction.Left)].tiles.map(mapTile);
+    p2DiscardCards.value = mjGame.discards[mapPosition(myPos, Direction.Top)].tiles.map(mapTile);
+    p3DiscardCards.value = mjGame.discards[mapPosition(myPos, Direction.Right)].tiles.map(mapTile);
 
     // myLatestPickCard.value = {
     //   name: mjGame.players[0].pick.name,

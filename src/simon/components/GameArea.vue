@@ -24,9 +24,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: "GameArea",
-});
+defineOptions({ name: "GameArea" });
 
 import BoardArea from "src/simon/components/BoardArea.vue";
 import GameAreaA from "src/simon/components/GameAreaA.vue";
@@ -78,7 +76,7 @@ async function reset() {
 
 async function dropTile() {
   try {
-    if (!mjStore.p4Cards.some((tile) => tile.id === mjStore.selectedCard.id)) {
+    if (!mjStore.pBottomCards.some((tile) => tile.id === mjStore.selectedCard.id)) {
       console.error("Selected tile is not in hand.");
       return;
     }
