@@ -40,6 +40,6 @@ const tiles = computed(() => {
   return positions[props.position] || positions.bottom;
 });
 
-const tiles1 = computed(() => tiles.value!.filter((tile, value) => value % 2));
-const tiles2 = computed(() => tiles.value!.filter((tile, value) => (value + 1) % 2));
+const tiles1 = computed(() => tiles.value.filter((tile, value) => value % 2));
+const tiles2 = computed(() => tiles.value.filter((tile, value) => (value + 1) % 2));
 </script>

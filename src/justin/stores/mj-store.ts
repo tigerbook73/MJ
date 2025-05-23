@@ -56,13 +56,13 @@ export const useMjStore = defineStore("mj", () => {
 
   function wallRefresh() {
     game.value?.walls.forEach((wall, index) => {
-      wallList[index]!.value = wall.tiles;
+      wallList[index].value = wall.tiles;
     });
   }
 
   function playerDiscardRefresh() {
     game.value?.discards.forEach((discard, index) => {
-      discardList[index]!.value = discard.tiles;
+      discardList[index].value = discard.tiles;
     });
   }
 
@@ -72,7 +72,7 @@ export const useMjStore = defineStore("mj", () => {
 
   function handTileRefresh() {
     game.value?.players.forEach((player, index) => {
-      handList[index]!.value = player?.handTiles || [];
+      handList[index].value = player?.handTiles || [];
     });
   }
 

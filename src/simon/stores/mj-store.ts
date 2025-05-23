@@ -125,16 +125,16 @@ export const useMjStore = defineStore("mj", () => {
     });
     if (!myPlayer) return;
     rearrangePlayers(myPlayer.position);
-    topWall.value = mjGame.walls[0]!.tiles.map((tileId) => {
+    topWall.value = mjGame.walls[0].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    rightWall.value = mjGame.walls[1]!.tiles.map((tileId) => {
+    rightWall.value = mjGame.walls[1].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    bottomWall.value = mjGame.walls[2]!.tiles.map((tileId) => {
+    bottomWall.value = mjGame.walls[2].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    leftWall.value = mjGame.walls[3]!.tiles.map((tileId) => {
+    leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
       return mapTile(tileId);
     });
     pBottomCards.value = copy(0); // 以前是mycards
@@ -144,18 +144,18 @@ export const useMjStore = defineStore("mj", () => {
     p3Cards.value = copy(3);
 
     //以前是myDiscardCards
-    pBottomDiscardCards.value = mjGame.discards[0]!.tiles.map((tileId) => {
+    pBottomDiscardCards.value = mjGame.discards[0].tiles.map((tileId) => {
       return mapTile(tileId);
     });
-    p1DiscardCards.value = mjGame.discards[1]!.tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-
-    p2DiscardCards.value = mjGame.discards[2]!.tiles.map((tileId) => {
+    p1DiscardCards.value = mjGame.discards[1].tiles.map((tileId) => {
       return mapTile(tileId);
     });
 
-    p3DiscardCards.value = mjGame.discards[3]!.tiles.map((tileId) => {
+    p2DiscardCards.value = mjGame.discards[2].tiles.map((tileId) => {
+      return mapTile(tileId);
+    });
+
+    p3DiscardCards.value = mjGame.discards[3].tiles.map((tileId) => {
       return mapTile(tileId);
     });
 
