@@ -1,13 +1,9 @@
 <template>
   <div class="column flex-center area-board">
-    <div class="row flex-center">
-      <!-- <comp-tile :type="mjStore.bottom_display.name" :selected="false" position="bottom" size="large"></comp-tile> -->
-    </div>
+    <div class="row flex-center"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: "BoardAreaD",
-});
+defineOptions({ name: "BoardAreaD" });
 </script>
