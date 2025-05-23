@@ -15,9 +15,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: "PlayerAreaBottom",
-});
+defineOptions({ name: "PlayerAreaBottom" });
 
 import CompTile from "src/justin/components/CompTile.vue";
 import { TileCore } from "@common/core/mj.tile-core";

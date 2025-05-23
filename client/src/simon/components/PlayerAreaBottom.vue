@@ -1,5 +1,10 @@
 <template>
-  <div :class="['column flex-center area-player', userMj.current?.position !== 0 ? 'bg-blue' : 'bg-red']">
+  <div
+    :class="[
+      'column flex-center area-player',
+      userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
+    ]"
+  >
     <div class="row flex-center">
       <comp-tile
         v-for="(tile, index) in userMj.pBottomCards"
@@ -11,19 +16,22 @@
         @dblclick="dropTile()"
       ></comp-tile>
 
-      <q-btn v-if="userMj.current?.position !== Position.East" flat @click="passTurn">Pass</q-btn>
+      <q-btn
+        v-if="userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom)"
+        flat
+        @click="passTurn"
+        >Pass</q-btn
+      >
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-defineOptions({
-  name: "PlayerAreaBottom",
-});
+defineOptions({ name: "PlayerAreaBottom" });
 
 import CompTile from "src/simon/components/CompTile.vue";
 
-import { useMjStore } from "src/simon/stores/mj-store";
+import { Direction, mapPosition, useMjStore } from "src/simon/stores/mj-store";
 // import { wait } from "src/utils/timer";
 
 // async function onClick(tile: string) {
@@ -53,8 +61,8 @@ import { useMjStore } from "src/simon/stores/mj-store";
 //    */
 // }
 
-import { Position } from "@common/core/mj.game";
 import { TileCore } from "@common/core/mj.tile-core";
+import { roomStore } from "../stores/room-store";
 
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   if (userMj.selectedCard.id == tile.id) {
@@ -64,10 +72,7 @@ function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   userMj.selectedCard = tile;
 }
 
-const emits = defineEmits<{
-  (e: "drop-tile"): void;
-  (e: "pass-turn"): void;
-}>();
+const emits = defineEmits<{ (e: "drop-tile"): void; (e: "pass-turn"): void }>();
 
 function dropTile() {
   emits("drop-tile");
