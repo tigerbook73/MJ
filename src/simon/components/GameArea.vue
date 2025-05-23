@@ -78,7 +78,7 @@ async function reset() {
 
 async function dropTile() {
   try {
-    if (!mjStore.p4Cards!.some((tile!) => tile.id === mjStore.selectedCard.id)) {
+    if (!mjStore.p4Cards.some((tile) => tile.id === mjStore.selectedCard.id)) {
       console.error("Selected tile is not in hand.");
       return;
     }
