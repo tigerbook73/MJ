@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { UserModel } from "src/common/models/user.model";
+import type { UserModel } from "@mj/shared/common/models/user.model";
 import { computed, ref } from "vue";
 import { appStore } from "./app-store";
 

@@ -16,7 +16,7 @@ export interface GameTileProp {
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { TileCore, type TileId } from "src/common/core/mj.tile-core";
+import { TileCore, type TileId } from "@mj/shared/common/core/mj.tile-core";
 import { Direction } from "../common/common";
 
 const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {

@@ -38,9 +38,9 @@ import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
 import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
-import type { Game } from "src/common/core/mj.game";
-import { Position } from "src/common/core/mj.game";
-import type { GameEvent } from "src/common/protocols/apis.models";
+import type { Game } from "@mj/shared/common/core/mj.game";
+import { Position } from "@mj/shared/common/core/mj.game";
+import type { GameEvent } from "@mj/shared/common/protocols/apis.models";
 import { setGame, mjGame } from "src/simon/core/mjGame";
 import { useMjStore } from "src/simon/stores/mj-store";
 

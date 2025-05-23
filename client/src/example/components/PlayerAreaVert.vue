@@ -9,7 +9,7 @@ export default { name: "PlayerAreaVert" };
 </script>
 
 <script setup lang="ts">
-import { TileCore } from "src/common/core/mj.tile-core";
+import { TileCore } from "@mj/shared/common/core/mj.tile-core";
 import type { GameTileProp } from "./GameTile.vue";
 import GameTile from "./GameTile.vue";
 import { computed } from "vue";

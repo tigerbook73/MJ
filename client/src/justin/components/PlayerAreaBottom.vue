@@ -20,7 +20,7 @@ defineOptions({
 });
 
 import CompTile from "src/justin/components/CompTile.vue";
-import { TileCore } from "src/common/core/mj.tile-core";
+import { TileCore } from "@mj/shared/common/core/mj.tile-core";
 import { useMjStore } from "src/justin/stores/mj-store";
 
 const mjStore = useMjStore();

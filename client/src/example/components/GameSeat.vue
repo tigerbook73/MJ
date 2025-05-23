@@ -11,10 +11,10 @@ export type GameSeatProp = PlayerModel;
 </script>
 
 <script setup lang="ts">
-import type { PlayerModel } from "src/common/models/player.model";
+import type { PlayerModel } from "@mj/shared/common/models/player.model";
 import { computed } from "vue";
 import { useExampleStore } from "../stores/example-store";
-import { UserType } from "src/common/models/common.types";
+import { UserType } from "@mj/shared/common/models/common.types";
 import { CommonUtil } from "../common/common";
 
 const props = defineProps<{ player: GameSeatProp }>();

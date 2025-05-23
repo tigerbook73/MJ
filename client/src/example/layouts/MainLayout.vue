@@ -47,7 +47,7 @@ import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
-import type { GameEvent } from "src/common/protocols/apis.models";
+import type { GameEvent } from "@mj/shared/common/protocols/apis.models";
 
 // test drawer
 const leftDrawerOpen = ref(false);

@@ -14,10 +14,9 @@ import type {
   SignInRequest,
   SignInResponse,
   SignOutRequest,
-  SignOutResponse} from "src/common/protocols/apis.models";
-import {
-  GameRequestType
-} from "src/common/protocols/apis.models";
+  SignOutResponse,
+} from "@mj/shared/common/protocols/apis.models";
+import { GameRequestType } from "@mj/shared/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
 
 export function sendSignIn(email: string, password: string): Promise<SignInResponse> {

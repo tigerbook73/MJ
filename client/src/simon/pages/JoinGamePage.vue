@@ -18,7 +18,7 @@
 import GameRoom from "src/simon/components/GameRoom.vue";
 // import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
-// import { PlayerModel } from "src/common/models/player.model";
+// import { PlayerModel } from "@mj/shared/common/models/player.model";
 import { clientApi } from "src/client/client-api";
 import { roomStore } from "src/simon/stores/room-store";
 

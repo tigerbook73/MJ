@@ -48,13 +48,13 @@
 </template>
 
 <script setup lang="ts">
-import { UserType } from "src/common/models/common.types";
+import { UserType } from "@mj/shared/common/models/common.types";
 
 import { computed } from "vue";
 // import { useRouter } from "vue-router";
 import PositionPlayer from "./PositionPlayer.vue";
-import type { PlayerModel } from "src/common/models/player.model";
-import { Position } from "src/common/core/mj.game";
+import type { PlayerModel } from "@mj/shared/common/models/player.model";
+import { Position } from "@mj/shared/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 
 interface Props {

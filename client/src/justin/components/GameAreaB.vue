@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-// import { Position } from "src/common/core/mj.game";
+// import { Position } from "@mj/shared/common/core/mj.game";
 // import { mjGame } from "src/core/mjGame";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";

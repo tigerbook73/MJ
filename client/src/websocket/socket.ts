@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
-import type { GameRequest, GameResponse } from "src/common/protocols/apis.models";
+import type { GameRequest, GameResponse } from "@mj/shared/common/protocols/apis.models";
 
 export const socketState = reactive({
   connected: false,

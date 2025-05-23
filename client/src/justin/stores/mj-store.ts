@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import type { Game, Player } from "src/common/core/mj.game";
-import { Position } from "src/common/core/mj.game";
-import type { TileId } from "src/common/core/mj.tile-core";
-import { TileCore } from "src/common/core/mj.tile-core";
-import type { RoomModel } from "src/common/models/room.model";
+import type { Game, Player } from "@mj/shared/common/core/mj.game";
+import { Position } from "@mj/shared/common/core/mj.game";
+import type { TileId } from "@mj/shared/common/core/mj.tile-core";
+import { TileCore } from "@mj/shared/common/core/mj.tile-core";
+import type { RoomModel } from "@mj/shared/common/models/room.model";
 import { ref } from "vue";
 
 export enum AppState {

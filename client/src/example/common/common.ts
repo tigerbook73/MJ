@@ -1,4 +1,4 @@
-import { Position } from "src/common/core/mj.game";
+import { Position } from "@mj/shared/common/core/mj.game";
 
 export enum Direction {
   Top = "top",
