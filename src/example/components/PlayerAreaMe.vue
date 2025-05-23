@@ -2,7 +2,7 @@
   <div class="row flex-center">
     <div class="wx-20 row flex-center">
       <div class="col">
-        <div v-for="set in openTiles" :key="set[0].id" class="row items-center q-gutter-xs">
+        <div v-for="set in openTiles" :key="set[0]!.id" class="row items-center q-gutter-xs">
           <div class="row items-center">
             <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
           </div>
@@ -194,7 +194,7 @@ const showDrop = computed<ShowState>(() => {
 function handleDrop() {
   if (canDo(showDrop.value)) {
     try {
-      clientApi.actionDrop(selectedTiles.value[0]);
+      clientApi.actionDrop(selectedTiles.value[0]!);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -276,7 +276,8 @@ const showPeng = computed<ShowState>(() => {
   return {
     show: TileCore.canPeng(player.handTiles, latestTile),
     disabled:
-      selectedTiles.value.length !== 2 || !TileCore.isSame(selectedTiles.value[0], selectedTiles.value[1], latestTile),
+      selectedTiles.value.length !== 2 ||
+      !TileCore.isSame(selectedTiles.value[0]!, selectedTiles.value[1]!, latestTile),
   };
 });
 
@@ -284,7 +285,7 @@ function handlePeng() {
   const game = exampleStore.currentGame!;
   if (canDo(showPeng.value)) {
     try {
-      clientApi.actionPeng([selectedTiles.value[0], selectedTiles.value[1]]);
+      clientApi.actionPeng([selectedTiles.value[0]!, selectedTiles.value[1]!]);
     } catch (e) {
       $q.notify({
         message: "Peng failed",
@@ -312,7 +313,7 @@ const showGang = computed<ShowState>(() => {
     show: TileCore.canGang(player.handTiles, latestTile),
     disabled:
       selectedTiles.value.length !== 3 ||
-      !TileCore.isSame(selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2], latestTile),
+      !TileCore.isSame(selectedTiles.value[0]!, selectedTiles.value[1]!, selectedTiles.value[2]!, latestTile),
   };
 });
 
@@ -320,7 +321,7 @@ function handleGang() {
   const game = exampleStore.currentGame!;
   if (canDo(showGang.value)) {
     try {
-      clientApi.actionGang([selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2]]);
+      clientApi.actionGang([selectedTiles.value[0]!, selectedTiles.value[1]!, selectedTiles.value[2]!]);
     } catch (e) {
       $q.notify({
         message: "Gang failed",
@@ -362,7 +363,7 @@ const showChi = computed<ShowState>(() => {
     show: TileCore.canChi(player.handTiles, latestTile),
     disabled:
       selectedTiles.value.length !== 2 ||
-      !TileCore.isConsecutive(selectedTiles.value[0], selectedTiles.value[1], latestTile),
+      !TileCore.isConsecutive(selectedTiles.value[0]!, selectedTiles.value[1]!, latestTile),
   };
 });
 
@@ -370,7 +371,7 @@ function handleChi() {
   const game = exampleStore.currentGame!;
   if (canDo(showChi.value)) {
     try {
-      clientApi.actionChi([selectedTiles.value[0], selectedTiles.value[1]]);
+      clientApi.actionChi([selectedTiles.value[0]!, selectedTiles.value[1]!]);
     } catch (e) {
       $q.notify({
         message: "Chi failed",

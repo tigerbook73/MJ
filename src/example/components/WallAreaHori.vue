@@ -34,7 +34,7 @@ const upperRow = computed(() => {
   const remainder = props.direction === Direction.Bottom ? 0 : 1; // even elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   return exampleStore
-    .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
+    .currentGame!.walls[position]!.tiles.filter((_, i) => i % 2 === remainder)
     .map(
       (tileId): GameTileProp => ({
         id: tileId,
@@ -50,7 +50,7 @@ const lowerRow = computed(() => {
   const remainder = props.direction === Direction.Bottom ? 1 : 0; // odd elements
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   return exampleStore
-    .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
+    .currentGame!.walls[position]!.tiles.filter((_, i) => i % 2 === remainder)
     .map(
       (tileId): GameTileProp => ({
         id: tileId,

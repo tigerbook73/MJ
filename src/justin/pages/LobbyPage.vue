@@ -31,7 +31,7 @@
               @dblclick="selectPos(Position.North)"
               :class="{ selected: Position.North === selectedPos }"
             >
-              North {{ rooms[roomNumber].players[Position.North].name }}
+              North {{ rooms[roomNumber]?.players[Position.North]?.name }}
             </div>
           </div>
           <div class="column col-4 flex-center">

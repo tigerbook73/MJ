@@ -34,7 +34,7 @@ const rightToLeft = computed(() => props.direction === Direction.Top);
 const upperRow = computed(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   const tileIds = CommonUtil.extendArrayToLength(
-    exampleStore.currentGame!.discards[position].tiles,
+    exampleStore.currentGame!.discards[position]!.tiles,
     rowLength * 2,
     TileCore.voidId,
   );
@@ -54,7 +54,7 @@ const upperRow = computed(() => {
 const lowerRow = computed(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition!, props.direction);
   const tileIds = CommonUtil.extendArrayToLength(
-    exampleStore.currentGame!.discards[position].tiles,
+    exampleStore.currentGame!.discards[position]!.tiles,
     rowLength * 2,
     TileCore.voidId,
   );

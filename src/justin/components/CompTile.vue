@@ -20,7 +20,7 @@ import { useMjStore } from "src/justin/stores/mj-store";
 
 interface Props {
   id?: string;
-  type: string;
+  type: string | undefined;
   position?: string;
   size?: "small" | "large";
   back?: boolean;

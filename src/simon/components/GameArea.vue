@@ -38,7 +38,7 @@ import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
 import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
-import type { Game} from "src/common/core/mj.game";
+import type { Game } from "src/common/core/mj.game";
 import { Position } from "src/common/core/mj.game";
 import type { GameEvent } from "src/common/protocols/apis.models";
 import { setGame, mjGame } from "src/simon/core/mjGame";
@@ -78,7 +78,7 @@ async function reset() {
 
 async function dropTile() {
   try {
-    if (!mjStore.p4Cards.some((tile) => tile.id === mjStore.selectedCard.id)) {
+    if (!mjStore.p4Cards!.some((tile!) => tile.id === mjStore.selectedCard.id)) {
       console.error("Selected tile is not in hand.");
       return;
     }

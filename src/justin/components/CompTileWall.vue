@@ -2,7 +2,7 @@
   <div class="flex-center" :class="flex1">
     <div :class="flex2">
       <comp-tile
-        v-for="(tile, index) in tiles.slice(0, 17)"
+        v-for="(tile, index) in tiles!.slice(0, 17)"
         :key="index"
         :type="mjStore.IDtoName(tile)"
         :position="props.position"
@@ -11,7 +11,7 @@
     </div>
     <div :class="flex2">
       <comp-tile
-        v-for="(tile, index) in tiles.slice(17, 34)"
+        v-for="(tile, index) in tiles!.slice(17, 34)"
         :key="index"
         :type="mjStore.IDtoName(tile)"
         :position="props.position"
