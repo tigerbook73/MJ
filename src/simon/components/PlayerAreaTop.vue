@@ -1,5 +1,10 @@
 <template>
-  <div :class="['column reverse flex-center area-player', userMj.current?.position !== 2 ? 'bg-blue' : 'bg-red']">
+  <div
+    :class="[
+      'column reverse flex-center area-player',
+      userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Top) ? 'bg-blue' : 'bg-red',
+    ]"
+  >
     <div class="row reverse flex-center">
       <comp-tile
         v-for="(tile, index) in userMj.p2Cards"
@@ -14,12 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { useMjStore } from "src/simon/stores/mj-store";
+import { Direction, mapPosition, useMjStore } from "src/simon/stores/mj-store";
 
-defineOptions({
-  name: "PlayerAreaTop",
-});
+defineOptions({ name: "PlayerAreaTop" });
 import CompTile from "src/simon/components/CompTile.vue";
+import { roomStore } from "../stores/room-store";
 
 const userMj = useMjStore();
 </script>
