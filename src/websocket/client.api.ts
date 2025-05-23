@@ -1,9 +1,8 @@
-import {
+import type {
   CreateRoomRequest,
   CreateRoomResponse,
   DeleteRoomRequest,
   DeleteRoomResponse,
-  GameRequestType,
   // JoinRoomRequest,
   // JoinRoomResponse,
   LeaveRoomRequest,
@@ -15,7 +14,9 @@ import {
   SignInRequest,
   SignInResponse,
   SignOutRequest,
-  SignOutResponse,
+  SignOutResponse} from "src/common/protocols/apis.models";
+import {
+  GameRequestType
 } from "src/common/protocols/apis.models";
 import { socketSendAndWait } from "./socket";
 

@@ -1,22 +1,22 @@
 <template>
   <q-page class="q-pa-md column flex-center bg-blue-grey-5">
     <div class="row" style="width: 80%; min-height: 500px">
-      <q-card class="q-pa-md col-5 row flex-center bg-green-2">
-        <div class="q-pa-md column flex-center" style="width: 80%; margin: 5px">
-          <LobbyDiv
+      <q-card class="q-pa-md col-5 row flex-center bg-green-2" style="align-items: start">
+        <div class="q-pa-md column flex-center" style="width: 80%; margin: 5px; align-items: start">
+          <!-- <LobbyDiv
             v-for="(room, index) in rooms"
             :key="index"
             :room="room"
             @selected="(player) => handleSelected(room, player)"
-          />
+          /> -->
           <div
-            class="row fit q-pa-md"
-            style="font-size: x-large; font-weight: 500"
+            class="row fit q-pa-md room-hover"
+            style="font-size: x-large; font-weight: 500; cursor: pointer"
             v-for="(room, index) in rooms"
             :key="index"
             :roomname="room.name"
-            @click="selectRoom(room)"
-            :class="{ selected: room.name === tempSelectRoom }"
+            @dblclick="selectRoom(room, index)"
+            :class="{ current: room.name === selectedRoom?.name && in_room }"
           >
             {{ room.name }}
           </div>
@@ -28,45 +28,45 @@
             <div
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
-              @click="selectPos(Position.North)"
-              :class="{ selected: Position.North === tempSelectPos }"
+              @dblclick="selectPos(Position.North)"
+              :class="{ selected: Position.North === selectedPos }"
             >
-              North
+              North {{ rooms[roomNumber].players[Position.North].name }}
             </div>
           </div>
           <div class="column col-4 flex-center">
             <div
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
-              @click="selectPos(Position.West)"
-              :class="{ selected: Position.West === tempSelectPos }"
+              @dblclick="selectPos(Position.West)"
+              :class="{ selected: Position.West === selectedPos }"
             >
-              West
+              West {{ rooms[roomNumber].players[Position.West].name }}
             </div>
 
             <div
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
-              @click="selectPos(Position.East)"
-              :class="{ selected: Position.East === tempSelectPos }"
+              @dblclick="selectPos(Position.East)"
+              :class="{ selected: Position.East === selectedPos }"
             >
-              East
+              East {{ rooms[roomNumber].players[Position.East].name }}
             </div>
           </div>
           <div class="row col-4 flex-center">
             <div
               class="row flex-center q-pa-md"
               style="font-size: x-large; font-weight: 500"
-              @click="selectPos(Position.South)"
-              :class="{ selected: Position.South === tempSelectPos }"
+              @dblclick="selectPos(Position.South)"
+              :class="{ selected: Position.South === selectedPos }"
             >
-              South
+              South {{ rooms[roomNumber].players[Position.South].name }}
             </div>
           </div>
         </div>
         <div class="q-pa-sm column flex-center" style="flex: auto">
           <div class="row flex-center" style="font-weight: bold; font-size: large">
-            current selection: {{ currentRoom }} {{ currentPos }}
+            current room: {{ currentRoom?.name }} pos: {{ currentPos }}
           </div>
           <div class="row flex-center" style="font-weight: bold; font-size: x-large">{{ selected }}</div>
           <q-btn flat class="q-pa-sm flex-center bg-white" style="font-size: large; font-weight: bold" @click="logout"
@@ -86,36 +86,41 @@
 </template>
 
 <script setup lang="ts">
-import LobbyDiv, { MyPlayer, RoomProp } from "src/justin/components/LobbyDiv.vue";
+import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { setGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
+import type { RoomModel } from "src/common/models/room.model";
 
 const router = useRouter();
 const mjStore = useMjStore();
 
-const tempSelectRoom = ref("");
-const tempSelectPos = ref<Position | null>(null);
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
+const selectedRoom = ref<RoomProp | null>(null);
+const selectedPos = ref<Position | null>(null);
+const roomNumber = ref(0);
+
+const temp = ref<number | null>(null);
 
 const selected = ref({ roomname: "", pos: Position.East | -1 });
-const currentRoom = ref("");
+const currentRoom = ref<RoomModel | null>(null);
 const currentPos = ref<Position | null>(Position.East);
-const display = ref("null");
+// const display = ref("null");
 const in_room = ref(false);
 
-const handleSelected = (room: RoomProp, player: MyPlayer) => {
-  display.value = `room: ${player.name} position: ${player.pos}`;
-  selected.value.roomname = room.name;
-  selected.value.pos = player.pos;
-  if (!in_room.value) {
-    joinRoom();
-  } else {
-    leaveRoom();
-  }
-};
+// const handleSelected = (room: RoomProp, player: MyPlayer) => {
+//   display.value = `room: ${player.name} position: ${player.pos}`;
+//   selected.value.roomname = room.name;
+//   selected.value.pos = player.pos;
+//   if (!in_room.value) {
+//     joinRoom();
+//   } else {
+//     leaveRoom();
+//   }
+// };
 
 const rooms = computed(() => {
   return mjStore.roomList.map((room) => ({
@@ -127,22 +132,30 @@ const rooms = computed(() => {
   }));
 });
 
-function selectRoom(room: RoomProp) {
-  if (room.name != tempSelectRoom.value) {
-    tempSelectRoom.value = room.name;
-    selected.value.roomname = room.name;
+function selectRoom(room: RoomProp, index: number) {
+  if (!in_room.value) {
+    in_room.value = true;
+    selectedRoom.value = room;
+    roomNumber.value = index;
+  } else if (room.name === currentRoom.value?.name) {
+    in_room.value = false;
+    selectedRoom.value = null;
+    roomNumber.value = 0;
   } else {
-    tempSelectRoom.value = "";
-    selected.value.roomname = "";
+    selectedRoom.value = room;
+    temp.value = index;
+    roomNumber.value = index;
   }
 }
 
 function selectPos(pos: Position) {
-  if (pos != tempSelectPos.value) {
-    tempSelectPos.value = pos;
+  if (pos != selectedPos.value) {
+    joinRoom();
+    selectedPos.value = pos;
     selected.value.pos = pos;
   } else {
-    tempSelectPos.value = null;
+    leaveRoom();
+    selectedPos.value = null;
     selected.value.pos = -1;
   }
 }
@@ -158,30 +171,44 @@ async function logout() {
 
 async function joinRoom() {
   try {
-    const room = await clientApi.joinRoom(selected.value.roomname, selected.value.pos);
-    currentRoom.value = room.name;
+    if (!selectedRoom.value || !selectedPos.value) {
+      window.alert("Please select a room and position first");
+      window.alert("Please select a room first");
+      return;
+    }
+    const room = await clientApi.joinRoom(selectedRoom.value.name, selectedPos.value);
+    currentRoom.value = room;
+    currentRoom.value.players = room.players;
     currentPos.value = selected.value.pos;
     in_room.value = true;
-  } catch (error: any) {
+  } catch {
     window.alert("join room failed");
   }
 }
 
 async function leaveRoom() {
   try {
-    await clientApi.leaveRoom(currentRoom.value);
+    if (!currentRoom.value) {
+      window.alert("Please select a room first");
+      return;
+    }
+    await clientApi.leaveRoom(currentRoom.value.name);
     in_room.value = false;
     selected.value.roomname = "";
-    currentRoom.value = "";
+    currentRoom.value = null;
     currentPos.value = null;
-  } catch (error: any) {
+  } catch {
     window.alert("leave room failed");
   }
 }
 
 async function enterGame() {
   try {
-    const data = await clientApi.enterGame(currentRoom.value);
+    if (!currentRoom.value) {
+      window.alert("Please select a room first");
+      return;
+    }
+    const data = await clientApi.enterGame(currentRoom.value.name);
     if (data.game) {
       setGame(data.game);
       mjStore.refresh();
@@ -194,8 +221,16 @@ async function enterGame() {
 </script>
 
 <style scoped>
-.selected {
-  background-color: green;
-  color: white; /* 可选，更清晰 */
+.room-hover {
+  transition: background-color 0.2s;
+}
+.room-hover:hover {
+  background-color: lightblue; /* light green */
+  color: black;
+}
+
+.current {
+  background-color: lightcoral;
+  color: black;
 }
 </style>

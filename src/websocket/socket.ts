@@ -1,6 +1,6 @@
 import { reactive } from "vue";
 import { io } from "socket.io-client";
-import { GameRequest, GameResponse } from "src/common/protocols/apis.models";
+import type { GameRequest, GameResponse } from "src/common/protocols/apis.models";
 
 export const socketState = reactive({
   connected: false,
@@ -27,6 +27,7 @@ export function socketSendAndWait(data: GameRequest): Promise<GameResponse> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(
       () =>
+        // eslint-disable-next-line @typescript-eslint/prefer-promise-reject-errors
         reject({
           type: data.type,
           status: "error",

@@ -14,7 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, StyleValue } from "vue";
+import type { StyleValue } from "vue";
+import { computed, ref } from "vue";
 import { useMjStore } from "src/justin/stores/mj-store";
 
 interface Props {

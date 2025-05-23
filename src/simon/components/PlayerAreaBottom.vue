@@ -69,11 +69,11 @@ const emits = defineEmits<{
   (e: "pass-turn"): void;
 }>();
 
-async function dropTile() {
+function dropTile() {
   emits("drop-tile");
 }
 
-async function passTurn() {
+function passTurn() {
   emits("pass-turn");
 }
 const userMj = useMjStore();

@@ -10,7 +10,7 @@
 import GameArea from "src/justin/components/GameArea.vue";
 import { clientApi } from "src/client/client-api";
 import { Position } from "src/common/core/mj.game";
-import { GameEvent } from "src/common/protocols/apis.models";
+import type { GameEvent } from "src/common/protocols/apis.models";
 import { mjGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
 

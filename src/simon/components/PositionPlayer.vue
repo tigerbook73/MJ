@@ -19,7 +19,7 @@
 import { computed, defineProps, ref } from "vue";
 import { UserType } from "src/common/models/common.types";
 import { userStore } from "src/simon/stores/user-store";
-import { PlayerModel } from "src/common/models/player.model";
+import type { PlayerModel } from "src/common/models/player.model";
 import { clientApi } from "src/client/client-api";
 
 const props = defineProps<{
@@ -43,7 +43,7 @@ async function joinRoom() {
       userStore().myPosition = props.player.position;
       emits("update");
     } else {
-      alert(`Failed to join room: ${response}`);
+      alert(`Failed to join room: ${JSON.stringify(response)}`);
     }
   } catch (error) {
     console.error("Error joining room:", error);

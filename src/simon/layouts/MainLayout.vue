@@ -30,7 +30,7 @@ import { clientApi } from "src/client/client-api";
 import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { useMjStore } from "src/simon/stores/mj-store";
-import { GameEvent } from "src/common/protocols/apis.models";
+import type { GameEvent } from "src/common/protocols/apis.models";
 import { userStore } from "../stores/user-store";
 
 const router = useRouter();

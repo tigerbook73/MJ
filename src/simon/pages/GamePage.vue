@@ -42,7 +42,6 @@ const $q = useQuasar();
 //   mjStore.refresh();
 // }
 
-mjGame;
 mjGame.init([Position.East, Position.North, Position.West, Position.South]);
 
 function tryCall(fn: () => void) {

@@ -41,7 +41,7 @@ async function signIn() {
     const user = await clientApi.signIn(email.value, password.value);
     userStore.user = user;
     router.push("/justin/lobby");
-  } catch (error: any) {
+  } catch {
     window.alert("failed");
   } finally {
     loading.value = false;

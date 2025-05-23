@@ -24,7 +24,7 @@ function Hu() {
   // mjStore.refresh();
 }
 
-async function Zimo() {
+function Zimo() {
   emits("zi-mo");
 }
 </script>

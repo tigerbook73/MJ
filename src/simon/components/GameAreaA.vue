@@ -20,11 +20,11 @@ import { useMjStore } from "src/simon/stores/mj-store";
 
 const mjStore = useMjStore();
 
-async function start() {
+function start() {
   emits("start-game");
 }
 
-async function reset() {
+function reset() {
   emits("reset-game");
 }
 </script>

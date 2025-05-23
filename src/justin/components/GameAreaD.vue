@@ -16,16 +16,16 @@ defineOptions({
 });
 const mjStore = useMjStore();
 
-async function pick() {
+function pick() {
   mjStore.refresh();
 }
 
-async function discard() {
+function discard() {
   // mjGame.drop(mjStore.selectedTile);
   mjStore.refresh();
 }
 
-async function hu() {
+function hu() {
   //
 }
 </script>

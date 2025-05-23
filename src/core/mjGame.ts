@@ -1,6 +1,6 @@
 import { clientApi } from "src/client/client-api";
 import { Game } from "src/common/core/mj.game";
-import { GameEvent } from "src/common/protocols/apis.models";
+import type { GameEvent } from "src/common/protocols/apis.models";
 import { useMjStore } from "src/justin/stores/mj-store";
 
 class MjGame extends Game {}

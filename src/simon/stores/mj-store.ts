@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Game } from "src/common/core/mj.game";
+import type { Game, Position } from "src/common/core/mj.game";
 // import { Position } from "src/common/core/mj.game";
 import { TileCore } from "src/common/core/mj.tile-core";
 import { mjGame } from "src/simon/core/mjGame";
@@ -67,7 +67,7 @@ function copy(playerIndex: number) {
 // }
 function rearrangePlayers(myPos: number) {
   const players = [...mjGame.players]; // 原始顺序
-  const start = players.findIndex((p) => p?.position === myPos);
+  const start = players.findIndex((p) => p?.position === (myPos as Position));
   if (start === -1) return;
   const reordered = [players[start], players[(start + 1) % 4], players[(start + 2) % 4], players[(start + 3) % 4]];
   mjGame.players = reordered;
@@ -91,7 +91,7 @@ export const useMjStore = defineStore("mj", () => {
   const open = ref(true);
   const canHu = ref(false);
   const current = ref(mjGame.current);
-  const activePositions = mjGame.players.filter((player) => player !== null).map((player) => player!.position);
+  const activePositions = mjGame.players.filter((player) => player !== null).map((player) => player.position);
 
   // const paused = ref(false);
 

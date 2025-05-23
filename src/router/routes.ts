@@ -1,6 +1,6 @@
 import exampleRoutes from "src/example/router/routes";
 import simonRoutes from "src/simon/router/routes";
-import { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 import justinRoutes from "../justin/router/routes";
 
 const routes: RouteRecordRaw[] = [

@@ -66,7 +66,7 @@ async function login() {
     } else {
       store.user = null;
       store.setSignedIn(false);
-      $q.notify({ type: "negative", message: "Login failed: " + response });
+      $q.notify({ type: "negative", message: "Login failed: " + JSON.stringify(response) });
     }
   } catch (error) {
     console.error("Sign-in error:", error);
