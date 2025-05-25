@@ -4,18 +4,18 @@
       <div class="column items-center q-gutter-xs" :class="{ reverse: bottomToTop }">
         <div
           v-for="set in openTiles"
-          :key="set[0]!.id"
+          :key="set[0]!.compId"
           class="col items-center q-gutter-xs"
           :class="{ reverse: bottomToTop }"
         >
           <div class="col items-center">
-            <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
+            <game-tile v-for="tile in set" :key="tile.compId" :tile="tile" :size="size"></game-tile>
           </div>
         </div>
       </div>
 
       <div class="column justify-end items-center" :class="{ reverse: bottomToTop }">
-        <game-tile v-for="tile in handTiles" :key="tile.id" :tile="tile"></game-tile>
+        <game-tile v-for="tile in handTiles" :key="tile.compId" :tile="tile"></game-tile>
       </div>
     </div>
     <div class="hx-4"></div>
@@ -57,8 +57,9 @@ const handTiles = computed((): GameTileProp[] => {
   tileIds.push(TileCore.voidId);
   tileIds.push(player.picked);
   return tileIds.map(
-    (id): GameTileProp => ({
-      id,
+    (tileId, index): GameTileProp => ({
+      id: tileId,
+      compId: tileId !== TileCore.voidId ? tileId : index + 1000,
       direction: props.direction,
       size,
       back: !exampleStore.open,
@@ -71,9 +72,10 @@ const openTiles = computed<GameTileProp[][]>(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.None, props.direction);
   const player = exampleStore.currentGame!.players[position]!;
   const tiless = player.openedSets.map((set): GameTileProp[] =>
-    set.tiles.map((tile): GameTileProp => {
+    set.tiles.map((tileId, index): GameTileProp => {
       return {
-        id: tile,
+        id: tileId,
+        compId: tileId !== TileCore.voidId ? tileId : index + 1000,
         direction: props.direction,
         size,
         back: false,

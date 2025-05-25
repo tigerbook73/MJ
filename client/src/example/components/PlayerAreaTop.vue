@@ -3,15 +3,20 @@
     <div class="wx-4"></div>
     <div class="wx-20 row justify-between" :class="{ reverse: true }">
       <div class="row items-center q-gutter-xs q-pr-sm" :class="{ reverse: true }">
-        <div v-for="set in openTiles" :key="set[0]!.id" class="row items-center q-gutter-xs" :class="{ reverse: true }">
+        <div
+          v-for="set in openTiles"
+          :key="set[0]!.compId"
+          class="row items-center q-gutter-xs"
+          :class="{ reverse: true }"
+        >
           <div class="row items-center">
-            <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
+            <game-tile v-for="tile in set" :key="tile.compId" :tile="tile" :size="size"></game-tile>
           </div>
         </div>
       </div>
 
       <div class="row justify-end items-center" :class="{ reverse: true }">
-        <game-tile v-for="(tile, index) in handTiles" :key="tile.id + index" :tile="tile"></game-tile>
+        <game-tile v-for="tile in handTiles" :key="tile.compId" :tile="tile"></game-tile>
       </div>
     </div>
   </div>
@@ -45,8 +50,9 @@ const handTiles = computed(() => {
   tileIds.push(TileCore.voidId);
   tileIds.push(player.picked);
   return tileIds.map(
-    (id): GameTileProp => ({
-      id,
+    (tileId, index): GameTileProp => ({
+      id: tileId,
+      compId: tileId !== TileCore.voidId ? tileId : index + 1000,
       direction: Direction.Top,
       size,
       back: !exampleStore.open,
@@ -59,9 +65,10 @@ const openTiles = computed<GameTileProp[][]>(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.None, Direction.Top);
   const player = exampleStore.currentGame!.players[position]!;
   const tiless = player.openedSets.map((set): GameTileProp[] =>
-    set.tiles.map((tile): GameTileProp => {
+    set.tiles.map((tileId, index): GameTileProp => {
       return {
-        id: tile,
+        id: tileId,
+        compId: tileId !== TileCore.voidId ? tileId : index + 1000,
         direction: Direction.Top,
         size,
         back: false,
