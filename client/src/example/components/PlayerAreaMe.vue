@@ -1,7 +1,7 @@
 <template>
   <div class="row flex-center">
-    <div class="wx-20 row flex-center">
-      <div class="col">
+    <div class="wx-20 row justify-between">
+      <div class="row flex-center q-gutter-xs">
         <div v-for="set in openTiles" :key="set[0]!.id" class="row items-center q-gutter-xs">
           <div class="row items-center">
             <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
