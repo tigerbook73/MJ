@@ -1,10 +1,10 @@
 <template>
   <div class="row flex-center">
     <div class="column" :class="{ reverse: bottomToTop }">
-      <game-tile v-for="tile in leftRow" :key="tile.compId :tile="tile"></game-tile>
+      <game-tile v-for="tile in leftRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
     <div class="column" :class="{ reverse: bottomToTop }">
-      <game-tile v-for="tile in rightRow" :key="tile.compId :tile="tile"></game-tile>
+      <game-tile v-for="tile in rightRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
   </div>
 </template>
