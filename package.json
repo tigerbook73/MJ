@@ -2,7 +2,9 @@
   "name": "mj",
   "private": true,
   "scripts": {
-    "lint": "cd client && yarn lint && cd ../server && yarn lint",
+    "lint": "yarn lint-server && yarn lint-client",
+    "lint-server": "cd server && yarn lint",
+    "lint-client": "cd client && yarn lint",
     "dev-client": "cd client && yarn dev",
     "dev-server": "cd server && yarn dev",
     "build-client": "cd client && yarn build",

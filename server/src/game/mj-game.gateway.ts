@@ -264,7 +264,7 @@ export class MjGameGateway
           },
         });
       }
-      return response;
+      return response as GameResponse;
     } catch (error) {
       const response: GameResponse = {
         type: data.type,
