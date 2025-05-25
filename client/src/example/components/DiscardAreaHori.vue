@@ -1,10 +1,10 @@
 <template>
   <div class="column flex-center">
     <div class="row" :class="{ reverse: rightToLeft }">
-      <game-tile v-for="tile in upperRow" :key="tile.id" :tile="tile"></game-tile>
+      <game-tile v-for="tile in upperRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
     <div class="row" :class="{ reverse: rightToLeft }">
-      <game-tile v-for="tile in lowerRow" :key="tile.id" :tile="tile"></game-tile>
+      <game-tile v-for="tile in lowerRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
   </div>
 </template>
@@ -41,8 +41,9 @@ const upperRow = computed(() => {
   const tiles =
     props.direction === Direction.Bottom ? tileIds.slice(0, rowLength) : tileIds.slice(rowLength, rowLength * 2);
   return tiles.map(
-    (tileId): GameTileProp => ({
+    (tileId, index): GameTileProp => ({
       id: tileId,
+      compId: tileId !== TileCore.voidId ? tileId : index + 1000,
       direction: props.direction,
       size,
       back: false,
@@ -61,8 +62,9 @@ const lowerRow = computed(() => {
   const tiles =
     props.direction === Direction.Bottom ? tileIds.slice(rowLength, rowLength * 2) : tileIds.slice(0, rowLength);
   return tiles.map(
-    (tileId): GameTileProp => ({
+    (tileId, index): GameTileProp => ({
       id: tileId,
+      compId: tileId !== TileCore.voidId ? tileId : index + 1000,
       direction: props.direction,
       size,
       back: false,

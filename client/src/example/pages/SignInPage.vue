@@ -4,7 +4,7 @@
       <q-card-section>
         <q-form @submit.prevent="signIn" class="q-gutter-md">
           <q-input v-model="exampleStore.user.email" label="Email" type="email" required />
-          <q-input v-model="exampleStore.user.password" label="Password" type="password" required />
+          <q-input v-model="password" label="Password" type="password" required />
           <q-btn type="submit" label="Sign In" color="primary" />
         </q-form>
         <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
@@ -22,25 +22,29 @@ import { onBeforeMount, ref } from "vue";
 const exampleStore = useExampleStore();
 const $q = useQuasar();
 
+const password = ref("password");
+
 onBeforeMount(() => {
   if (exampleStore.appState !== AppState.UnSignedIn) {
     return;
   }
 
   if (exampleStore.user.email && exampleStore.user.password) {
+    password.value = exampleStore.user.password;
     signIn();
   }
 });
 
 const loading = ref(false);
 async function signIn() {
-  if (!exampleStore.user.email && !exampleStore.user.password) {
+  if (!exampleStore.user.email && !password.value) {
     return;
   }
 
   try {
     loading.value = true;
-    await clientApi.signIn(exampleStore.user.email, exampleStore.user.password);
+    await clientApi.signIn(exampleStore.user.email, password.value);
+    exampleStore.user.password = password.value; // Save the password for future use
     exampleStore.setSignedIn(true);
   } catch {
     exampleStore.setSignedIn(false);

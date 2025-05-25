@@ -1,10 +1,10 @@
 <template>
   <div class="row flex-center">
     <div class="column" :class="{ reverse: bottomToTop }">
-      <game-tile v-for="tile in leftRow" :key="tile.id" :tile="tile"></game-tile>
+      <game-tile v-for="tile in leftRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
     <div class="column" :class="{ reverse: bottomToTop }">
-      <game-tile v-for="tile in rightRow" :key="tile.id" :tile="tile"></game-tile>
+      <game-tile v-for="tile in rightRow" :key="tile.compId" :tile="tile"></game-tile>
     </div>
   </div>
 </template>
@@ -19,6 +19,7 @@ import GameTile from "./GameTile.vue";
 import { computed } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
+import { TileCore } from "src/common/core/mj.tile-core";
 
 // define props
 const props = defineProps<{
@@ -35,8 +36,9 @@ const leftRow = computed(() => {
   return exampleStore
     .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
     .map(
-      (tileId): GameTileProp => ({
+      (tileId, index): GameTileProp => ({
         id: tileId,
+        compId: tileId !== TileCore.voidId ? tileId : index + 1000,
         direction: props.direction,
         size,
         back: !exampleStore.open,
@@ -50,8 +52,9 @@ const rightRow = computed(() => {
   return exampleStore
     .currentGame!.walls[position].tiles.filter((_, i) => i % 2 === remainder)
     .map(
-      (tileId): GameTileProp => ({
+      (tileId, index): GameTileProp => ({
         id: tileId,
+        compId: tileId !== TileCore.voidId ? tileId : index + 1000,
         direction: props.direction,
         size,
         back: !exampleStore.open,

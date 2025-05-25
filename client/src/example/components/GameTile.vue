@@ -7,6 +7,7 @@
 <script lang="ts">
 export interface GameTileProp {
   id: TileId;
+  compId: number;
   direction: Direction;
   size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   back?: boolean;
@@ -23,6 +24,7 @@ const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {
   tile: () => ({
     // default values
     id: TileCore.voidId,
+    compId: TileCore.voidId,
     direction: Direction.Bottom,
     size: "sm",
     back: false,

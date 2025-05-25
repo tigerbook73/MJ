@@ -1,10 +1,10 @@
 <template>
   <div class="row flex-center">
-    <div class="wx-20 row flex-center">
-      <div class="col">
-        <div v-for="set in openTiles" :key="set[0]!.id" class="row items-center q-gutter-xs">
+    <div class="wx-20 row justify-between">
+      <div class="row flex-center q-gutter-xs">
+        <div v-for="set in openTiles" :key="set[0]!.compId" class="row items-center q-gutter-xs">
           <div class="row items-center">
-            <game-tile v-for="tile in set" :key="tile.id" :tile="tile" :size="size"></game-tile>
+            <game-tile v-for="tile in set" :key="tile.compId" :tile="tile" :size="size"></game-tile>
           </div>
         </div>
       </div>
@@ -12,7 +12,7 @@
       <div class="row justify-end items-center">
         <game-tile
           v-for="tile in handTiles"
-          :key="tile.id"
+          :key="tile.compId"
           :tile="tile"
           @click.stop="handleClick(tile.id)"
           @dblclick.stop="handleDblClick(tile.id)"
@@ -26,6 +26,7 @@
       <q-btn v-if="showGang.show" :disable="showGang.disabled" @click="handleGang" dense label="杠" color="dark" />
       <q-btn v-if="showPeng.show" :disable="showPeng.disabled" @click="handlePeng" dense label="碰" color="dark" />
       <q-btn v-if="showChi.show" :disable="showChi.disabled" @click="handleChi" dense label="吃" color="dark" />
+      <q-btn v-if="showHu.show" :disable="showHu.disabled" @click="handleHu" dense label="胡" color="dark" />
     </div>
   </div>
 </template>
@@ -72,12 +73,13 @@ const handTiles = computed<GameTileProp[]>(() => {
   tileIds.push(TileCore.voidId);
   tileIds.push(player.picked);
   return tileIds.map(
-    (id): GameTileProp => ({
-      id,
+    (tileId, index): GameTileProp => ({
+      id: tileId,
+      compId: tileId !== TileCore.voidId ? tileId : index + 1000,
       direction: Direction.Bottom,
       size,
       back: false,
-      selected: selectedTiles.value.includes(id),
+      selected: selectedTiles.value.includes(tileId),
     }),
   );
 });
@@ -86,13 +88,14 @@ const openTiles = computed<GameTileProp[][]>(() => {
   const position = CommonUtil.mapPosition(exampleStore.currentPosition ?? Position.None, Direction.Bottom);
   const player = exampleStore.currentGame!.players[position]!;
   const tiless = player.openedSets.map((set): GameTileProp[] =>
-    set.tiles.map((tile): GameTileProp => {
+    set.tiles.map((tileId, index): GameTileProp => {
       return {
-        id: tile,
+        id: tileId,
+        compId: tileId !== TileCore.voidId ? tileId : index + 1000,
         direction: Direction.Bottom,
         size,
         back: false,
-        selected: selectedTiles.value.includes(tile),
+        selected: selectedTiles.value.includes(tileId),
       };
     }),
   );
@@ -116,6 +119,11 @@ const state = computed(() => {
 const selectedTiles = ref<TileId[]>([]);
 function setSelected(tileId: TileId) {
   if (tileId === TileCore.voidId) {
+    return;
+  }
+
+  // if the tile is not in hand, do nothing
+  if (handTiles.value.every((tile) => tile.id !== tileId)) {
     return;
   }
 
@@ -151,11 +159,14 @@ function handleClick(tileId: TileId) {
 
   // in state my turn
   if (state.value === State.MyTurn) {
-    setSelected(tileId);
+    // delay unselect to avoid double click
+    setTimeout(() => {
+      setSelected(tileId);
+    }, 100);
     return;
   }
 
-  // in state waitiing pass, chi / peng / hu / gang is not supported now
+  // in state waiting pass
   if (state.value === State.WaitingPass) {
     addSelected(tileId);
     return;
@@ -169,8 +180,9 @@ function handleDblClick(tileId: TileId) {
 
   // in state my turn
   if (state.value === State.MyTurn) {
-    setSelected(tileId);
-    handleDrop();
+    if (selectedTiles.value[0] === tileId) {
+      handleDrop();
+    }
     return;
   }
 
@@ -227,6 +239,7 @@ function handleZimo() {
   if (canDo(showZimo.value)) {
     try {
       clientApi.actionZimo();
+      clearSelected();
     } catch (e) {
       $q.notify({
         message: "Zimo failed",
@@ -250,6 +263,7 @@ function handlePass() {
   if (showPass.value) {
     try {
       clientApi.actionPass();
+      clearSelected();
     } catch (e) {
       $q.notify({
         message: "Pass failed",
@@ -285,6 +299,7 @@ function handlePeng() {
   if (canDo(showPeng.value)) {
     try {
       clientApi.actionPeng([selectedTiles.value[0], selectedTiles.value[1]]);
+      clearSelected();
     } catch (e) {
       $q.notify({
         message: "Peng failed",
@@ -321,6 +336,7 @@ function handleGang() {
   if (canDo(showGang.value)) {
     try {
       clientApi.actionGang([selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2]]);
+      clearSelected();
     } catch (e) {
       $q.notify({
         message: "Gang failed",
@@ -371,9 +387,44 @@ function handleChi() {
   if (canDo(showChi.value)) {
     try {
       clientApi.actionChi([selectedTiles.value[0], selectedTiles.value[1]]);
+      clearSelected();
     } catch (e) {
       $q.notify({
         message: "Chi failed",
+        color: "negative",
+        icon: "warning",
+      });
+    }
+  }
+}
+
+//
+// hu feature
+//
+
+const showHu = computed<ShowState>(() => {
+  if (state.value !== State.WaitingPass) {
+    return {
+      show: false,
+      disabled: false,
+    };
+  }
+
+  const player = exampleStore.currentGame!.players[exampleStore.currentPosition!]!;
+  const latestTile = exampleStore.currentGame!.latestTile;
+  return {
+    show: TileCore.canHu(player.handTiles, latestTile),
+    disabled: false,
+  };
+});
+
+function handleHu() {
+  if (canDo(showHu.value)) {
+    try {
+      clientApi.actionHu();
+    } catch (e) {
+      $q.notify({
+        message: "Hu failed",
         color: "negative",
         icon: "warning",
       });
