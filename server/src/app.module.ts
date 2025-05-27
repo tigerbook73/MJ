@@ -4,16 +4,17 @@ import { AppService } from "./app.service";
 import { MjGameModule } from "./game/mj-game.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ConfigModule } from "@nestjs/config";
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaModule } from "./prisma/prisma.modeule";
 
 @Module({
   imports: [
     //
     ConfigModule.forRoot(),
-    MjGameModule,
+    PrismaModule,
     ScheduleModule.forRoot(),
+    MjGameModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [AppService],
 })
 export class AppModule {}
