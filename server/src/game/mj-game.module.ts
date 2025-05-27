@@ -15,5 +15,6 @@ import { RoomService } from "./room.service";
     UserService,
     RoomService,
   ],
+  exports: [RoomService],
 })
 export class MjGameModule {}
