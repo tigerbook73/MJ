@@ -63,8 +63,15 @@ import { Direction, mapPosition, useMjStore } from "src/simon/stores/mj-store";
 
 import { TileCore } from "@common/core/mj.tile-core";
 import { roomStore } from "../stores/room-store";
-
+let lastClickTime = 0;
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
+  const now = Date.now();
+  if (now - lastClickTime < 500) {
+    dropTile();
+    lastClickTime = 0; // Reset last click time after double click
+    return;
+  }
+  lastClickTime = now;
   if (userMj.selectedCard.id == tile.id) {
     userMj.selectedCard = { name: "", id: TileCore.voidId, options: { selected: false } };
     return;

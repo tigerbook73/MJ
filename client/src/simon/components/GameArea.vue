@@ -37,12 +37,13 @@ import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
 import type { Game } from "@common/core/mj.game";
-import { Position } from "@common/core/mj.game";
 import type { GameEvent } from "@common/protocols/apis.models";
 import { setGame, mjGame } from "src/simon/core/mjGame";
 import { useMjStore } from "src/simon/stores/mj-store";
 
 const mjStore = useMjStore();
+import { Direction, mapPosition } from "src/simon/stores/mj-store";
+import { roomStore } from "src/simon/stores/room-store";
 
 async function start() {
   try {
@@ -99,7 +100,7 @@ async function passTurn() {
       console.error("Error: No current player found, cannot pass.");
       return;
     }
-    if (mjStore.current?.position === Position.East) {
+    if (mjStore.current?.position === mapPosition(roomStore().currentPosition!, Direction.Bottom)) {
       console.error("You cannot pass your own turn!");
       return;
     }
@@ -117,6 +118,20 @@ async function passTurn() {
   }
 }
 
+// async function actionChi(tile: string) {
+//   try {
+//     const response = await clientApi.actionChi();
+//     if (response) {
+//       setGame(response); // Update game state
+
+//       mjStore.refresh(); // Refresh UI
+//     } else {
+//       console.error("Chi failed: No game data in response");
+//     }
+//   } catch (error) {
+//     console.error("Error invoking Chi:", error);
+//   }
+// }
 async function Zimo() {
   try {
     const response = await clientApi.actionZimo();

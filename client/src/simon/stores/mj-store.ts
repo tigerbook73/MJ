@@ -45,7 +45,7 @@ function copy(playerIndex: number) {
   return cards;
 }
 
-export function mapPosition(myPosition: number, direction: Direction): number {
+export function mapPosition(myPosition: number, direction: Direction): Position {
   if (direction === Direction.Bottom) {
     return ((myPosition + 4) % 4) as Position;
   } else if (direction === Direction.Left) {
