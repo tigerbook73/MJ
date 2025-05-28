@@ -5,6 +5,7 @@ import { MjGameModule } from "./game/mj-game.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ConfigModule } from "@nestjs/config";
 import { PrismaModule } from "./prisma/prisma.modeule";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PrismaModule } from "./prisma/prisma.modeule";
     PrismaModule,
     ScheduleModule.forRoot(),
     MjGameModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

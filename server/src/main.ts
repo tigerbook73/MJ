@@ -23,5 +23,10 @@ async function bootstrap() {
     },
   );
   await app.listen(3000);
+
+  const httpAdapter = app.getHttpAdapter();
+  if (httpAdapter.getType() === "express") {
+    return;
+  }
 }
 bootstrap();
