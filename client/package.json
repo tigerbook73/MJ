@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "A MJ Project",
   "license": "MIT",
-  "productName": "My MaJiang",
+  "productName": "My Mahjong",
   "author": "Shengtian Liao (liaoshengtian@hotmail.com)",
   "type": "module",
   "private": true,
@@ -14,7 +14,7 @@
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
     "dev": "quasar dev",
     "start": "quasar dev",
-    "build": "quasar build",
+    "build": "quasar build && cp -r ./dist/spa/* ../server/public",
     "postinstall": "quasar prepare"
   },
   "dependencies": {

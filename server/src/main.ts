@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("api");
 
-  const spaPath = ["..", "..", "client", "dist", "spa"];
+  const spaPath = ["..", "public"];
   app.use(Express.static(join(__dirname, ...spaPath)));
   app.use(
     (
@@ -15,8 +15,16 @@ async function bootstrap() {
       res: Express.Response,
       next: Express.NextFunction,
     ) => {
-      if (req.method === "GET" && !req.url.startsWith("/api")) {
-        res.sendFile(join(__dirname, ...spaPath, "index.html"));
+      if (
+        req.method === "GET" &&
+        !req.url.startsWith("/api") &&
+        !req.url.startsWith("/react/api")
+      ) {
+        if (req.url.startsWith("/react")) {
+          res.sendFile(join(__dirname, ...spaPath, "react", "index.html"));
+        } else {
+          res.sendFile(join(__dirname, ...spaPath, "index.html"));
+        }
       } else {
         next();
       }
