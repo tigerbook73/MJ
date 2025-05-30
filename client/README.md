@@ -1,7 +1,7 @@
 # Table of Content
 
 - [Table of Content](#markdown-header-table-of-content)
-- [My MaJiang (mj-proj)](#markdown-header-my-majiang-mj-proj)
+- [My Mahjong (mj-proj)](#markdown-header-my-mahjiang-mj-proj)
   - [Install the dependencies](#markdown-header-install-the-dependencies)
     - [Start the app in development mode (hot-code reloading, error reporting, etc.)](#markdown-header-start-the-app-in-development-mode-hot-code-reloading-error-reporting-etc)
     - [Lint the files](#markdown-header-lint-the-files)
@@ -13,7 +13,7 @@
     - [Install npm global package](#markdown-header-install-npm-global-package)
     - [Run ts file](#markdown-header-run-ts-file)
 
-# My MaJiang (mj-proj)
+# My Mahjong (mj-proj)
 
 This is MJ Project
 

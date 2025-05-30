@@ -3,6 +3,7 @@
     <q-btn label="Example Site" size="lg" class="col-2" icon="person" @click="() => navigateTo('/example')" />
     <q-btn label="Simon Site" size="lg" class="col-2" icon="person" @click="() => navigateTo('/simon')" />
     <q-btn label="Justin Site" size="lg" class="col-2" icon="person" @click="() => navigateTo('/justin')" />
+    <q-btn label="React Site" size="lg" class="col-2" icon="person" @click="() => navigateTo('/react')" />
   </div>
 </template>
 
