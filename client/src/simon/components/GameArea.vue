@@ -17,7 +17,12 @@
     <!-- bottom -->
     <div class="row h-10">
       <game-area-c class="w-10" @zi-mo="Zimo"></game-area-c>
-      <player-area-bottom class="w-70" @drop-tile="dropTile" @pass-turn="passTurn"></player-area-bottom>
+      <player-area-bottom
+        class="w-70"
+        @drop-tile="dropTile"
+        @pass-turn="passTurn"
+        @handle-chi="handleChi"
+      ></player-area-bottom>
       <game-area-d class="w-10"></game-area-d>
     </div>
   </div>
@@ -44,6 +49,7 @@ import { useMjStore } from "src/simon/stores/mj-store";
 const mjStore = useMjStore();
 import { Direction, mapPosition } from "src/simon/stores/mj-store";
 import { roomStore } from "src/simon/stores/room-store";
+import type { TileId } from "src/common/core/mj.tile-core";
 
 async function start() {
   try {
@@ -75,14 +81,24 @@ async function reset() {
   }
 }
 
-async function dropTile() {
+async function dropTile(tileId?: TileId) {
   try {
-    if (!mjStore.pBottomCards.some((tile) => tile.id === mjStore.selectedCard.id)) {
-      console.error("Selected tile is not in hand.");
+    // if (!mjStore.pBottomCards.some((tile) => tile.id === mjStore.selectedCard.id)) {
+    //   console.error("Selected tile is not in hand.");
+    //   return;
+    // }
+
+    if (tileId === undefined) {
+      console.error("No tileId provided to dropTile");
       return;
     }
 
-    const response = await clientApi.actionDrop(mjStore.selectedCard.id);
+    if (!mjStore.pBottomCards.some((tile) => tile.id === tileId)) {
+      console.error("No tile selected.");
+      return;
+    }
+
+    const response = await clientApi.actionDrop(tileId);
     if (response) {
       setGame(response);
       mjStore.refresh();
@@ -100,6 +116,7 @@ async function passTurn() {
       console.error("Error: No current player found, cannot pass.");
       return;
     }
+
     if (mjStore.current?.position === mapPosition(roomStore().currentPosition!, Direction.Bottom)) {
       console.error("You cannot pass your own turn!");
       return;
@@ -118,20 +135,20 @@ async function passTurn() {
   }
 }
 
-// async function actionChi(tile: string) {
-//   try {
-//     const response = await clientApi.actionChi();
-//     if (response) {
-//       setGame(response); // Update game state
+async function handleChi(tileIds: [TileId, TileId]) {
+  try {
+    const response = await clientApi.actionChi(tileIds);
+    if (response) {
+      setGame(response); // Update game state
 
-//       mjStore.refresh(); // Refresh UI
-//     } else {
-//       console.error("Chi failed: No game data in response");
-//     }
-//   } catch (error) {
-//     console.error("Error invoking Chi:", error);
-//   }
-// }
+      mjStore.refresh(); // Refresh UI
+    } else {
+      console.error("Chi failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error invoking Chi:", error);
+  }
+}
 async function Zimo() {
   try {
     const response = await clientApi.actionZimo();
