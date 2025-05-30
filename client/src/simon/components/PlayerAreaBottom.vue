@@ -11,16 +11,23 @@
         :key="index"
         :type="tile"
         size="large"
-        :selected="userMj.selectedCard.id == tile.id"
+        :selected="selectedTiles.includes(tile.id)"
         @click="onClick(tile)"
-        @dblclick="dropTile()"
+        @dblclick="dropTile(tile.id)"
       ></comp-tile>
 
       <q-btn
         v-if="userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom)"
         flat
-        @click="passTurn"
+        @click="passTurn()"
         >Pass</q-btn
+      >
+      <q-btn
+        v-if="userMj.current?.position === mapPosition(roomStore().currentPosition!, Direction.Left)"
+        flat
+        @click="handleChi()"
+        :disable="selectedTiles.length < 2"
+        >Chi</q-btn
       >
     </div>
   </div>
@@ -61,8 +68,10 @@ import { Direction, mapPosition, useMjStore } from "src/simon/stores/mj-store";
 //    */
 // }
 
-import { TileCore } from "@common/core/mj.tile-core";
+import type { TileId } from "@common/core/mj.tile-core";
+// import { TileCore } from "@common/core/mj.tile-core";
 import { roomStore } from "../stores/room-store";
+import { ref } from "vue";
 let lastClickTime = 0;
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   const now = Date.now();
@@ -72,21 +81,58 @@ function onClick(tile: (typeof userMj.pBottomCards)[0]) {
     return;
   }
   lastClickTime = now;
-  if (userMj.selectedCard.id == tile.id) {
-    userMj.selectedCard = { name: "", id: TileCore.voidId, options: { selected: false } };
-    return;
+  // if (userMj.selectedCard.id == tile.id) {
+  //   userMj.selectedCard = { name: "", id: TileCore.voidId, options: { selected: false } };
+  //   return;
+  // }
+  // userMj.selectedCard = tile;
+
+  // if (!selectedTiles.value.includes(tile.id)) {
+  //   if (selectedTiles.value.length < 2) {
+  //     selectedTiles.value.push(tile.id);
+  //   } else {
+  //     selectedTiles.value.shift();
+  //     selectedTiles.value.push(tile.id);
+  //   }
+  // }
+
+  const idx = selectedTiles.value.indexOf(tile.id);
+  if (idx !== -1) {
+    // if the tile is already selected, remove it
+    selectedTiles.value.splice(idx, 1);
+  } else {
+    if (selectedTiles.value.length < 2) {
+      selectedTiles.value.push(tile.id);
+    } else {
+      selectedTiles.value.shift();
+      selectedTiles.value.push(tile.id);
+    }
   }
-  userMj.selectedCard = tile;
 }
 
-const emits = defineEmits<{ (e: "drop-tile"): void; (e: "pass-turn"): void }>();
+const emits = defineEmits<{
+  (e: "drop-tile", payload: TileId): void;
+  (e: "pass-turn"): void;
+  (e: "handle-chi", payload: [tile1: TileId, tile2: TileId]): void;
+}>();
 
-function dropTile() {
-  emits("drop-tile");
+function dropTile(tileId?: TileId) {
+  if (tileId) {
+    emits("drop-tile", tileId);
+  }
+  selectedTiles.value = [];
 }
 
 function passTurn() {
   emits("pass-turn");
+}
+
+const selectedTiles = ref<TileId[]>([]);
+function handleChi() {
+  const tile1 = selectedTiles.value[0];
+  const tile2 = selectedTiles.value[1];
+  emits("handle-chi", [tile1, tile2]);
+  selectedTiles.value = [];
 }
 const userMj = useMjStore();
 </script>
