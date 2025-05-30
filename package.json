@@ -9,7 +9,7 @@
     "dev-server": "cd server && yarn dev",
     "build-client": "cd client && yarn build",
     "build-server": "cd server && yarn build",
-    "build-react": "git submodule update --init --recursive && cd react && pnpm build",
+    "build-react": "git submodule update --init --recursive && cd react && cd react && pnpm build",
     "build": "yarn build-client && yarn build-server",
     "postinstall": "node link.js"
   },
