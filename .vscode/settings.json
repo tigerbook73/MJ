@@ -9,5 +9,15 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
     "!src/common": true
-  }
-}
+  },
+  "sqltools.useNodeRuntime": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "mj-db",
+      "group": "mj",
+      "database": "./server/prisma/db/sqlite.db"
+    }
+  ],
+
