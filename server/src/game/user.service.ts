@@ -2,12 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { Position } from "src/common/core/mj.game";
 import { UserType } from "src/common/models/common.types";
 import { UserCreateDto, UserModel } from "src/common/models/user.model";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class UserService {
   public users: UserModel[] = [];
 
-  constructor() {
+  constructor(private readonly prismaService: PrismaService) {
     // create default BOT users
     this.users = [
       this.createBot(Position.East),
@@ -57,6 +58,10 @@ export class UserService {
 
   findAll(): UserModel[] {
     return this.users;
+  }
+
+  list() {
+    return this.prismaService.user.findMany();
   }
 
   findBot(position: Position): UserModel | null {
