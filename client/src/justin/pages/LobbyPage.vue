@@ -8,7 +8,7 @@
         >
           Room List
           <div
-            class="row fit q-pa-md"
+            class="row fit q-pa-md no-select"
             style="font-size: x-large; font-weight: 500; cursor: pointer"
             v-for="(room, index) in rooms"
             :key="index"
@@ -21,38 +21,63 @@
         </div>
       </q-card>
       <q-card class="col-7 q-pa-md column flex-center bg-green-1">
-        <div class="q-pa-sm row flex-center bg-blue-1" style="height: 50%; width: 100%">
-          <div
-            v-for="pos in orderedPositions"
-            :key="pos"
-            class="row col-3 flex-center q-pa-md"
-            style="font-size: x-large; font-weight: 500"
-            @dblclick="selectPos(pos)"
-            :class="{ current: pos === selectedPos }"
-          >
-            {{ positionLabels[pos] }} {{ rooms[roomNumber]?.players?.[pos]?.name }}
-          </div>
-          <div class="column fit">
-            <div class="row flex-center">
-              <div class="col-4">1</div>
-              <div class="col-4">2</div>
-              <div class="col-4">3</div>
+        <div class="q-pa-sm row flex-center bg-blue-1" style="height: 75%; width: 100%">
+          <div class="column flex-center" style="width: 100%">
+            <div class="row flex-center" style="width: 100%">
+              <div class="col-4"></div>
+              <div
+                class="column col-4 flex-center no-select"
+                :class="{ current: Position.West === selectedPos }"
+                style="font-size: x-large; font-weight: 500; cursor: pointer"
+                @dblclick="selectPos(Position.West)"
+              >
+                West
+                <div>{{ rooms[roomNumber]?.players?.[Position.West]?.name }}</div>
+              </div>
+              <div class="col-4"></div>
             </div>
-            <div class="row">
-              <div>4</div>
-              <div>5</div>
-              <div>6</div>
+
+            <div class="row flex-center" style="width: 100%">
+              <div
+                class="column col-4 flex-center no-select"
+                :class="{ current: Position.North === selectedPos }"
+                style="font-size: x-large; font-weight: 500; cursor: pointer"
+                @dblclick="selectPos(Position.North)"
+              >
+                North
+                <div>{{ rooms[roomNumber]?.players?.[Position.North]?.name }}</div>
+              </div>
+              <div class="col-4"></div>
+              <div
+                class="column col-4 flex-center no-select"
+                :class="{ current: Position.South === selectedPos }"
+                style="font-size: x-large; font-weight: 500; cursor: pointer"
+                @dblclick="selectPos(Position.South)"
+              >
+                South
+                <div>{{ rooms[roomNumber]?.players?.[Position.South]?.name }}</div>
+              </div>
             </div>
-            <div class="row">
-              <div>7</div>
-              <div>8</div>
-              <div>9</div>
+
+            <div class="row flex-center" style="width: 100%">
+              <div class="col-4"></div>
+              <div
+                class="column col-4 flex-center no-select"
+                :class="{ current: Position.East === selectedPos }"
+                style="font-size: x-large; font-weight: 500; cursor: pointer"
+                @dblclick="selectPos(Position.East)"
+              >
+                East
+                <div>{{ rooms[roomNumber]?.players?.[Position.East]?.name }}</div>
+              </div>
+              <div class="col-4"></div>
             </div>
           </div>
         </div>
         <div class="q-pa-sm column flex-center" style="flex: auto">
-          <div class="row flex-center" style="font-weight: bold; font-size: large">
-            current room: {{ currentRoom?.name }} pos: {{ currentPos }}
+          <div class="column flex-center" style="font-weight: bold; font-size: large">
+            <div>room: {{ selectedRoom?.name || "None" }}</div>
+            <div>pos: {{ positionNames[currentPos] }}</div>
           </div>
           <q-btn
             flat
@@ -80,32 +105,24 @@ import type { RoomModel } from "@common/models/room.model";
 const mjStore = useMjStore();
 const router = useRouter();
 
-const positionLabels = {
-  [Position.East]: "East",
-  [Position.South]: "South",
-  [Position.West]: "West",
-  [Position.North]: "North",
-};
-
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const selectedRoom = ref<RoomProp | null>(null);
 const selectedPos = ref<Position>(Position.None);
-const roomNumber = ref(0);
+const roomNumber = ref(-1);
 
-const orderedPositions: (Position.East | Position.South | Position.West | Position.North)[] = [
-  Position.East,
-  Position.South,
-  Position.West,
-  Position.North,
-];
-
-const temp = ref<number | null>(null);
-
-const selected = ref({ roomname: "", pos: Position.East | -1 });
+const display = ref({ roomname: "", pos: Position.None });
 const currentRoom = ref<RoomModel | null>(null);
 const currentPos = ref<Position>(Position.None);
 const in_room = ref(false);
 const in_pos = ref(false);
+
+const positionNames = {
+  [Position.West]: "West",
+  [Position.North]: "North",
+  [Position.South]: "South",
+  [Position.East]: "East",
+  [Position.None]: "None",
+};
 
 const rooms = computed(() => {
   return mjStore.roomList.map((room) => ({
@@ -117,41 +134,55 @@ const rooms = computed(() => {
 });
 
 function selectRoom(room: RoomProp, index: number) {
-  if (!in_room.value) {
-    in_room.value = true;
-    selectedRoom.value = room;
-    selected.value.roomname = room.name;
-    roomNumber.value = index;
-  } else if (room.name === currentRoom.value?.name) {
-    in_room.value = false;
-    selectedRoom.value = null;
-    selectedPos.value = Position.None;
-    selected.value.roomname = "";
-    selected.value.pos = Position.None;
-    roomNumber.value = 0;
-  } else {
-    selectedRoom.value = room;
-    selected.value.roomname = room.name;
-    selectedPos.value = Position.None;
-    selected.value.pos = Position.None;
-    temp.value = index;
-    roomNumber.value = index;
+  try {
+    if (!in_room.value) {
+      in_room.value = true;
+      selectedRoom.value = room;
+      display.value.roomname = room.name;
+      roomNumber.value = index;
+    } else if (room.name === currentRoom.value?.name || room.name === selectedRoom.value?.name) {
+      leaveRoom();
+      selectedRoom.value = null;
+      selectedPos.value = Position.None;
+      display.value.roomname = "";
+      display.value.pos = Position.None;
+      roomNumber.value = -1;
+      in_room.value = false;
+      in_pos.value = false;
+    } else if (room.name !== currentRoom.value?.name) {
+      leaveRoom();
+      in_pos.value = false;
+      selectedRoom.value = room;
+      display.value.roomname = room.name;
+      selectedPos.value = Position.None;
+      display.value.pos = Position.None;
+      roomNumber.value = index;
+    }
+  } catch (error) {
+    window.alert(error);
   }
 }
 
 function selectPos(pos: Position) {
-  if (pos === selectedPos.value && in_pos.value) {
-    leaveRoom();
-    selectedPos.value = Position.None;
-  } else if (pos !== selectedPos.value && in_pos.value) {
-    leaveRoom();
-    selectedPos.value = pos;
-    selected.value.pos = pos;
-    joinRoom();
-  } else if (pos !== selectedPos.value && !in_pos.value) {
-    selectedPos.value = pos;
-    selected.value.pos = pos;
-    joinRoom();
+  try {
+    if (pos === selectedPos.value && in_pos.value) {
+      leaveRoom();
+      in_pos.value = false;
+      selectedPos.value = Position.None;
+      display.value.pos = Position.None;
+    } else if (pos !== selectedPos.value && in_pos.value) {
+      leaveRoom();
+      selectedPos.value = pos;
+      display.value.pos = pos;
+      joinRoom();
+    } else if (!in_pos.value) {
+      in_pos.value = true;
+      selectedPos.value = pos;
+      display.value.pos = pos;
+      joinRoom();
+    }
+  } catch (error) {
+    window.alert(error);
   }
 }
 
@@ -164,9 +195,7 @@ async function joinRoom() {
     const room = await clientApi.joinRoom(selectedRoom.value.name, selectedPos.value);
     currentRoom.value = room;
     currentRoom.value.players = room.players;
-    currentPos.value = selected.value.pos;
-    in_room.value = true;
-    in_pos.value = true;
+    currentPos.value = selectedPos.value;
   } catch {
     window.alert("join room failed");
   }
@@ -175,13 +204,9 @@ async function joinRoom() {
 async function leaveRoom() {
   try {
     if (!currentRoom.value) {
-      window.alert("Please select a room first abc");
       return;
     }
     await clientApi.leaveRoom(currentRoom.value.name);
-    in_room.value = false;
-    in_pos.value = false;
-    selected.value.roomname = "";
     currentRoom.value = null;
     currentPos.value = Position.None;
   } catch {
@@ -219,5 +244,12 @@ async function enterGame() {
 .current {
   background-color: lightcoral;
   color: black;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
 }
 </style>

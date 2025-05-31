@@ -1,0 +1,4 @@
+[submodule "react"]
+	path = react
+	url = https://github.com/tigerbook73/mj-react.git
+	branch = main
