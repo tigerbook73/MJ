@@ -1,12 +1,13 @@
 <template>
   <q-page class="q-pa-md column flex-center bg-blue-grey-5">
     <div class="row" style="width: 80%; min-height: 500px">
-      <q-card class="q-pa-md col-5 row flex-center bg-green-2" style="align-items: start">
+      <div class="q-pa-md col-5 row flex-center bg-green-2" style="align-items: start">
         <div
           class="q-pa-md column flex-center"
           style="width: 80%; margin: 5px; align-items: start; font-size: x-large; font-weight: 800"
         >
-          Room List
+          <div>Room List</div>
+
           <div
             class="row fit q-pa-md no-select"
             style="font-size: x-large; font-weight: 500; cursor: pointer"
@@ -19,58 +20,27 @@
             {{ room.name }}
           </div>
         </div>
-      </q-card>
-      <q-card class="col-7 q-pa-md column flex-center bg-green-1">
-        <div class="q-pa-sm row flex-center bg-blue-1" style="height: 75%; width: 100%">
+      </div>
+      <div class="col-7 q-pa-md column flex-center bg-green-1">
+        <div class="q-pa-sm row flex-center bg-blue-1" style="height: 70%; width: 100%">
           <div class="column flex-center" style="width: 100%">
-            <div class="row flex-center" style="width: 100%">
-              <div class="col-4"></div>
-              <div
-                class="column col-4 flex-center no-select"
-                :class="{ current: Position.West === selectedPos }"
-                style="font-size: x-large; font-weight: 500; cursor: pointer"
-                @dblclick="selectPos(Position.West)"
-              >
-                West
-                <div>{{ rooms[roomNumber]?.players?.[Position.West]?.name }}</div>
+            <div v-for="rowIndex in 3" :key="rowIndex" class="row flex-center" style="width: 100%">
+              <div v-for="colIndex in 3" :key="colIndex" class="col-4">
+                <template v-for="seat in seatLayout" :key="seat.label">
+                  <div
+                    v-if="seat.row === rowIndex - 1 && seat.col === colIndex - 1"
+                    class="column col-4 flex-center no-select"
+                    :class="{ current: seat.pos === selectedPos }"
+                    style="font-size: x-large; font-weight: 500; cursor: pointer"
+                    @dblclick="selectPos(seat.pos)"
+                  >
+                    {{ seat.label }}
+                    <div>
+                      {{ rooms[roomNumber]?.players?.[seat.pos]?.name }}
+                    </div>
+                  </div>
+                </template>
               </div>
-              <div class="col-4"></div>
-            </div>
-
-            <div class="row flex-center" style="width: 100%">
-              <div
-                class="column col-4 flex-center no-select"
-                :class="{ current: Position.North === selectedPos }"
-                style="font-size: x-large; font-weight: 500; cursor: pointer"
-                @dblclick="selectPos(Position.North)"
-              >
-                North
-                <div>{{ rooms[roomNumber]?.players?.[Position.North]?.name }}</div>
-              </div>
-              <div class="col-4"></div>
-              <div
-                class="column col-4 flex-center no-select"
-                :class="{ current: Position.South === selectedPos }"
-                style="font-size: x-large; font-weight: 500; cursor: pointer"
-                @dblclick="selectPos(Position.South)"
-              >
-                South
-                <div>{{ rooms[roomNumber]?.players?.[Position.South]?.name }}</div>
-              </div>
-            </div>
-
-            <div class="row flex-center" style="width: 100%">
-              <div class="col-4"></div>
-              <div
-                class="column col-4 flex-center no-select"
-                :class="{ current: Position.East === selectedPos }"
-                style="font-size: x-large; font-weight: 500; cursor: pointer"
-                @dblclick="selectPos(Position.East)"
-              >
-                East
-                <div>{{ rooms[roomNumber]?.players?.[Position.East]?.name }}</div>
-              </div>
-              <div class="col-4"></div>
             </div>
           </div>
         </div>
@@ -87,7 +57,7 @@
             >EnterGame</q-btn
           >
         </div>
-      </q-card>
+      </div>
     </div>
   </q-page>
 </template>
@@ -123,6 +93,13 @@ const positionNames = {
   [Position.East]: "East",
   [Position.None]: "None",
 };
+
+const seatLayout = [
+  { label: "West", pos: Position.West, row: 0, col: 1 },
+  { label: "North", pos: Position.North, row: 1, col: 0 },
+  { label: "South", pos: Position.South, row: 1, col: 2 },
+  { label: "East", pos: Position.East, row: 2, col: 1 },
+];
 
 const rooms = computed(() => {
   return mjStore.roomList.map((room) => ({
@@ -165,6 +142,9 @@ function selectRoom(room: RoomProp, index: number) {
 
 function selectPos(pos: Position) {
   try {
+    if (!in_room.value) {
+      return;
+    }
     if (pos === selectedPos.value && in_pos.value) {
       leaveRoom();
       in_pos.value = false;
@@ -251,5 +231,8 @@ async function enterGame() {
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
+}
+
+.seat {
 }
 </style>

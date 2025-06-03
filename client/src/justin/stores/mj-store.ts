@@ -21,6 +21,7 @@ export const useMjStore = defineStore("mj", () => {
   const open = ref(false as boolean);
   const status = ref(false as boolean);
   const isWinning = ref(false as boolean);
+  const appState = ref<AppState>(AppState.Unconnected);
 
   const players = ref([] as Player[]);
   const selectedTile = ref(TileCore.voidTile.id);
@@ -43,6 +44,54 @@ export const useMjStore = defineStore("mj", () => {
   const discardTop = ref([] as TileId[]);
   const discardLeft = ref([] as TileId[]);
   const discardList = [discardBottom, discardRight, discardTop, discardLeft];
+
+  function refreshAppState() {
+    if (!connected.value) {
+      appState.value = AppState.Unconnected;
+    } else if (!signedIn.value) {
+      appState.value = AppState.UnSignedIn;
+    } else if (!game.value) {
+      appState.value = AppState.InLobby;
+    } else {
+      appState.value = AppState.InGame;
+    }
+  }
+
+  // signed in state
+  const signedIn = ref(false);
+  function setSignedIn(value: boolean) {
+    signedIn.value = value;
+
+    if (!value) {
+      // reset other value
+      // user.value.password = "";
+      // roomList.value = [];
+      // currentRoom.value = null;
+      // currentPosition.value = null;
+      // currentGame.value = null;
+    }
+    refreshAppState();
+  }
+
+  // connected state
+  const connected = ref(false);
+  function setConnected(value: boolean) {
+    connected.value = value;
+
+    // reset other value
+    signedIn.value = false;
+    // user.value.password = "";
+    // roomList.value = [];
+    // currentRoom.value = null;
+    // currentPosition.value = null;
+    // currentGame.value = null;
+    refreshAppState();
+  }
+
+  function setCurrentGame(value: Game | null) {
+    game.value = value;
+    refreshAppState();
+  }
 
   function refresh() {
     wallRefresh();
@@ -80,10 +129,6 @@ export const useMjStore = defineStore("mj", () => {
     game.value = value;
   }
 
-  // function isCurrentPlayer(position: number) {
-  //   return (position === game.value.current?.position) === true;
-  // }
-
   refresh();
 
   return {
@@ -94,6 +139,7 @@ export const useMjStore = defineStore("mj", () => {
     position,
     open,
     my_pos,
+    appState,
 
     wallWest,
     wallSouth,
@@ -121,6 +167,10 @@ export const useMjStore = defineStore("mj", () => {
     isWinning,
 
     refresh,
+
+    setConnected,
+    setSignedIn,
+    setCurrentGame,
   };
 });
 
