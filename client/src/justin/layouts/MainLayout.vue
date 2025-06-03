@@ -43,6 +43,7 @@ import { clientApi } from "src/client/client-api";
 import type { GameEvent } from "@common/protocols/apis.models";
 import { useMjStore, AppState } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
+import { Position } from "src/common/core/mj.game";
 defineOptions({
   name: "MainLayout",
 });
@@ -71,13 +72,21 @@ watch(
   { immediate: true },
 );
 
+// connection status
+clientApi.gameSocket.onConnect(() => {
+  mjStore.setConnected(true);
+});
+clientApi.gameSocket.onDisconnect(() => {
+  mjStore.setConnected(false);
+});
+
 clientApi.gameSocket.onReceive((event: GameEvent) => {
   event = clientApi.parseEvent(event);
 
-  mjStore.setGame(clientApi.findMyGame(event));
-  mjStore.room = clientApi.findMyRoom(event);
   mjStore.roomList = event.data.rooms;
-  mjStore.position = clientApi.findMyPlayerModel(event)?.position ?? null;
+  mjStore.room = clientApi.findMyRoom(event);
+  mjStore.position = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
+  mjStore.setGame(clientApi.findMyGame(event));
 });
 
 function toggleLeftDrawer() {
@@ -88,18 +97,21 @@ async function signOut() {
   try {
     await clientApi.signOut();
     mjStore.setSignedIn(false);
-    router.push("/justin/login");
   } catch (error: any) {
     window.alert(error.message);
   }
 }
 
 async function quitGame() {
-  // try {
-  //   await clientApi.quitGame(currentRoom.value);
-  // } catch (error: any) {
-  //   window.alert("quit game failed");
-  // }
+  if (!mjStore.room) {
+    return;
+  }
+
+  try {
+    await clientApi.quitGame(mjStore.room.name);
+  } catch (e) {
+    console.error(e);
+  }
 }
 async function enterGame() {
   //

@@ -17,7 +17,8 @@ export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
-  const position = ref<Position | null>(null);
+  const position = ref<Position>(Position.None);
+
   const open = ref(false as boolean);
   const status = ref(false as boolean);
   const isWinning = ref(false as boolean);
@@ -65,10 +66,10 @@ export const useMjStore = defineStore("mj", () => {
     if (!value) {
       // reset other value
       // user.value.password = "";
-      // roomList.value = [];
-      // currentRoom.value = null;
-      // currentPosition.value = null;
-      // currentGame.value = null;
+      roomList.value = [];
+      room.value = null;
+      position.value = Position.None;
+      game.value = null;
     }
     refreshAppState();
   }
@@ -81,14 +82,14 @@ export const useMjStore = defineStore("mj", () => {
     // reset other value
     signedIn.value = false;
     // user.value.password = "";
-    // roomList.value = [];
-    // currentRoom.value = null;
-    // currentPosition.value = null;
-    // currentGame.value = null;
+    roomList.value = [];
+    room.value = null;
+    position.value = Position.None;
+    game.value = null;
     refreshAppState();
   }
 
-  function setCurrentGame(value: Game | null) {
+  function setGame(value: Game | null) {
     game.value = value;
     refreshAppState();
   }
@@ -125,10 +126,6 @@ export const useMjStore = defineStore("mj", () => {
     });
   }
 
-  function setGame(value: Game | null) {
-    game.value = value;
-  }
-
   refresh();
 
   return {
@@ -160,7 +157,6 @@ export const useMjStore = defineStore("mj", () => {
     status,
     selectedTile,
 
-    setGame,
     IDtoName,
 
     clearSelected,
@@ -170,7 +166,7 @@ export const useMjStore = defineStore("mj", () => {
 
     setConnected,
     setSignedIn,
-    setCurrentGame,
+    setGame,
   };
 });
 

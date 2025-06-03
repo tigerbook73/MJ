@@ -65,15 +65,12 @@
 <script setup lang="ts">
 import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
-import { useRouter } from "vue-router";
 import { Position } from "@common/core/mj.game";
 import { clientApi } from "src/client/client-api";
-import { setGame } from "src/core/mjGame";
 import { useMjStore } from "src/justin/stores/mj-store";
 import type { RoomModel } from "@common/models/room.model";
 
 const mjStore = useMjStore();
-const router = useRouter();
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const selectedRoom = ref<RoomProp | null>(null);
@@ -110,6 +107,24 @@ const rooms = computed(() => {
   }));
 });
 
+function refreshStatus() {
+  if (mjStore.room) {
+    in_room.value = true;
+    in_pos.value = true;
+    selectedRoom.value = {
+      name: mjStore.room.name,
+      players: mjStore.room.players
+        .map((player) => ({ name: player.userName, pos: player.position }))
+        .sort((a, b) => a.pos - b.pos),
+    };
+    display.value.roomname = mjStore.room.name;
+    display.value.pos = mjStore.position;
+    selectedPos.value = mjStore.position;
+    currentRoom.value = mjStore.room;
+    currentPos.value = mjStore.position;
+    roomNumber.value = rooms.value.findIndex((room) => room.name === mjStore.room?.name);
+  }
+}
 function selectRoom(room: RoomProp, index: number) {
   try {
     if (!in_room.value) {
@@ -200,16 +215,13 @@ async function enterGame() {
       window.alert("Please select a room first");
       return;
     }
-    const data = await clientApi.enterGame(currentRoom.value.name);
-    if (data.game) {
-      setGame(data.game);
-      mjStore.refresh();
-    }
-    router.push("/justin/game");
+    await clientApi.enterGame(currentRoom.value.name);
   } catch (error: any) {
     window.alert(error.message);
   }
 }
+
+refreshStatus();
 </script>
 
 <style scoped>
@@ -234,5 +246,6 @@ async function enterGame() {
 }
 
 .seat {
+  outline-color: black;
 }
 </style>

@@ -19,7 +19,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRouter } from "vue-router";
 import { useUserStore } from "src/justin/stores/user-store";
 import { clientApi } from "src/client/client-api";
 import { useMjStore } from "../stores/mj-store";
@@ -28,7 +27,6 @@ defineOptions({
   name: "LoginPage",
 });
 
-const router = useRouter();
 const email = ref("Admin@mj.com");
 const password = ref("Password");
 const loading = ref(false);
@@ -42,7 +40,6 @@ async function signIn() {
     mjStore.setSignedIn(true);
     const user = await clientApi.signIn(email.value, password.value);
     userStore.user = user;
-    router.push("/justin/lobby");
   } catch {
     mjStore.setSignedIn(false);
     window.alert("failed");
