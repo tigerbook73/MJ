@@ -38,22 +38,38 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from "vue";
 import { clientApi } from "src/client/client-api";
 import type { GameEvent } from "@common/protocols/apis.models";
-import { useMjStore } from "src/justin/stores/mj-store";
-import { ref } from "vue";
-import { useRouter } from "vue-router";
-
+import { useMjStore, AppState } from "src/justin/stores/mj-store";
+import { useRoute, useRouter } from "vue-router";
 defineOptions({
   name: "MainLayout",
 });
 
 const mjStore = useMjStore();
-const router = useRouter();
 const leftDrawerOpen = ref(false);
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
+const route = useRoute();
+const router = useRouter();
+
+// to the correct page based on app state
+watch(
+  () => [mjStore.appState, route.fullPath],
+  () => {
+    const stateToPath = {
+      [AppState.Unconnected]: "/justin/login",
+      [AppState.UnSignedIn]: "/justin/login",
+      [AppState.InLobby]: "/justin/lobby",
+      [AppState.InGame]: "/justin/game",
+    };
+    const path = stateToPath[mjStore.appState];
+    if (path === route.fullPath) {
+      return;
+    }
+    router.push(path);
+  },
+  { immediate: true },
+);
 
 clientApi.gameSocket.onReceive((event: GameEvent) => {
   event = clientApi.parseEvent(event);
@@ -64,9 +80,14 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   mjStore.position = clientApi.findMyPlayerModel(event)?.position ?? null;
 });
 
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value;
+}
+
 async function signOut() {
   try {
     await clientApi.signOut();
+    mjStore.setSignedIn(false);
     router.push("/justin/login");
   } catch (error: any) {
     window.alert(error.message);
