@@ -2,7 +2,7 @@
   <div>
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
       <q-img
-        v-if="props.type && (!props.back || mjStore.open)"
+        v-if="props.type && (mjStore.open || !props.back)"
         :src="imgSrc"
         :ratio="1 / 1"
         fit="scale-down"
@@ -12,6 +12,7 @@
     </div>
   </div>
 </template>
+<!-- v-if="props.type && (!props.back || mjStore.open)" -->
 
 <script setup lang="ts">
 import type { StyleValue } from "vue";
@@ -82,7 +83,7 @@ const imgSrc = computed(() => {
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
 
-const tileClass = computed(() => (props.back && !mjStore.open ? "mj-tile-back" : props.type ? "mj-tile" : ""));
+const tileClass = computed(() => (props.type ? (props.back && !mjStore.open ? "mj-tile-back" : "mj-tile") : ""));
 const tileStyle = computed(
   () =>
     ({
@@ -122,11 +123,7 @@ const rotate: Record<string, string> = {
   left: "rotate(90deg)",
   bottom: "none",
 };
-const imgStyle = ref({
-  width: width,
-  transform: rotate[props.position] || "none",
-  position: "relative",
-});
+const imgStyle = ref({ width: width, transform: rotate[props.position] || "none", position: "relative" });
 </script>
 
 <style lang="scss">

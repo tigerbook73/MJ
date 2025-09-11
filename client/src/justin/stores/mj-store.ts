@@ -101,6 +101,9 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   function IDtoName(id: number) {
+    // if (id == -1) {
+    //   return "";
+    // }
     return IDTileList[id];
   }
 
