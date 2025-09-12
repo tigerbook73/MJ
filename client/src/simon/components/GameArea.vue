@@ -140,7 +140,7 @@ async function handleChi(tileIds: [TileId, TileId]) {
     const response = await clientApi.actionChi(tileIds);
     if (response) {
       setGame(response); // Update game state
-
+      // Add to eat tiles
       mjStore.refresh(); // Refresh UI
     } else {
       console.error("Chi failed: No game data in response");
