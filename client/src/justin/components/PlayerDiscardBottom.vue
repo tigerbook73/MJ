@@ -1,13 +1,12 @@
 <template>
-  <div class="column flex-center area-player">
-    <div class="row flex-center">
-      <comp-tile
-        v-for="(tile, index) in mjStore.discardBottom"
-        :key="index"
-        :type="mjStore.IDtoName(tile)"
-        size="large"
-      ></comp-tile>
-    </div>
+  <div class="row items-start content-start full-height">
+    <comp-tile
+      v-for="(tile, index) in mjStore.discardBottom"
+      :key="index"
+      :type="mjStore.IDtoName(tile)"
+      position="bottom"
+      size="large"
+    ></comp-tile>
   </div>
 </template>
 

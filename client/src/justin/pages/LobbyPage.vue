@@ -93,8 +93,8 @@ const positionNames = {
 
 const seatLayout = [
   { label: "West", pos: Position.West, row: 0, col: 1 },
-  { label: "North", pos: Position.North, row: 1, col: 0 },
-  { label: "South", pos: Position.South, row: 1, col: 2 },
+  { label: "North", pos: Position.South, row: 1, col: 0 },
+  { label: "South", pos: Position.North, row: 1, col: 2 },
   { label: "East", pos: Position.East, row: 2, col: 1 },
 ];
 
@@ -216,6 +216,7 @@ async function enterGame() {
       return;
     }
     await clientApi.enterGame(currentRoom.value.name);
+    mjStore.myPos = currentPos.value;
   } catch (error: any) {
     window.alert(error.message);
   }

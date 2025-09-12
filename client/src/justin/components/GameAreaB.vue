@@ -10,16 +10,13 @@
 <script setup lang="ts">
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
-import { useMjStore } from "src/justin/stores/mj-store";
 
 defineOptions({ name: "GameAreaB" });
 const $q = useQuasar();
-const mjStore = useMjStore();
 
 function start() {
   try {
     clientApi.startGame();
-    mjStore.refresh();
   } catch (e) {
     $q.notify({ message: "Game start failed", color: "negative", icon: "warning" });
     console.error("Game start failed", e);

@@ -8,6 +8,7 @@
         :selected="tile === mjStore.selectedTile"
         position="right"
         size="large"
+        :back="true"
       ></comp-tile>
     </div>
   </div>
