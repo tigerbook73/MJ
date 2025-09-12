@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
-import type { Game, Position } from "@common/core/mj.game";
+import { type Game, type Position } from "@common/core/mj.game";
 // import { Position } from "@common/core/mj.game";
-import { TileCore } from "@common/core/mj.tile-core";
+import { TileCore, type TileId } from "@common/core/mj.tile-core";
 import { mjGame } from "src/simon/core/mjGame";
 import { ref } from "vue";
 import { appStore } from "./app-store";
@@ -9,7 +9,7 @@ import { roomStore } from "./room-store";
 
 const useRoomStore = roomStore();
 
-interface HandCard {
+export interface HandCard {
   name: string;
   id: number;
   options: { selected: boolean };
@@ -22,7 +22,7 @@ export enum Direction {
   Left = "left",
 }
 
-function mapTile(tileId: number): HandCard {
+export function mapTile(tileId: number): HandCard {
   const tile = TileCore.fromId(tileId);
   return { name: tile.name, id: tile.id, options: { selected: false } };
 }
@@ -76,6 +76,7 @@ export const useMjStore = defineStore("mj", () => {
   const canHu = ref(false);
   const current = ref(mjGame.current);
   const activePositions = mjGame.players.filter((player) => player !== null).map((player) => player.position);
+  const latestTile = ref<TileId | null>(null);
 
   // const paused = ref(false);
 
@@ -133,6 +134,7 @@ export const useMjStore = defineStore("mj", () => {
     // };
     canHu.value = TileCore.canHu(mjGame.current?.handTiles ?? []);
     current.value = mjGame.current;
+    latestTile.value = mjGame.latestTile;
     // paused.value = mjGame.isPaused();
   }
 
@@ -158,6 +160,7 @@ export const useMjStore = defineStore("mj", () => {
     pBottomCards,
     pBottomDiscardCards,
     myLatestPickCard,
+    latestTile,
     canHu,
     selectedCard,
     current,
