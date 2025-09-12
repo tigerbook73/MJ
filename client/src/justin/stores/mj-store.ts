@@ -13,6 +13,30 @@ export enum AppState {
   InGame = "IN_GAME",
 }
 
+export const PlayerPosRotation = [
+  [0, 1, 2, 3],
+  [1, 2, 3, 0],
+  [2, 3, 0, 1],
+  [3, 0, 1, 2],
+];
+
+/*
+server
+    西
+  南  北
+    东
+actual
+    西
+  北  南
+    东
+
+    逆时针 server东北西南，bot right top left
+    server enum east0 south1 west2 north3
+
+
+
+*/
+
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
   const room = ref<RoomModel | null>(null);
@@ -26,13 +50,13 @@ export const useMjStore = defineStore("mj", () => {
 
   const players = ref([] as Player[]);
   const selectedTile = ref(TileCore.voidTile.id);
-  const my_pos = ref(Position.East as Position);
+  const myPos = ref(Position.East as Position);
 
-  const wallEast = ref([] as TileId[]);
-  const wallSouth = ref([] as TileId[]);
-  const wallWest = ref([] as TileId[]);
-  const wallNorth = ref([] as TileId[]);
-  const wallList = [wallEast, wallSouth, wallWest, wallNorth];
+  const wallBottom = ref([] as TileId[]);
+  const wallRight = ref([] as TileId[]);
+  const wallTop = ref([] as TileId[]);
+  const wallLeft = ref([] as TileId[]);
+  const wallList = [wallBottom, wallRight, wallTop, wallLeft];
 
   const handTileBottom = ref([] as TileId[]);
   const handTileRight = ref([] as TileId[]);
@@ -113,14 +137,26 @@ export const useMjStore = defineStore("mj", () => {
     });
   }
 
+  function refreshAll() {
+    const pos = myPos.value;
+    const g = game.value;
+    const rotation = PlayerPosRotation[myPos.value];
+
+    if (!g || pos === Position.None) return;
+
+    for (let i = 0; i < rotation.length; i++) {
+      const gi = rotation[i];
+
+      wallList[i].value = g.walls?.[gi]?.tiles ?? [];
+      handList[i].value = g.players?.[gi]?.handTiles ?? [];
+      discardList[i].value = g.discards?.[gi]?.tiles ?? [];
+    }
+  }
+
   function playerDiscardRefresh() {
     game.value?.discards.forEach((discard, index) => {
       discardList[index].value = discard.tiles;
     });
-  }
-
-  function clearSelected() {
-    selectedTile.value = TileCore.voidTile.id;
   }
 
   function handTileRefresh() {
@@ -129,7 +165,11 @@ export const useMjStore = defineStore("mj", () => {
     });
   }
 
-  refresh();
+  function clearSelected() {
+    selectedTile.value = TileCore.voidTile.id;
+  }
+
+  refreshAll();
 
   return {
     // state
@@ -138,13 +178,13 @@ export const useMjStore = defineStore("mj", () => {
     roomList,
     position,
     open,
-    my_pos,
+    myPos,
     appState,
 
-    wallWest,
-    wallSouth,
-    wallEast,
-    wallNorth,
+    wallTop,
+    wallRight,
+    wallBottom,
+    wallLeft,
 
     handTileBottom,
     handTileRight,
@@ -166,6 +206,7 @@ export const useMjStore = defineStore("mj", () => {
     isWinning,
 
     refresh,
+    refreshAll,
 
     setConnected,
     setSignedIn,

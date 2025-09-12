@@ -87,7 +87,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   mjStore.room = clientApi.findMyRoom(event);
   mjStore.position = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
   mjStore.setGame(clientApi.findMyGame(event));
-  mjStore.refresh();
+  mjStore.refreshAll();
 });
 
 function toggleLeftDrawer() {

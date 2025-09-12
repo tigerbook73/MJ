@@ -43,11 +43,11 @@ const flex2 = props.position === "top" || props.position === "bottom" ? "row" : 
 
 const mjStore = useMjStore();
 const tiles = computed(() => {
-  const positions: Record<string, typeof mjStore.wallWest> = {
-    top: mjStore.wallWest,
-    left: mjStore.wallNorth,
-    right: mjStore.wallSouth,
-    bottom: mjStore.wallEast,
+  const positions: Record<string, typeof mjStore.wallTop> = {
+    top: mjStore.wallTop,
+    left: mjStore.wallLeft,
+    right: mjStore.wallRight,
+    bottom: mjStore.wallBottom,
   };
   return positions[props.position] || positions.bottom;
 });
