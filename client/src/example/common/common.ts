@@ -42,7 +42,7 @@ export class CommonUtil {
     // LEFT         RIGHT
     //       BOTTOM (myPostion)
     //
-    // Position: East/0 -> South/1 -> West/2 -> North/4
+    // Position: East/0 -> South/1 -> West/2 -> North/3
     // bottom => myPosition (fixed)
     // left   => (myPosition + 1 + 4) % 4
     // top    => (myPosition + 2 + 4) % 4
@@ -68,7 +68,7 @@ export class CommonUtil {
     // LEFT         RIGHT
     //       BOTTOM (myPostion)
     //
-    // Position: East/0 -> South/1 -> West/2 -> North/4
+    // Position: East/0 -> South/1 -> West/2 -> North/3
     // position === myPosition => bottom
     // position === (myPosition + 1) %4 => left
     // position === (myPosition + 2) %4 => top
