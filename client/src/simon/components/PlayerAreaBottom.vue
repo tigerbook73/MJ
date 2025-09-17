@@ -31,20 +31,47 @@ import { TileCore, type TileId } from "@common/core/mj.tile-core";
 // import { TileCore } from "@common/core/mj.tile-core";
 import { roomStore } from "../stores/room-store";
 import { computed, ref } from "vue";
-import { ActionType } from "src/common/core/mj.game";
+import { ActionType, GameState } from "src/common/core/mj.game";
 const room = roomStore();
+const userMj = useMjStore();
 let lastClickTime = 0;
+// 当前是哪位玩家在出牌
 const currentPosition = computed(() => userMj.current?.position);
+// 我自己的位置
 const myPosition = computed(() => room.currentPosition);
+// 左边玩家的位置
 const leftPosition = computed(() => mapPosition(myPosition.value!, Direction.Left));
+// 获取上家打出的牌
+const latestTile = userMj.latestTile;
+const state = computed(() => {
+  const game = userMj.currentGame; // 假设 `currentGame` 是全局状态
+  if (!game || !game.current) {
+    return GameState.Init; // 如果游戏或当前玩家不存在，返回初始状态
+  }
 
+  if (game.state === GameState.WaitingAction && game.current.position === room.currentPosition) {
+    return GameState.WaitingAction; // 当前是我的回合
+  } else if (game.state === GameState.WaitingPass && game.current.position !== room.currentPosition) {
+    return GameState.WaitingPass; // 当前不是我的回合，但需要等待我操作
+  } else {
+    return GameState.Init; // 默认返回初始状态
+  }
+});
 const canChi = computed(() => {
+
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingPass 状态下才允许吃
+  if (gameState !== GameState.WaitingPass) {
+    return { show: false, disabled: false };
+  }
   // 当前出牌者是上家，且自己是Bottom
   console.log('userMj.latestTile', userMj.latestTile);
   const isFromLeft = currentPosition.value === leftPosition.value;
-  // const isBottom = myPosition.value === mapPosition(currentPosition.value!, Direction.Bottom);
-  // 获取上家打出的牌
-  const latestTile = userMj.latestTile;
+  // const isBottom = myPosition.value === mapPosition(currentPosition.value! - 1, Direction.Bottom);
+
   if (!isFromLeft) {
     return { show: false, disabled: false };
   }
@@ -100,11 +127,14 @@ function passTurn() {
 }
 
 const selectedTiles = ref<TileId[]>([]);
-const eatTiles = ref<HandCard[][]>([]);
-
-const player = useMjStore().current;
-if (player) {
-  eatTiles.value = player.openedSets
+const player = computed(() => {
+  return myPosition.value
+    ? userMj.currentGame?.players.find((p) => p?.position === myPosition.value)
+    : undefined;
+});
+const eatTiles = computed(() => {
+  if (!player.value) return [];
+  return player.value.openedSets
     .filter((set) => set.actionType === ActionType.Chi)
     .map((set): HandCard[] =>
       set.tiles.map((tileId) => {
@@ -116,14 +146,16 @@ if (player) {
         };
       }),
     );
-}
+});
+
+
 function handleChi() {
   const tile1 = selectedTiles.value[0];
   const tile2 = selectedTiles.value[1];
   emits("handle-chi", [tile1, tile2]);
   selectedTiles.value = [];
 }
-const userMj = useMjStore();
+
 </script>
 
 <style></style>

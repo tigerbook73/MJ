@@ -77,7 +77,6 @@ export const useMjStore = defineStore("mj", () => {
   const current = ref(mjGame.current);
   const activePositions = mjGame.players.filter((player) => player !== null).map((player) => player.position);
   const latestTile = ref<TileId | null>(null);
-
   // const paused = ref(false);
 
   const topWall = ref([] as HandCard[]);
