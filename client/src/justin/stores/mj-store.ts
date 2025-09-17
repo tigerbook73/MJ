@@ -46,6 +46,7 @@ export const useMjStore = defineStore("mj", () => {
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
   const position = ref<Position>(Position.None);
+  const isMyTurn = ref(false as boolean);
 
   const open = ref(false as boolean);
   const status = ref(false as boolean);
@@ -180,6 +181,12 @@ export const useMjStore = defineStore("mj", () => {
       discardList[i].value = g.discards?.[gi]?.tiles ?? [];
       newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
     }
+
+    if (g.current?.position === myPos.value) {
+      isMyTurn.value = true;
+    } else {
+      isMyTurn.value = false;
+    }
   }
 
   function clearSelected() {
@@ -227,6 +234,7 @@ export const useMjStore = defineStore("mj", () => {
     clearSelected,
     isWinning,
 
+    isMyTurn,
     refresh,
     refreshAll,
 

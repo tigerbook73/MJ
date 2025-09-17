@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- {{ $options.name }} -->
-    <q-btn flat @click="discard">discard</q-btn>
-    <q-btn flat @click="pass">pass</q-btn>
+    <q-btn flat v-show="mjStore.isMyTurn" @click="discard">discard</q-btn>
+    <q-btn flat v-show="mjStore.isMyTurn" @click="pass">pass</q-btn>
   </div>
 </template>
 
