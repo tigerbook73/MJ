@@ -10,6 +10,14 @@
         position="bottom"
         size="large"
       ></comp-tile>
+      <comp-tile type=""></comp-tile>
+      <comp-tile
+        :type="mjStore.IDtoName(mjStore.newTileBottom)"
+        :selected="mjStore.newTileBottom === mjStore.selectedTile"
+        @click="onClick(mjStore.newTileBottom)"
+        position="bottom"
+        size="large"
+      ></comp-tile>
     </div>
   </div>
 </template>

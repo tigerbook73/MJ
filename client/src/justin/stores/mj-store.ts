@@ -46,6 +46,7 @@ export const useMjStore = defineStore("mj", () => {
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
   const position = ref<Position>(Position.None);
+  const isMyTurn = ref(false as boolean);
 
   const open = ref(false as boolean);
   const status = ref(false as boolean);
@@ -73,6 +74,12 @@ export const useMjStore = defineStore("mj", () => {
   const discardTop = ref([] as TileId[]);
   const discardLeft = ref([] as TileId[]);
   const discardList = [discardBottom, discardRight, discardTop, discardLeft];
+
+  const newTileBottom = ref(TileCore.voidId as TileId);
+  const newTileRight = ref(TileCore.voidId as TileId);
+  const newTileTop = ref(TileCore.voidId as TileId);
+  const newTileLeft = ref(TileCore.voidId as TileId);
+  const newList = [newTileBottom, newTileRight, newTileTop, newTileLeft];
 
   function refreshAppState() {
     if (!connected.value) {
@@ -122,17 +129,22 @@ export const useMjStore = defineStore("mj", () => {
     refreshAppState();
   }
 
+  function IDtoName(id: number) {
+    if (id == -1) {
+      return "";
+    }
+    return IDTileList[id];
+  }
+
+  function refresh() {
+    //
+  }
+
+  /*
   function refresh() {
     wallRefresh();
     playerDiscardRefresh();
     handTileRefresh();
-  }
-
-  function IDtoName(id: number) {
-    // if (id == -1) {
-    //   return "";
-    // }
-    return IDTileList[id];
   }
 
   function wallRefresh() {
@@ -140,6 +152,19 @@ export const useMjStore = defineStore("mj", () => {
       wallList[index].value = wall.tiles;
     });
   }
+
+  function playerDiscardRefresh() {
+    game.value?.discards.forEach((discard, index) => {
+      discardList[index].value = discard.tiles;
+    });
+  }
+
+  function handTileRefresh() {
+    game.value?.players.forEach((player, index) => {
+      handList[index].value = player?.handTiles || [];
+    });
+  }
+  */
 
   function refreshAll() {
     const pos = myPos.value;
@@ -154,19 +179,14 @@ export const useMjStore = defineStore("mj", () => {
       wallList[i].value = g.walls?.[gi]?.tiles ?? [];
       handList[i].value = g.players?.[gi]?.handTiles ?? [];
       discardList[i].value = g.discards?.[gi]?.tiles ?? [];
+      newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
     }
-  }
 
-  function playerDiscardRefresh() {
-    game.value?.discards.forEach((discard, index) => {
-      discardList[index].value = discard.tiles;
-    });
-  }
-
-  function handTileRefresh() {
-    game.value?.players.forEach((player, index) => {
-      handList[index].value = player?.handTiles || [];
-    });
+    if (g.current?.position === myPos.value) {
+      isMyTurn.value = true;
+    } else {
+      isMyTurn.value = false;
+    }
   }
 
   function clearSelected() {
@@ -200,6 +220,11 @@ export const useMjStore = defineStore("mj", () => {
     discardTop,
     discardLeft,
 
+    newTileBottom,
+    newTileLeft,
+    newTileRight,
+    newTileTop,
+
     players,
     status,
     selectedTile,
@@ -209,6 +234,7 @@ export const useMjStore = defineStore("mj", () => {
     clearSelected,
     isWinning,
 
+    isMyTurn,
     refresh,
     refreshAll,
 

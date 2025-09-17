@@ -10,6 +10,14 @@
         size="large"
         :back="true"
       ></comp-tile>
+      <comp-tile type="" position="right"></comp-tile>
+      <comp-tile
+        :type="mjStore.IDtoName(mjStore.newTileRight)"
+        :selected="mjStore.newTileRight === mjStore.selectedTile"
+        position="right"
+        size="large"
+        :back="true"
+      ></comp-tile>
     </div>
   </div>
 </template>
