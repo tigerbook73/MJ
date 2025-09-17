@@ -5,7 +5,7 @@
       :key="index"
       :type="mjStore.IDtoName(tile)"
       position="bottom"
-      size="large"
+      size="small"
     ></comp-tile>
   </div>
 </template>
