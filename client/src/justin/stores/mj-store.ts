@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import type { Game, Player } from "@common/core/mj.game";
-import { Position } from "@common/core/mj.game";
+import { GameState, Position } from "@common/core/mj.game";
 import type { TileId } from "@common/core/mj.tile-core";
 import { TileCore } from "@common/core/mj.tile-core";
 import type { RoomModel } from "@common/models/room.model";
@@ -45,7 +45,7 @@ export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
-  const position = ref<Position>(Position.None);
+  const myPos = ref<Position>(Position.None);
   const isMyTurn = ref(false as boolean);
 
   const open = ref(false as boolean);
@@ -53,9 +53,13 @@ export const useMjStore = defineStore("mj", () => {
   const isWinning = ref(false as boolean);
   const appState = ref<AppState>(AppState.Unconnected);
 
+  const canChi = ref(false as boolean);
+  const canPon = ref(false as boolean);
+  const canKan = ref(false as boolean);
+  const canRon = ref(false as boolean);
+
   const players = ref([] as Player[]);
   const selectedTile = ref(TileCore.voidTile.id);
-  const myPos = ref(Position.East as Position);
 
   const wallBottom = ref([] as TileId[]);
   const wallRight = ref([] as TileId[]);
@@ -103,7 +107,7 @@ export const useMjStore = defineStore("mj", () => {
       // user.value.password = "";
       roomList.value = [];
       room.value = null;
-      position.value = Position.None;
+      myPos.value = Position.None;
       game.value = null;
     }
     refreshAppState();
@@ -119,7 +123,7 @@ export const useMjStore = defineStore("mj", () => {
     // user.value.password = "";
     roomList.value = [];
     room.value = null;
-    position.value = Position.None;
+    myPos.value = Position.None;
     game.value = null;
     refreshAppState();
   }
@@ -182,11 +186,47 @@ export const useMjStore = defineStore("mj", () => {
       newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
     }
 
-    if (g.current?.position === myPos.value) {
-      isMyTurn.value = true;
-    } else {
-      isMyTurn.value = false;
+    // if (g.current?.position === myPos.value) {
+    //   isMyTurn.value = true;
+    // } else {
+    //   isMyTurn.value = false;
+    // }
+    isMyTurn.value = true;
+
+    checkMyHand();
+  }
+
+  function checkMyHand() {
+    const g = game.value;
+    const hand = handTileBottom.value;
+
+    //首先全false
+    //1 全场判断是否有吃碰杠和，如有，进入waiting pass状态，不管是否为自家
+    //1.1 根据上条条件，判断自家手牌是否能吃碰杠和
+    //1.2 如有，则设置为true
+    setAllFalse();
+
+    if (!g || g.current === null) return;
+
+    if (g.state === GameState.WaitingPass) {
+      //
+      if (g.current.position % 4 === (myPos.value += 1) % 4) {
+        canChi.value = TileCore.canChi(hand, g.latestTile);
+      }
+      canPon.value = TileCore.canPeng(hand, g.latestTile);
+      canKan.value = TileCore.canGang(hand, g.latestTile);
+      canRon.value = TileCore.canHu(hand, g.latestTile);
+    } else if (g.state === GameState.WaitingAction) {
+      canKan.value = TileCore.canGang(hand, g.latestTile);
+      canRon.value = TileCore.canHu(hand, g.latestTile);
     }
+  }
+
+  function setAllFalse() {
+    canChi.value = false;
+    canPon.value = false;
+    canKan.value = false;
+    canRon.value = false;
   }
 
   function clearSelected() {
@@ -200,7 +240,6 @@ export const useMjStore = defineStore("mj", () => {
     game,
     room,
     roomList,
-    position,
     open,
     myPos,
     appState,
@@ -235,6 +274,12 @@ export const useMjStore = defineStore("mj", () => {
     isWinning,
 
     isMyTurn,
+    canChi,
+    canPon,
+    canKan,
+    canRon,
+    setAllFalse,
+
     refresh,
     refreshAll,
 

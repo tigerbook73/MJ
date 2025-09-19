@@ -85,7 +85,7 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
 
   mjStore.roomList = event.data.rooms;
   mjStore.room = clientApi.findMyRoom(event);
-  mjStore.position = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
+  mjStore.myPos = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
   mjStore.setGame(clientApi.findMyGame(event));
   // mjStore.refresh();
   mjStore.refreshAll();

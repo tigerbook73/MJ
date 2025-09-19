@@ -118,10 +118,10 @@ function refreshStatus() {
         .sort((a, b) => a.pos - b.pos),
     };
     display.value.roomname = mjStore.room.name;
-    display.value.pos = mjStore.position;
-    selectedPos.value = mjStore.position;
+    display.value.pos = mjStore.myPos;
+    selectedPos.value = mjStore.myPos;
     currentRoom.value = mjStore.room;
-    currentPos.value = mjStore.position;
+    currentPos.value = mjStore.myPos;
     roomNumber.value = rooms.value.findIndex((room) => room.name === mjStore.room?.name);
   }
 }
