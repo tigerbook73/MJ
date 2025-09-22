@@ -1,4 +1,6 @@
+import type { Game } from "@common/core/mj.game";
 import { Position } from "@common/core/mj.game";
+import type { TileId } from "src/common/core/mj.tile-core";
 
 export enum Direction {
   Top = "top",
@@ -87,5 +89,28 @@ export class CommonUtil {
       extendedArray.push(fillValue);
     }
     return extendedArray;
+  }
+
+  /**
+   * remove opened tiles from discards
+   */
+  static updateDiscards(game: Game) {
+    // created set for opened tiles
+    const openedTiles = new Set<TileId>();
+
+    for (const player of game.players) {
+      if (!player) continue;
+
+      for (const openedSet of player.openedSets) {
+        for (const tile of openedSet.tiles) {
+          openedTiles.add(tile);
+        }
+      }
+    }
+
+    // remove opened tiles from discards
+    for (const discard of game.discards) {
+      discard.tiles = discard.tiles.filter((tile) => !openedTiles.has(tile));
+    }
   }
 }
