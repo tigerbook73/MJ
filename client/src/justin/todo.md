@@ -21,6 +21,7 @@
   - need add chi pon kan ron button and corresponding function
 
 - 玩家action
+  - button created, function wip
   - 吃 按钮
 
   - 玩家碰

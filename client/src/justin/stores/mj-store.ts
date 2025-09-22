@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Game, Player } from "@common/core/mj.game";
+import type { Game, OpenedSet, Player } from "@common/core/mj.game";
 import { GameState, Position } from "@common/core/mj.game";
 import type { TileId } from "@common/core/mj.tile-core";
 import { TileCore } from "@common/core/mj.tile-core";
@@ -37,8 +37,6 @@ actual
     逆时针 server东北西南，bot right top left
     server enum east0 south1 west2 north3
 
-
-
 */
 
 export const useMjStore = defineStore("mj", () => {
@@ -46,43 +44,49 @@ export const useMjStore = defineStore("mj", () => {
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
   const myPos = ref<Position>(Position.None);
-  const isMyTurn = ref(false as boolean);
+  const isMyTurn = ref<boolean>(false);
 
-  const open = ref(false as boolean);
-  const status = ref(false as boolean);
-  const isWinning = ref(false as boolean);
+  const open = ref<boolean>(false);
+  const status = ref<boolean>(false);
+  const isWinning = ref<boolean>(false);
   const appState = ref<AppState>(AppState.Unconnected);
 
-  const canChi = ref(false as boolean);
-  const canPon = ref(false as boolean);
-  const canKan = ref(false as boolean);
-  const canRon = ref(false as boolean);
+  const canChi = ref<boolean>(false);
+  const canPon = ref<boolean>(false);
+  const canKan = ref<boolean>(false);
+  const canRon = ref<boolean>(false);
 
-  const players = ref([] as Player[]);
+  const players = ref<Player[]>([]);
   const selectedTile = ref(TileCore.voidTile.id);
 
-  const wallBottom = ref([] as TileId[]);
-  const wallRight = ref([] as TileId[]);
-  const wallTop = ref([] as TileId[]);
-  const wallLeft = ref([] as TileId[]);
+  const wallBottom = ref<TileId[]>([]);
+  const wallRight = ref<TileId[]>([]);
+  const wallTop = ref<TileId[]>([]);
+  const wallLeft = ref<TileId[]>([]);
   const wallList = [wallBottom, wallRight, wallTop, wallLeft];
 
-  const handTileBottom = ref([] as TileId[]);
-  const handTileRight = ref([] as TileId[]);
-  const handTileTop = ref([] as TileId[]);
-  const handTileLeft = ref([] as TileId[]);
+  const handTileBottom = ref<TileId[]>([]);
+  const handTileRight = ref<TileId[]>([]);
+  const handTileTop = ref<TileId[]>([]);
+  const handTileLeft = ref<TileId[]>([]);
   const handList = [handTileBottom, handTileRight, handTileTop, handTileLeft];
 
-  const discardBottom = ref([] as TileId[]);
-  const discardRight = ref([] as TileId[]);
-  const discardTop = ref([] as TileId[]);
-  const discardLeft = ref([] as TileId[]);
+  const discardBottom = ref<TileId[]>([]);
+  const discardRight = ref<TileId[]>([]);
+  const discardTop = ref<TileId[]>([]);
+  const discardLeft = ref<TileId[]>([]);
   const discardList = [discardBottom, discardRight, discardTop, discardLeft];
 
-  const newTileBottom = ref(TileCore.voidId as TileId);
-  const newTileRight = ref(TileCore.voidId as TileId);
-  const newTileTop = ref(TileCore.voidId as TileId);
-  const newTileLeft = ref(TileCore.voidId as TileId);
+  const meldsBottom = ref<OpenedSet[]>([]);
+  const meldsRight = ref<OpenedSet[]>([]);
+  const meldsTop = ref<OpenedSet[]>([]);
+  const meldsLeft = ref<OpenedSet[]>([]);
+  const meldsList = [meldsBottom, meldsRight, meldsTop, meldsLeft];
+
+  const newTileBottom = ref<TileId>(TileCore.voidId);
+  const newTileRight = ref<TileId>(TileCore.voidId);
+  const newTileTop = ref<TileId>(TileCore.voidId);
+  const newTileLeft = ref<TileId>(TileCore.voidId);
   const newList = [newTileBottom, newTileRight, newTileTop, newTileLeft];
 
   function refreshAppState() {
@@ -140,36 +144,6 @@ export const useMjStore = defineStore("mj", () => {
     return IDTileList[id];
   }
 
-  function refresh() {
-    //
-  }
-
-  /*
-  function refresh() {
-    wallRefresh();
-    playerDiscardRefresh();
-    handTileRefresh();
-  }
-
-  function wallRefresh() {
-    game.value?.walls.forEach((wall, index) => {
-      wallList[index].value = wall.tiles;
-    });
-  }
-
-  function playerDiscardRefresh() {
-    game.value?.discards.forEach((discard, index) => {
-      discardList[index].value = discard.tiles;
-    });
-  }
-
-  function handTileRefresh() {
-    game.value?.players.forEach((player, index) => {
-      handList[index].value = player?.handTiles || [];
-    });
-  }
-  */
-
   function refreshAll() {
     const pos = myPos.value;
     const g = game.value;
@@ -184,16 +158,11 @@ export const useMjStore = defineStore("mj", () => {
       handList[i].value = g.players?.[gi]?.handTiles ?? [];
       discardList[i].value = g.discards?.[gi]?.tiles ?? [];
       newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
+      meldsList[i].value = g.players?.[gi]?.openedSets ?? [];
     }
 
-    // if (g.current?.position === myPos.value) {
-    //   isMyTurn.value = true;
-    // } else {
-    //   isMyTurn.value = false;
-    // }
-    isMyTurn.value = true;
-
     checkMyHand();
+    checkMyTurn();
   }
 
   function checkMyHand() {
@@ -220,6 +189,10 @@ export const useMjStore = defineStore("mj", () => {
       canKan.value = TileCore.canGang(hand, g.latestTile);
       canRon.value = TileCore.canHu(hand, g.latestTile);
     }
+  }
+
+  function checkMyTurn() {
+    isMyTurn.value = canChi.value || canPon.value || canKan.value || canRon.value;
   }
 
   function setAllFalse() {
@@ -264,6 +237,11 @@ export const useMjStore = defineStore("mj", () => {
     newTileRight,
     newTileTop,
 
+    meldsBottom,
+    meldsRight,
+    meldsTop,
+    meldsLeft,
+
     players,
     status,
     selectedTile,
@@ -280,7 +258,6 @@ export const useMjStore = defineStore("mj", () => {
     canRon,
     setAllFalse,
 
-    refresh,
     refreshAll,
 
     setConnected,
