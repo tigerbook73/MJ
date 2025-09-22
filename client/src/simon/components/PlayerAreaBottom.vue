@@ -4,8 +4,8 @@
     userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
   ]">
     <div class="row flex-center q-gutter-xs">
-      <div v-for="(group, gIdx) in eatTiles" :key="gIdx" class="row">
-        <comp-tile v-for="(tile, index) in group" :key="gIdx + index" :type="tile" size="small" />
+      <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row">
+        <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
       </div>
     </div>
 
@@ -16,6 +16,9 @@
       <q-btn v-if="userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom)" flat
         @click="passTurn()">Pass</q-btn>
       <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
+      <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
+      <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
+      <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
     </div>
   </div>
 </template>
@@ -42,7 +45,8 @@ const myPosition = computed(() => room.currentPosition);
 // 左边玩家的位置
 const leftPosition = computed(() => mapPosition(myPosition.value!, Direction.Left));
 // 获取上家打出的牌
-const latestTile = userMj.latestTile;
+// const latestTile = userMj.latestTile;
+const latestTile = computed(() => userMj.latestTile);
 const state = computed(() => {
   const game = userMj.currentGame; // 假设 `currentGame` 是全局状态
   if (!game || !game.current) {
@@ -76,13 +80,89 @@ const canChi = computed(() => {
     return { show: false, disabled: false };
   }
 
-  const chi = TileCore.canChi(userMj.pBottomCards.map(card => card.id), latestTile!);
+  const chi = TileCore.canChi(userMj.pBottomCards.map(card => card.id), latestTile.value!);
 
   return {
     show: chi,
     disabled:
       selectedTiles.value.length !== 2 ||
-      !TileCore.isConsecutive(selectedTiles.value[0], selectedTiles.value[1], latestTile!),
+      !TileCore.isConsecutive(selectedTiles.value[0], selectedTiles.value[1], latestTile.value!),
+  };
+
+});
+
+const canPeng = computed(() => {
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingPass 状态下才允许碰
+  if (gameState !== GameState.WaitingPass) {
+    return { show: false, disabled: false };
+  }
+  // 当前出牌者不是bottom的时候可以碰
+  const isNotFromBottom = currentPosition.value !== myPosition.value;
+  if (!isNotFromBottom) {
+    return { show: false, disabled: false };
+  }
+
+  const peng = TileCore.canPeng(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+
+  return {
+    show: peng,
+    disabled:
+      selectedTiles.value.length !== 2 ||
+      !TileCore.isSame(selectedTiles.value[0], selectedTiles.value[1], latestTile.value!),
+  };
+
+});
+
+const canGang = computed(() => {
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingPass 状态下才允许杠
+  if (gameState !== GameState.WaitingPass) {
+    return { show: false, disabled: false };
+  }
+  // 当前出牌者不是bottom的时候可以杠
+  const isNotFromBottom = currentPosition.value !== myPosition.value;
+  if (!isNotFromBottom) {
+    return { show: false, disabled: false };
+  }
+
+  const gang = TileCore.canGang(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+
+  return {
+    show: gang,
+    disabled:
+      selectedTiles.value.length !== 3 ||
+      !TileCore.isSame(selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2], latestTile.value!),
+  };
+
+});
+
+const canHu = computed(() => {
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingPass 状态下才允许胡
+  if (gameState !== GameState.WaitingPass) {
+    return { show: false, disabled: false };
+  }
+  // 当前出牌者不是bottom的时候可以胡
+  const isNotFromBottom = currentPosition.value !== myPosition.value;
+  if (!isNotFromBottom) {
+    return { show: false, disabled: false };
+  }
+
+  const hu = TileCore.canHu(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+
+  return {
+    show: hu,
+    disabled: !hu,
   };
 
 });
@@ -113,6 +193,9 @@ const emits = defineEmits<{
   (e: "drop-tile", payload: TileId): void;
   (e: "pass-turn"): void;
   (e: "handle-chi", payload: [tile1: TileId, tile2: TileId]): void;
+  (e: "handle-peng", payload: [tile1: TileId, tile2: TileId]): void;
+  (e: "handle-gang", payload: [tile1: TileId, tile2: TileId, tile3: TileId]): void;
+  (e: "hu"): void;
 }>();
 
 function dropTile(tileId?: TileId) {
@@ -132,22 +215,51 @@ const player = computed(() => {
     ? userMj.currentGame?.players.find((p) => p?.position === myPosition.value)
     : undefined;
 });
-const eatTiles = computed(() => {
+
+const meldGroups = computed(() => {
   if (!player.value) return [];
   return player.value.openedSets
-    .filter((set) => set.actionType === ActionType.Chi)
-    .map((set): HandCard[] =>
-      set.tiles.map((tileId) => {
-        const tile = TileCore.fromId(tileId);
-        return {
-          name: tile.name,
-          id: tile.id,
-          options: { selected: selectedTiles.value.includes(tileId) },
-        };
-      }),
-    );
+    .filter(s => s.actionType === ActionType.Chi || s.actionType === ActionType.Peng || s.actionType === ActionType.Gang || s.actionType === ActionType.Hu)
+    .map(s => s.tiles.map(tileId => {
+      const t = TileCore.fromId(tileId);
+      return {
+        name: t.name,
+        id: t.id,
+        options: { selected: selectedTiles.value.includes(tileId) },
+      } as HandCard;
+    }));
 });
 
+// const eatTiles = computed(() => {
+//   if (!player.value) return [];
+//   return player.value.openedSets
+//     .filter((set) => set.actionType === ActionType.Chi)
+//     .map((set): HandCard[] =>
+//       set.tiles.map((tileId) => {
+//         const tile = TileCore.fromId(tileId);
+//         return {
+//           name: tile.name,
+//           id: tile.id,
+//           options: { selected: selectedTiles.value.includes(tileId) },
+//         };
+//       }),
+//     );
+// });
+// const pengTiles = computed(() => {
+//   if (!player.value) return [];
+//   return player.value.openedSets
+//     .filter((set) => set.actionType === ActionType.Peng)
+//     .map((set): HandCard[] =>
+//       set.tiles.map((tileId) => {
+//         const tile = TileCore.fromId(tileId);
+//         return {
+//           name: tile.name,
+//           id: tile.id,
+//           options: { selected: selectedTiles.value.includes(tileId) },
+//         };
+//       }),
+//     );
+// });
 
 function handleChi() {
   const tile1 = selectedTiles.value[0];
@@ -156,6 +268,24 @@ function handleChi() {
   selectedTiles.value = [];
 }
 
+function handlePeng() {
+  const tile1 = selectedTiles.value[0];
+  const tile2 = selectedTiles.value[1];
+  emits("handle-peng", [tile1, tile2]);
+  selectedTiles.value = [];
+}
+
+function handleGang() {
+  const tile1 = selectedTiles.value[0];
+  const tile2 = selectedTiles.value[1];
+  const tile3 = selectedTiles.value[2];
+  emits("handle-gang", [tile1, tile2, tile3]);
+  selectedTiles.value = [];
+}
+
+function Hu() {
+  emits("hu");
+}
 </script>
 
 <style></style>

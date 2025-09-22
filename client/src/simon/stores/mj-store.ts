@@ -72,6 +72,8 @@ export const useMjStore = defineStore("mj", () => {
     appStore().refreshAppState();
   }
 
+  const eatenTiles = ref<TileId[]>([]); // 存储被吃掉的牌的 ID
+
   const open = ref(true);
   const canHu = ref(false);
   const current = ref(mjGame.current);
@@ -144,6 +146,7 @@ export const useMjStore = defineStore("mj", () => {
     currentGame,
     setCurrentGame,
     reset,
+    eatenTiles,
     // state
     open,
     topWall,
