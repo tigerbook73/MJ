@@ -1,36 +1,5 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
-
-        <q-toolbar-title> MJ App </q-toolbar-title>
-        <q-space />
-        <!-- <div class="row q-gutter-sm items-center">
-          <div>{{ mjStore.user.email }}</div>
-          <q-btn v-if="mjStore.appState === AppState.InGame" dense flat label="Quit Game" @click="quitGame" />
-          <q-btn v-if="mjStore.appState === AppState.InLobby" dense flat label="Sign Out" @click="signOut" />
-        </div> -->
-        <q-btn flat @click="signOut">Sign Out</q-btn>
-        <q-btn flat @click="quitGame">Quit Game</q-btn>
-        <q-btn flat @click="enterGame">Enter Game</q-btn>
-      </q-toolbar>
-    </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" side="left" overlay bordered>
-      <q-list>
-        <q-item clickable v-ripple to="/justin/login">
-          <q-item-section>Login</q-item-section>
-        </q-item>
-        <q-item clickable v-ripple to="/justin/lobby">
-          <q-item-section>Lobby</q-item-section>
-        </q-item>
-        <q-item clickable v-ripple to="/justin/game">
-          <q-item-section>Game</q-item-section>
-        </q-item>
-      </q-list>
-    </q-drawer>
-
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -38,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { watch } from "vue";
 import { clientApi } from "src/client/client-api";
 import type { GameEvent } from "@common/protocols/apis.models";
 import { useMjStore, AppState } from "src/justin/stores/mj-store";
@@ -49,7 +18,6 @@ defineOptions({
 });
 
 const mjStore = useMjStore();
-const leftDrawerOpen = ref(false);
 const route = useRoute();
 const router = useRouter();
 
@@ -90,32 +58,4 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   // mjStore.refresh();
   mjStore.refreshAll();
 });
-
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
-}
-
-async function signOut() {
-  try {
-    await clientApi.signOut();
-    mjStore.setSignedIn(false);
-  } catch (error: any) {
-    window.alert(error.message);
-  }
-}
-
-async function quitGame() {
-  if (!mjStore.room) {
-    return;
-  }
-
-  try {
-    await clientApi.quitGame(mjStore.room.name);
-  } catch (e) {
-    console.error(e);
-  }
-}
-async function enterGame() {
-  //
-}
 </script>
