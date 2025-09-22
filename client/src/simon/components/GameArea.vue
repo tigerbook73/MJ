@@ -17,12 +17,8 @@
     <!-- bottom -->
     <div class="row h-10">
       <game-area-c class="w-10" @zi-mo="Zimo"></game-area-c>
-      <player-area-bottom
-        class="w-70"
-        @drop-tile="dropTile"
-        @pass-turn="passTurn"
-        @handle-chi="handleChi"
-      ></player-area-bottom>
+      <player-area-bottom class="w-70" @drop-tile="dropTile" @pass-turn="passTurn" @handle-chi="handleChi"
+        @handle-peng="handlePeng" @handle-gang="handleGang" @hu="Hu"></player-area-bottom>
       <game-area-d class="w-10"></game-area-d>
     </div>
   </div>
@@ -147,6 +143,51 @@ async function handleChi(tileIds: [TileId, TileId]) {
     }
   } catch (error) {
     console.error("Error invoking Chi:", error);
+  }
+}
+
+async function handlePeng(tileIds: [TileId, TileId]) {
+  try {
+    const response = await clientApi.actionPeng(tileIds);
+    if (response) {
+      setGame(response); // Update game state
+
+      mjStore.refresh(); // Refresh UI
+    } else {
+      console.error("Peng failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error invoking Peng:", error);
+  }
+}
+
+async function handleGang(tileIds: [TileId, TileId, TileId]) {
+  try {
+    const response = await clientApi.actionGang(tileIds);
+    if (response) {
+      setGame(response); // Update game state
+
+      mjStore.refresh(); // Refresh UI
+    } else {
+      console.error("Gang failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error invoking Gang:", error);
+  }
+}
+
+async function Hu() {
+  try {
+    const response = await clientApi.actionHu();
+    if (response) {
+      setGame(response); // Update game state
+
+      mjStore.refresh(); // Refresh UI
+    } else {
+      console.error("Hu failed: No game data in response");
+    }
+  } catch (error) {
+    console.error("Error invoking Hu:", error);
   }
 }
 async function Zimo() {
