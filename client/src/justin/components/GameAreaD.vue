@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="column">
     <!-- {{ $options.name }} -->
-    <q-btn flat v-show="mjStore.isMyTurn" @click="discard">discard</q-btn>
-    <q-btn flat v-show="mjStore.isMyTurn" @click="pass">pass</q-btn>
+    <q-btn flat style="width: 100%" v-show="mjStore.myPos === mjStore.game?.current?.position" @click="discard"
+      >discard</q-btn
+    >
+    <q-btn flat style="width: 100%" v-show="mjStore.isMyTurn" @click="pass">pass</q-btn>
   </div>
 </template>
 
