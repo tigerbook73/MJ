@@ -19,13 +19,13 @@
         size="large"
       ></comp-tile>
       <comp-tile type=""></comp-tile>
-      <comp-tile
+      <!-- <comp-tile
         v-for="(tile, index) in mjStore.meldsBottom"
         :key="index"
         :type="mjStore.IDtoName(tile)"
         position="bottom"
         size="large"
-      ></comp-tile>
+      ></comp-tile> -->
     </div>
   </div>
 </template>
