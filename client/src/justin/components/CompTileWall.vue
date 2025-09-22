@@ -1,22 +1,24 @@
 <template>
   <div class="flex-center" :class="flex1">
+    <!-- 上排 -->
     <div :class="flex2">
       <comp-tile
-        v-for="(tile, index) in tiles!.slice(0, 17)"
-        :key="index"
+        v-for="(tile, i) in needReverse ? topRow.slice().reverse() : topRow"
+        :key="i"
         :type="mjStore.IDtoName(tile)"
         :position="props.position"
         back
-      ></comp-tile>
+      />
     </div>
+    <!-- 下排 -->
     <div :class="flex2">
       <comp-tile
-        v-for="(tile, index) in tiles!.slice(17, 34)"
-        :key="index"
+        v-for="(tile, i) in needReverse ? bottomRow.slice().reverse() : bottomRow"
+        :key="i"
         :type="mjStore.IDtoName(tile)"
         :position="props.position"
         back
-      ></comp-tile>
+      />
     </div>
   </div>
 </template>
@@ -51,4 +53,8 @@ const tiles = computed(() => {
   };
   return positions[props.position] || positions.bottom;
 });
+
+const topRow = computed(() => tiles.value.filter((_, i) => i % 2 === 0));
+const bottomRow = computed(() => tiles.value.filter((_, i) => i % 2 === 1));
+const needReverse = computed(() => props.position === "left" || props.position === "bottom");
 </script>
