@@ -3,23 +3,24 @@
     'column flex-center area-player',
     userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
   ]">
-    <div class="row flex-center q-gutter-xs">
+    <div class="row flex-center q-gutter-xs" Justify-content="flex-start">
       <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row">
         <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
       </div>
+      <div class="row flex-center">
+        <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
+          :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
+
+        <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
+        <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
+        <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
+        <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
+        <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
+        <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
+      </div>
     </div>
 
-    <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
-        :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
 
-      <q-btn v-if="userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom)" flat
-        @click="passTurn()">Pass</q-btn>
-      <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
-      <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
-      <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
-      <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
-    </div>
   </div>
 </template>
 
@@ -61,6 +62,30 @@ const state = computed(() => {
     return GameState.Init; // 默认返回初始状态
   }
 });
+
+const cleanHandIds = computed(() =>
+  userMj.pBottomCards
+    .map(c => c.id)
+    .filter(id => id !== TileCore.voidId && id !== -1)
+);
+const canPass = computed(() => {
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingPass 状态下才允许过
+  if (gameState !== GameState.WaitingPass) {
+    return { show: false, disabled: false };
+  }
+  // 当前出牌者不是bottom的时候可以过
+  const isNotFromBottom = currentPosition.value !== myPosition.value;
+  if (!isNotFromBottom) {
+    return { show: false, disabled: false };
+  }
+
+  return { show: true, disabled: false };
+});
+
 const canChi = computed(() => {
 
   // 当前游戏状态
@@ -80,7 +105,7 @@ const canChi = computed(() => {
     return { show: false, disabled: false };
   }
 
-  const chi = TileCore.canChi(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+  const chi = TileCore.canChi(cleanHandIds.value, latestTile.value!);
 
   return {
     show: chi,
@@ -106,7 +131,7 @@ const canPeng = computed(() => {
     return { show: false, disabled: false };
   }
 
-  const peng = TileCore.canPeng(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+  const peng = TileCore.canPeng(cleanHandIds.value, latestTile.value!);
 
   return {
     show: peng,
@@ -132,7 +157,7 @@ const canGang = computed(() => {
     return { show: false, disabled: false };
   }
 
-  const gang = TileCore.canGang(userMj.pBottomCards.map(card => card.id), latestTile.value!);
+  const gang = TileCore.canGang(cleanHandIds.value, latestTile.value!);
 
   return {
     show: gang,
@@ -157,14 +182,35 @@ const canHu = computed(() => {
   if (!isNotFromBottom) {
     return { show: false, disabled: false };
   }
+  const hu = TileCore.canHu(cleanHandIds.value, latestTile.value!);
 
-  const hu = TileCore.canHu(userMj.pBottomCards.map(card => card.id), latestTile.value!);
 
   return {
     show: hu,
-    disabled: !hu,
+    disabled: false,
   };
 
+});
+
+const canZimo = computed(() => {
+  // 当前游戏状态
+  const gameState = state.value;
+  console.log('gameState', gameState);
+
+  // 只有在 WaitingAction 状态下才允许自摸
+  if (gameState !== GameState.WaitingAction) {
+    return { show: false, disabled: false };
+  }
+  // 当前出牌者是bottom的时候可以自摸
+  const isFromBottom = currentPosition.value === myPosition.value;
+  if (!isFromBottom) {
+    return { show: false, disabled: false };
+  }
+  const zimo = TileCore.canHu(cleanHandIds.value);
+  return {
+    show: zimo,
+    disabled: false,
+  };
 });
 
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
@@ -196,6 +242,7 @@ const emits = defineEmits<{
   (e: "handle-peng", payload: [tile1: TileId, tile2: TileId]): void;
   (e: "handle-gang", payload: [tile1: TileId, tile2: TileId, tile3: TileId]): void;
   (e: "hu"): void;
+  (e: "zi-mo"): void;
 }>();
 
 function dropTile(tileId?: TileId) {
@@ -285,6 +332,10 @@ function handleGang() {
 
 function Hu() {
   emits("hu");
+}
+
+function Zimo() {
+  emits("zi-mo");
 }
 </script>
 
