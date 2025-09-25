@@ -13,12 +13,16 @@ import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
 import { useMjStore } from "../stores/mj-store";
 
+defineOptions({ name: "GameAreaD" });
+
 const $q = useQuasar();
 const mjStore = useMjStore();
 
 function discard() {
   try {
-    clientApi.actionDrop(mjStore.selectedTile);
+    if (mjStore.selectedList.length === 1) {
+      clientApi.actionDrop(mjStore.selectedList[0]);
+    }
   } catch (e) {
     $q.notify({ message: "Discard tile failed", color: "negative", icon: "warning" });
     console.error("Discard tile failed", e);
@@ -33,5 +37,4 @@ function pass() {
     console.error("pass failed", e);
   }
 }
-defineOptions({ name: "GameAreaD" });
 </script>
