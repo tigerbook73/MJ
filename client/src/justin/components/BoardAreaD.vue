@@ -8,15 +8,29 @@
 </template>
 
 <script setup lang="ts">
+import { useQuasar } from "quasar";
 import { useMjStore } from "../stores/mj-store";
+import { clientApi } from "src/client/client-api";
 
 defineOptions({ name: "BoardAreaD" });
+
+const $q = useQuasar();
 const mjStore = useMjStore();
+
 function chi() {
   //
+  if (mjStore.selectedList.length === 2) {
+    try {
+      clientApi.actionChi([mjStore.selectedList[0], mjStore.selectedList[1]]);
+    } catch (e) {
+      $q.notify({ message: "Action Chi failed", color: "negative", icon: "warning" });
+      console.error("Action Chi failed", e);
+    }
+  }
 }
 function pon() {
   //
+  mjStore.allowMultiSelect = true;
 }
 function kan() {
   //
