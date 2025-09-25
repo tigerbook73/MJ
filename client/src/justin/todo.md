@@ -18,14 +18,20 @@
 
 - 玩家PASS  done  22/09
 - 玩家按钮显示/隐藏 done 22/09
-  - need add chi pon kan ron button and corresponding function
+  - need add chi pon kan ron button done 22/09
+  - corresponding function  WIP 25/09 partially done
 
 - 玩家action
   - button created, function wip
   - 吃 按钮
+    - 多牌选择模式  done  25/09
+    - 手牌剔除  done 25/09
+    - discard 剔除  done 25/09
+    - 加入melds done 25/09
 
   - 玩家碰
   - 玩家杠
+  - 玩家暗杠
   - 玩家自摸
   - 别家放铳
 
@@ -33,4 +39,8 @@
   - tool bar affected game page height, need adjust
     - deleted 22/09
   - after refresh, sometimes(?) all position will reset
-    - fixed by remove duplicated position variable in mjStore
+    - fixed by remove duplicated position variable in mjStore 22/09
+
+  - angang need to filter hand
+  - status of allowMultiSelect need to be updated
+  - after chi pon kan there is bug to discard.
