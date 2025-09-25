@@ -272,14 +272,16 @@ export class TileCore {
     return true;
   }
 
-  static sortTiles(tiles: (TileCore | TileId)[]) {
+  static sortTiles(tiles: (TileCore | TileId)[]): (TileCore | TileId)[] {
     if (tiles.length == 0) {
       return tiles;
     }
-    return tiles.sort(
-      (a, b) =>
-        (typeof a == "number" ? a : a.id) - (typeof b == "number" ? b : b.id),
-    );
+
+    return tiles.sort((a, b) => {
+      const aId = typeof a === "number" ? a : a.id;
+      const bId = typeof b === "number" ? b : b.id;
+      return aId - bId;
+    });
   }
 
   static canHu(handTiles: readonly TileId[], tile = TileCore.voidId) {
@@ -379,5 +381,110 @@ export class TileCore {
 
   isTiao() {
     return this.type === TileType.TIAO;
+  }
+
+  /**
+   * 判断麻将下一张牌应该打什么
+   * @param tiles 手牌数组, 长度可以是14/11/8/5/2，因为已经碰/吃的牌就不用考虑了
+   * @return 如果能胡牌，返回 null，否则返回一个 TileId
+   */
+  static decideDiscard(tiles: readonly TileId[]): TileId | null {
+    if (tiles.length === 0) return null;
+
+    // 1. 如果能胡牌，不出牌（返回 null 表示可以胡牌）
+    const sortedTiles = [...tiles].sort((a, b) => a - b);
+    if (TileCore.canHu(sortedTiles)) return null;
+
+    // 2. 统计每种牌的数量
+    const tileCount = new Map<string, { ids: TileId[]; count: number }>();
+    for (const tileId of sortedTiles) {
+      const tile = TileCore.fromId(tileId);
+      const key = `${tile.type}-${tile.index}`;
+      if (!tileCount.has(key)) tileCount.set(key, { ids: [], count: 0 });
+      const entry = tileCount.get(key)!;
+      entry.ids.push(tileId);
+      entry.count++;
+    }
+
+    // 3. 给每张牌计算分数（分数越低越容易打出）
+    const tileScores = new Map<TileId, number>();
+
+    for (const tileId of sortedTiles) {
+      const tile = TileCore.fromId(tileId);
+      const key = `${tile.type}-${tile.index}`;
+      const entry = tileCount.get(key)!;
+
+      let score = 0;
+
+      // 刻子 / 杠子 → 保留
+      if (entry.count >= 3) {
+        score += 100;
+      }
+      // 对子 → 次高保留
+      else if (entry.count === 2) {
+        score += 50;
+      }
+      // 单张 → 基础分
+      else {
+        score += 10;
+      }
+
+      // 数牌顺子潜力
+      if (tile.isWan() || tile.isTong() || tile.isTiao()) {
+        const prevKey = `${tile.type}-${tile.index - 1}`;
+        const nextKey = `${tile.type}-${tile.index + 1}`;
+        const prev2Key = `${tile.type}-${tile.index - 2}`;
+        const next2Key = `${tile.type}-${tile.index + 2}`;
+
+        // 存在邻牌 → 增加保留分
+        if (tileCount.has(prevKey)) score += 20;
+        if (tileCount.has(nextKey)) score += 20;
+        if (tileCount.has(prev2Key)) score += 10;
+        if (tileCount.has(next2Key)) score += 10;
+
+        // 边张（1/9）孤张 → 减分，容易打出
+        if (tile.index === 1 || tile.index === 9) score -= 15;
+
+        // 中间牌（4/5/6） → 保留价值稍高
+        if (tile.index >= 4 && tile.index <= 6) score += 5;
+      } else {
+        // 字牌
+        if (entry.count === 1)
+          score -= 20; // 孤张字牌 → 优先打出
+        else if (entry.count === 2) score += 0; // 对子字牌 → 保留
+      }
+
+      tileScores.set(tileId, score);
+    }
+
+    // 4. 找到分数最低的牌打出
+    let minScore = Infinity;
+    for (const tileId of sortedTiles) {
+      const score = tileScores.get(tileId) || 0;
+      if (score < minScore) {
+        minScore = score;
+      }
+    }
+
+    // 5. 如果有多张相同分数的牌，按类型优先级选择
+    const minScoreTiles = sortedTiles.filter(
+      (tileId) => (tileScores.get(tileId) || 0) === minScore,
+    );
+
+    // 优先打孤张字牌 → 边张 → 中间数牌
+    minScoreTiles.sort((a, b) => {
+      const tileA = TileCore.fromId(a);
+      const tileB = TileCore.fromId(b);
+
+      const weight = (tile: TileCore) => {
+        if (tile.type === TileType.JIAN) return 3;
+        if (tile.index === 1 || tile.index === 9) return 2;
+        return 1;
+      };
+
+      return weight(tileB) - weight(tileA); // 分值高的留着，低的先打
+    });
+
+    return minScoreTiles[0];
   }
 }
