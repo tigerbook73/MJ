@@ -5,19 +5,12 @@
         v-for="(tile, index) in mjStore.handTileTop"
         :key="index"
         :type="mjStore.IDtoName(tile)"
-        :selected="tile === mjStore.selectedTile"
         position="top"
         size="large"
         :back="true"
       ></comp-tile
       ><comp-tile type="" position="top"></comp-tile>
-      <comp-tile
-        :type="mjStore.IDtoName(mjStore.newTileTop)"
-        :selected="mjStore.newTileTop === mjStore.selectedTile"
-        position="top"
-        size="large"
-        :back="true"
-      ></comp-tile>
+      <comp-tile :type="mjStore.IDtoName(mjStore.newTileTop)" position="top" size="large" :back="true"></comp-tile>
     </div>
   </div>
 </template>
