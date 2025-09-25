@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { Game, OpenedSet, Player } from "@common/core/mj.game";
+import type { Game, OpenedSet } from "@common/core/mj.game";
 import { GameState, Position } from "@common/core/mj.game";
 import type { TileId } from "@common/core/mj.tile-core";
 import { TileCore } from "@common/core/mj.tile-core";
@@ -56,8 +56,8 @@ export const useMjStore = defineStore("mj", () => {
   const canKan = ref<boolean>(false);
   const canRon = ref<boolean>(false);
 
-  const players = ref<Player[]>([]);
-  const selectedTile = ref(TileCore.voidTile.id);
+  const selectedList = ref<TileId[]>([]);
+  const allowMultiSelect = ref<boolean>(false);
 
   const wallBottom = ref<TileId[]>([]);
   const wallRight = ref<TileId[]>([]);
@@ -186,7 +186,8 @@ export const useMjStore = defineStore("mj", () => {
       canKan.value = TileCore.canGang(hand, g.latestTile);
       canRon.value = TileCore.canHu(hand, g.latestTile);
     } else if (g.state === GameState.WaitingAction) {
-      canKan.value = TileCore.canGang(hand, g.latestTile);
+      // canKan.value = TileCore.canGang(hand, g.latestTile);
+
       canRon.value = TileCore.canHu(hand, g.latestTile);
     }
   }
@@ -202,8 +203,33 @@ export const useMjStore = defineStore("mj", () => {
     canRon.value = false;
   }
 
+  function selectTile(tile: TileId) {
+    const index = selectedList.value.indexOf(tile);
+    if (allowMultiSelect.value === false) {
+      if (index === -1) {
+        selectedList.value = [tile];
+      } else {
+        clearSelected();
+      }
+    } else if (allowMultiSelect.value === true) {
+      //
+      if (index === -1) {
+        selectedList.value.push(tile);
+      } else {
+        selectedList.value.splice(index, 1);
+      }
+    }
+  }
+
   function clearSelected() {
-    selectedTile.value = TileCore.voidTile.id;
+    selectedList.value = [];
+  }
+
+  function showSelected(tile: TileId) {
+    if (selectedList.value.indexOf(tile) === -1) {
+      return false;
+    }
+    return true;
   }
 
   refreshAll();
@@ -242,9 +268,12 @@ export const useMjStore = defineStore("mj", () => {
     meldsTop,
     meldsLeft,
 
-    players,
     status,
-    selectedTile,
+
+    allowMultiSelect,
+    selectedList,
+    selectTile,
+    showSelected,
 
     IDtoName,
 
