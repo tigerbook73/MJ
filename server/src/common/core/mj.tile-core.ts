@@ -348,6 +348,18 @@ export class TileCore {
     return handTiles.filter((t) => TileCore.isSame(t, target)).length >= 3;
   }
 
+  static canAngang(handTiles: readonly TileId[]): boolean {
+    const handTileSet = new Map<TileId, number>();
+    for (const tile of handTiles) {
+      const count = handTileSet.get(tile) || 0;
+      if (count === 3) {
+        return true;
+      }
+      handTileSet.set(tile, count + 1);
+    }
+    return false;
+  }
+
   static canChi(handTiles: readonly TileId[], target: TileId): boolean {
     const filteredTiles = []; // tiles list that does not contain the latest tile and duplicate tiles
     let previousTile = TileCore.voidId;
