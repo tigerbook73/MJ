@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row wrap justify-start items-end content-start area-player">
     <comp-tile v-for="(tile, index) in userMj.pBottomDiscardCards" :key="index" :type="tile" size="small"></comp-tile>
   </div>
 </template>
