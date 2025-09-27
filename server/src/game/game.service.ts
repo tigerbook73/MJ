@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ActionResult, Game, GameState, Player } from "src/common/core/mj.game";
-import { TileCore, type TileId } from "src/common/core/mj.tile-core";
+import {
+  ActionType,
+  TileCore,
+  type TileId,
+} from "src/common/core/mj.tile-core";
 import { UserType } from "src/common/models/common.types";
 import { RoomModel } from "src/common/models/room.model";
 
@@ -150,6 +154,11 @@ export class GameService {
       const tiles = [...currentPlayer.handTiles, currentPlayer.picked].sort(
         (a, b) => a - b,
       );
+      if (TileCore.canHu(tiles)) {
+        game.zimo();
+        return true;
+      }
+
       const toDrop = TileCore.decideDiscard(tiles);
       if (toDrop === null) {
         game.zimo();
@@ -160,27 +169,55 @@ export class GameService {
     }
 
     /**
-     * if state === GameState.WaitingPass, if the next queued player is robot, pass
+     * if state === GameState.WaitingPass, find the right actions for robots
      */
     if (game.state === GameState.WaitingPass) {
-      const firstWatingAction = game.queuedActions.find(
-        (action) => action.status == ActionResult.Waiting,
+      const candidateRobots = new Set(
+        game.queuedActions
+          .filter(
+            (action) =>
+              room.findPlayerByPosition(action.player.position)?.type ===
+              UserType.Bot,
+          )
+          .map((action) => action.player),
       );
-      if (!firstWatingAction) {
-        return false;
+
+      let someActions = false;
+      for (const robot of candidateRobots) {
+        // find allowed actions for robot
+        const allowedActions = game.queuedActions
+          .filter(
+            (action) =>
+              action.player === robot && action.type !== ActionType.Pass,
+          )
+          .map((action) => action.type);
+
+        // skip if no allowed actions
+        if (allowedActions.length === 0) {
+          continue;
+        }
+
+        const action = TileCore.decideAction(
+          robot.handTiles,
+          game.latestTile,
+          allowedActions,
+        );
+        if (action?.action === ActionType.Peng) {
+          game.peng(robot, action.tiles as [TileId, TileId]);
+          someActions = true;
+        } else if (action?.action === ActionType.Chi) {
+          game.chi(action.tiles as [TileId, TileId]);
+          someActions = true;
+        } else if (action?.action === ActionType.Hu) {
+          game.hu(robot);
+          someActions = true;
+        } else {
+          game.pass(robot);
+          someActions = true;
+        }
       }
 
-      const firstWaitingPlayer = firstWatingAction.player;
-      const firstWaitingPlayerModel = room.findPlayerByPosition(
-        firstWaitingPlayer.position,
-      );
-      if (!firstWaitingPlayerModel) {
-        throw new Error("First waiting player model not found");
-      }
-      if (firstWaitingPlayerModel.type === UserType.Bot) {
-        game.pass(firstWaitingPlayer);
-        return true;
-      }
+      return someActions;
     }
     return false;
   }
