@@ -1,5 +1,3 @@
-# Steps
-
 - 初始发牌
 
   - 玩家位置  done
@@ -13,27 +11,32 @@
 
 - 玩家打牌
   - 判断当前是自己  done  19/09
-    - added canChi,canPon,canKan,canRon status variable in mjStore
-  - 选择/打/  done
+    - added canChi,canPon,canKan,canRon variable
+    - 选择/打/  done
 
 - 玩家PASS  done  22/09
 - 玩家按钮显示/隐藏 done 22/09
   - need add chi pon kan ron button done 22/09
   - corresponding function  WIP 25/09 partially done
+    - done 27/09
 
 - 玩家action
-  - button created, function wip
+  - button & function done 27/09
   - 吃 按钮
     - 多牌选择模式  done  25/09
     - 手牌剔除  done 25/09
     - discard 剔除  done 25/09
     - 加入melds done 25/09
 
-  - 玩家碰
-  - 玩家杠
+  - 玩家碰  done 27/09
+  - 玩家杠  done 27/09
+  - 玩家荣和  done 27/09
   - 玩家暗杠
   - 玩家自摸
-  - 别家放铳
+
+- 界面
+  - 当前玩家highlight done  27/09
+  - 玩家荣和显示
 
 - bug/need refine
   - tool bar affected game page height, need adjust
@@ -43,4 +46,6 @@
 
   - angang need to filter hand
   - status of allowMultiSelect need to be updated
+    - fixed 27/09
   - after chi pon kan there is bug to discard.
+    - fixed 27/09

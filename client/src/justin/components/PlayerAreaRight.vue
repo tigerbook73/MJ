@@ -1,5 +1,5 @@
 <template>
-  <div class="column flex-center area-player bg-green-0'">
+  <div :class="['column flex-center area-player', color]">
     <div class="row reverse-wrap flex-center w-5">
       <comp-tile
         v-for="(tile, index) in mjStore.handTileRight"
@@ -21,6 +21,12 @@ defineOptions({
 });
 import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
+import { computed } from "vue";
+import { findDirectionForPostiion } from "../common/common";
+
+const color = computed(() =>
+  findDirectionForPostiion(mjStore.myPos, 1) === mjStore.game?.current?.position ? "bg-green-5" : "bg-green-0",
+);
 
 const mjStore = useMjStore();
 </script>
