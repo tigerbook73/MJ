@@ -3,7 +3,7 @@
     <comp-tile
       v-for="(tile, index) in mjStore.discardRight"
       :key="index"
-      :type="mjStore.IDtoName(tile)"
+      :type="IDtoName(tile)"
       position="right"
       size="small"
     ></comp-tile>
@@ -17,6 +17,7 @@ defineOptions({
 
 import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
+import { IDtoName } from "../common/common";
 
 const mjStore = useMjStore();
 </script>

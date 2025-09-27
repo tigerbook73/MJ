@@ -3,7 +3,7 @@
     <comp-tile
       v-for="(tile, index) in mjStore.discardTop"
       :key="index"
-      :type="mjStore.IDtoName(tile)"
+      :type="IDtoName(tile)"
       position="top"
       size="small"
     ></comp-tile>
@@ -15,9 +15,8 @@ defineOptions({
   name: "PlayerDiscardTop",
 });
 
-import CompTile from "src/justin/components/CompTile.vue";
-
+import { IDtoName } from "../common/common";
 import { useMjStore } from "src/justin/stores/mj-store";
-
+import CompTile from "./CompTile.vue";
 const mjStore = useMjStore();
 </script>

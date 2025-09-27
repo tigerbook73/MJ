@@ -10,13 +10,13 @@
 import { watch } from "vue";
 import { clientApi } from "src/client/client-api";
 import type { GameEvent } from "@common/protocols/apis.models";
-import { useMjStore, AppState } from "src/justin/stores/mj-store";
+import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
+import { AppState } from "../common/common";
 defineOptions({
   name: "MainLayout",
 });
-
 const mjStore = useMjStore();
 const route = useRoute();
 const router = useRouter();
