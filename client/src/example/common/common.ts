@@ -102,9 +102,7 @@ export class CommonUtil {
       if (!player) continue;
 
       for (const openedSet of player.openedSets) {
-        for (const tile of openedSet.tiles) {
-          openedTiles.add(tile);
-        }
+        openedTiles.add(openedSet.target);
       }
     }
 
