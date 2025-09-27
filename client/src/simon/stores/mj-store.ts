@@ -57,6 +57,26 @@ export function mapPosition(myPosition: number, direction: Direction): Position 
   }
 }
 
+export function updateDiscards(game: Game) {
+  if (!game?.players || !game?.discards) return;
+
+  // 收集所有 target（每张牌 id 全局唯一）
+  const openedIds = new Set<TileId>();
+  for (const p of game.players) {
+    if (!p?.openedSets) continue;
+    for (const s of p.openedSets) {
+      if (s?.target != null) openedIds.add(s.target);
+    }
+  }
+  if (openedIds.size === 0) return;
+
+  // 逐家过滤弃牌：命中 target 的直接移除
+  for (const d of game.discards) {
+    if (!d?.tiles) continue;
+    d.tiles = d.tiles.filter((id: TileId) => !openedIds.has(id));
+  }
+}
+
 export const useMjStore = defineStore("mj", () => {
   // game info
   const currentGame = ref<Game | null>(null);

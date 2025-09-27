@@ -1,50 +1,19 @@
-import { defineStore } from "pinia";
-import type { Game, OpenedSet } from "@common/core/mj.game";
-import { GameState, Position } from "@common/core/mj.game";
-import type { TileId } from "@common/core/mj.tile-core";
-import { TileCore } from "@common/core/mj.tile-core";
-import type { RoomModel } from "@common/models/room.model";
 import { ref } from "vue";
-
-export enum AppState {
-  Unconnected = "UNCONNECTED",
-  UnSignedIn = "UNSIGNED_IN",
-  InLobby = "IN_LOBBY",
-  InGame = "IN_GAME",
-}
-
-export const PlayerPosRotation = [
-  [0, 3, 2, 1],
-  [1, 0, 3, 2],
-  [2, 1, 0, 3],
-  [3, 2, 1, 0],
-];
-// [0, 3, 2, 1],
-// [1, 0, 3, 2],
-// [2, 1, 0, 3],
-// [3, 2, 1, 0],
-
-/*
-server
-    西
-  南  北
-    东
-actual
-    西
-  北  南
-    东
-
-    逆时针 server东北西南，bot right top left
-    server enum east0 south1 west2 north3
-
-*/
+import { TileCore } from "@common/core/mj.tile-core";
+import { AppState } from "src/example/stores/example-store";
+import { defineStore } from "pinia";
+import { GameState, Position } from "@common/core/mj.game";
+import { findDirectionForPostiion } from "/root/code/MJ/client/src/justin/common/common";
+import type { RoomModel } from "@common/models/room.model";
+import type { TileId } from "@common/core/mj.tile-core";
+import type { Game, OpenedSet } from "@common/core/mj.game";
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
+
   const myPos = ref<Position>(Position.None);
-  const isMyTurn = ref<boolean>(false);
 
   const open = ref<boolean>(false);
   const status = ref<boolean>(false);
@@ -55,6 +24,7 @@ export const useMjStore = defineStore("mj", () => {
   const canPon = ref<boolean>(false);
   const canKan = ref<boolean>(false);
   const canRon = ref<boolean>(false);
+  const isMyTurn = ref<boolean>(false);
 
   const selectedList = ref<TileId[]>([]);
   const allowMultiSelect = ref<boolean>(false);
@@ -102,13 +72,12 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   // signed in state
-  const signedIn = ref(false);
+  const signedIn = ref<boolean>(false);
   function setSignedIn(value: boolean) {
     signedIn.value = value;
 
     if (!value) {
       // reset other value
-      // user.value.password = "";
       roomList.value = [];
       room.value = null;
       myPos.value = Position.None;
@@ -118,13 +87,12 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   // connected state
-  const connected = ref(false);
+  const connected = ref<boolean>(false);
   function setConnected(value: boolean) {
     connected.value = value;
 
     // reset other value
     signedIn.value = false;
-    // user.value.password = "";
     roomList.value = [];
     room.value = null;
     myPos.value = Position.None;
@@ -137,22 +105,14 @@ export const useMjStore = defineStore("mj", () => {
     refreshAppState();
   }
 
-  function IDtoName(id: number) {
-    if (id == -1) {
-      return "";
-    }
-    return IDTileList[id];
-  }
-
   function refreshAll() {
     const pos = myPos.value;
     const g = game.value;
-    const rotation = PlayerPosRotation[myPos.value];
 
     if (!g || pos === Position.None) return;
 
-    for (let i = 0; i < rotation.length; i++) {
-      const gi = rotation[i];
+    for (let i = 0; i < 4; i++) {
+      const gi = findDirectionForPostiion(pos, i);
 
       wallList[i].value = g.walls?.[gi]?.tiles ?? [];
       handList[i].value = g.players?.[gi]?.handTiles ?? [];
@@ -194,6 +154,7 @@ export const useMjStore = defineStore("mj", () => {
 
   function checkMyTurn() {
     isMyTurn.value = canChi.value || canPon.value || canKan.value || canRon.value;
+    allowMultiSelect.value = canChi.value || canPon.value || canKan.value;
   }
 
   function setAllFalse() {
@@ -241,6 +202,7 @@ export const useMjStore = defineStore("mj", () => {
     roomList,
     open,
     myPos,
+    status,
     appState,
 
     wallTop,
@@ -268,14 +230,10 @@ export const useMjStore = defineStore("mj", () => {
     meldsTop,
     meldsLeft,
 
-    status,
-
     allowMultiSelect,
     selectedList,
     selectTile,
     showSelected,
-
-    IDtoName,
 
     clearSelected,
     isWinning,
@@ -294,142 +252,3 @@ export const useMjStore = defineStore("mj", () => {
     setGame,
   };
 });
-
-export const IDTileList: string[] = [
-  "m1",
-  "m1",
-  "m1",
-  "m1",
-  "m2",
-  "m2",
-  "m2",
-  "m2",
-  "m3",
-  "m3",
-  "m3",
-  "m3",
-  "m4",
-  "m4",
-  "m4",
-  "m4",
-  "m5",
-  "m5",
-  "m5",
-  "m5",
-  "m6",
-  "m6",
-  "m6",
-  "m6",
-  "m7",
-  "m7",
-  "m7",
-  "m7",
-  "m8",
-  "m8",
-  "m8",
-  "m8",
-  "m9",
-  "m9",
-  "m9",
-  "m9",
-  "p1",
-  "p1",
-  "p1",
-  "p1",
-  "p2",
-  "p2",
-  "p2",
-  "p2",
-  "p3",
-  "p3",
-  "p3",
-  "p3",
-  "p4",
-  "p4",
-  "p4",
-  "p4",
-  "p5",
-  "p5",
-  "p5",
-  "p5",
-  "p6",
-  "p6",
-  "p6",
-  "p6",
-  "p7",
-  "p7",
-  "p7",
-  "p7",
-  "p8",
-  "p8",
-  "p8",
-  "p8",
-  "p9",
-  "p9",
-  "p9",
-  "p9",
-  "s1",
-  "s1",
-  "s1",
-  "s1",
-  "s2",
-  "s2",
-  "s2",
-  "s2",
-  "s3",
-  "s3",
-  "s3",
-  "s3",
-  "s4",
-  "s4",
-  "s4",
-  "s4",
-  "s5",
-  "s5",
-  "s5",
-  "s5",
-  "s6",
-  "s6",
-  "s6",
-  "s6",
-  "s7",
-  "s7",
-  "s7",
-  "s7",
-  "s8",
-  "s8",
-  "s8",
-  "s8",
-  "s9",
-  "s9",
-  "s9",
-  "s9",
-  "z1",
-  "z1",
-  "z1",
-  "z1",
-  "z2",
-  "z2",
-  "z2",
-  "z2",
-  "z3",
-  "z3",
-  "z3",
-  "z3",
-  "z4",
-  "z4",
-  "z4",
-  "z4",
-  "z5",
-  "z5",
-  "z5",
-  "z5",
-  "z6",
-  "z6",
-  "z6",
-  "z6",
-  "z7",
-  "z7",
-  "z7",
-  "z7",
-];

@@ -1,10 +1,10 @@
 <template>
-  <div :class="['column flex-center area-player', 'bg-green-0']">
+  <div :class="['column flex-center area-player', color]">
     <div class="row flex-center">
       <comp-tile
         v-for="(tile, index) in mjStore.handTileBottom"
         :key="index"
-        :type="mjStore.IDtoName(tile)"
+        :type="IDtoName(tile)"
         :selected="mjStore.showSelected(tile)"
         @click="onClick(tile)"
         position="bottom"
@@ -12,7 +12,7 @@
       />
       <comp-tile type="" />
       <comp-tile
-        :type="mjStore.IDtoName(mjStore.newTileBottom)"
+        :type="IDtoName(mjStore.newTileBottom)"
         :selected="mjStore.showSelected(mjStore.newTileBottom)"
         @click="onClick(mjStore.newTileBottom)"
         position="bottom"
@@ -25,7 +25,7 @@
         <comp-tile
           v-for="(tile, colIndex) in row.tiles"
           :key="`${rowIndex}-${colIndex}`"
-          :type="mjStore.IDtoName(tile)"
+          :type="IDtoName(tile)"
           position="bottom"
           size="large"
         />
@@ -40,8 +40,14 @@ defineOptions({ name: "PlayerAreaBottom" });
 import CompTile from "src/justin/components/CompTile.vue";
 import type { TileId } from "@common/core/mj.tile-core";
 import { useMjStore } from "src/justin/stores/mj-store";
+import { computed } from "vue";
+import { findDirectionForPostiion, IDtoName } from "../common/common";
 
 const mjStore = useMjStore();
+
+const color = computed(() =>
+  findDirectionForPostiion(mjStore.myPos, 0) === mjStore.game?.current?.position ? "bg-green-5" : "bg-green-0",
+);
 
 function onClick(tile: TileId) {
   //

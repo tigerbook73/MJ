@@ -29,9 +29,10 @@ import { clientApi } from "src/client/client-api";
 
 import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
-import { useMjStore } from "src/simon/stores/mj-store";
+import { updateDiscards, useMjStore } from "src/simon/stores/mj-store";
 import type { GameEvent } from "@common/protocols/apis.models";
 import { userStore } from "../stores/user-store";
+
 
 const router = useRouter();
 const useAppStore = appStore();
@@ -86,11 +87,13 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   const game = clientApi.findMyGame(parsed);
   if (game) {
     useGameStore.setCurrentGame(game);
+    updateDiscards(game);
     useGameStore.refresh();
   } else {
     useGameStore.setCurrentGame(null);
   }
 });
+
 
 watch(
   () => useAppStore.appState,
