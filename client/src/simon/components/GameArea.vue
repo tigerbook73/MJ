@@ -37,8 +37,6 @@ import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
 import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
-import type { Game } from "@common/core/mj.game";
-import type { GameEvent } from "@common/protocols/apis.models";
 import { setGame, mjGame } from "src/simon/core/mjGame";
 import { useMjStore } from "src/simon/stores/mj-store";
 
@@ -205,20 +203,4 @@ async function Zimo() {
   }
 }
 
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  event = clientApi.parseEvent(event);
-  const game = clientApi.findMyGame(event);
-
-  if (!game) {
-    console.warn("No game found in event.");
-    return;
-  }
-
-  handleGameUpdate(game);
-});
-
-function handleGameUpdate(game: Game) {
-  setGame(game);
-  mjStore.refresh();
-}
 </script>
