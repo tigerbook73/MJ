@@ -5,6 +5,7 @@ import type { TileId } from "@common/core/mj.tile-core";
 import { TileCore } from "@common/core/mj.tile-core";
 import type { RoomModel } from "@common/models/room.model";
 import { ref } from "vue";
+import { findDirectionForPostiion, IDTileList } from "/root/code/MJ/client/src/justin/common/common";
 
 export enum AppState {
   Unconnected = "UNCONNECTED",
@@ -13,12 +14,6 @@ export enum AppState {
   InGame = "IN_GAME",
 }
 
-export const PlayerPosRotation = [
-  [0, 3, 2, 1],
-  [1, 0, 3, 2],
-  [2, 1, 0, 3],
-  [3, 2, 1, 0],
-];
 // [0, 3, 2, 1],
 // [1, 0, 3, 2],
 // [2, 1, 0, 3],
@@ -147,12 +142,11 @@ export const useMjStore = defineStore("mj", () => {
   function refreshAll() {
     const pos = myPos.value;
     const g = game.value;
-    const rotation = PlayerPosRotation[myPos.value];
 
     if (!g || pos === Position.None) return;
 
-    for (let i = 0; i < rotation.length; i++) {
-      const gi = rotation[i];
+    for (let i = 0; i < 4; i++) {
+      const gi = findDirectionForPostiion(pos, i);
 
       wallList[i].value = g.walls?.[gi]?.tiles ?? [];
       handList[i].value = g.players?.[gi]?.handTiles ?? [];
@@ -194,6 +188,7 @@ export const useMjStore = defineStore("mj", () => {
 
   function checkMyTurn() {
     isMyTurn.value = canChi.value || canPon.value || canKan.value || canRon.value;
+    allowMultiSelect.value = canChi.value || canPon.value || canKan.value;
   }
 
   function setAllFalse() {
@@ -241,6 +236,7 @@ export const useMjStore = defineStore("mj", () => {
     roomList,
     open,
     myPos,
+    status,
     appState,
 
     wallTop,
@@ -268,8 +264,6 @@ export const useMjStore = defineStore("mj", () => {
     meldsTop,
     meldsLeft,
 
-    status,
-
     allowMultiSelect,
     selectedList,
     selectTile,
@@ -294,142 +288,3 @@ export const useMjStore = defineStore("mj", () => {
     setGame,
   };
 });
-
-export const IDTileList: string[] = [
-  "m1",
-  "m1",
-  "m1",
-  "m1",
-  "m2",
-  "m2",
-  "m2",
-  "m2",
-  "m3",
-  "m3",
-  "m3",
-  "m3",
-  "m4",
-  "m4",
-  "m4",
-  "m4",
-  "m5",
-  "m5",
-  "m5",
-  "m5",
-  "m6",
-  "m6",
-  "m6",
-  "m6",
-  "m7",
-  "m7",
-  "m7",
-  "m7",
-  "m8",
-  "m8",
-  "m8",
-  "m8",
-  "m9",
-  "m9",
-  "m9",
-  "m9",
-  "p1",
-  "p1",
-  "p1",
-  "p1",
-  "p2",
-  "p2",
-  "p2",
-  "p2",
-  "p3",
-  "p3",
-  "p3",
-  "p3",
-  "p4",
-  "p4",
-  "p4",
-  "p4",
-  "p5",
-  "p5",
-  "p5",
-  "p5",
-  "p6",
-  "p6",
-  "p6",
-  "p6",
-  "p7",
-  "p7",
-  "p7",
-  "p7",
-  "p8",
-  "p8",
-  "p8",
-  "p8",
-  "p9",
-  "p9",
-  "p9",
-  "p9",
-  "s1",
-  "s1",
-  "s1",
-  "s1",
-  "s2",
-  "s2",
-  "s2",
-  "s2",
-  "s3",
-  "s3",
-  "s3",
-  "s3",
-  "s4",
-  "s4",
-  "s4",
-  "s4",
-  "s5",
-  "s5",
-  "s5",
-  "s5",
-  "s6",
-  "s6",
-  "s6",
-  "s6",
-  "s7",
-  "s7",
-  "s7",
-  "s7",
-  "s8",
-  "s8",
-  "s8",
-  "s8",
-  "s9",
-  "s9",
-  "s9",
-  "s9",
-  "z1",
-  "z1",
-  "z1",
-  "z1",
-  "z2",
-  "z2",
-  "z2",
-  "z2",
-  "z3",
-  "z3",
-  "z3",
-  "z3",
-  "z4",
-  "z4",
-  "z4",
-  "z4",
-  "z5",
-  "z5",
-  "z5",
-  "z5",
-  "z6",
-  "z6",
-  "z6",
-  "z6",
-  "z7",
-  "z7",
-  "z7",
-  "z7",
-];

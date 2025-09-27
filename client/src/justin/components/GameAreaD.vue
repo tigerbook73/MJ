@@ -22,6 +22,7 @@ function discard() {
   try {
     if (mjStore.selectedList.length === 1) {
       clientApi.actionDrop(mjStore.selectedList[0]);
+      mjStore.clearSelected();
     }
   } catch (e) {
     $q.notify({ message: "Discard tile failed", color: "negative", icon: "warning" });
@@ -32,6 +33,7 @@ function discard() {
 function pass() {
   try {
     clientApi.actionPass();
+    mjStore.clearSelected();
   } catch (e) {
     $q.notify({ message: "pass failed", color: "negative", icon: "warning" });
     console.error("pass failed", e);

@@ -28,15 +28,39 @@ function chi() {
     }
   }
 }
+
 function pon() {
   //
-  mjStore.allowMultiSelect = true;
+  if (mjStore.selectedList.length === 2) {
+    try {
+      clientApi.actionPeng([mjStore.selectedList[0], mjStore.selectedList[1]]);
+    } catch (e) {
+      $q.notify({ message: "Action Pon failed", color: "negative", icon: "warning" });
+      console.error("Action Pon failed", e);
+    }
+  }
 }
+
 function kan() {
   //
+  if (mjStore.selectedList.length === 3) {
+    try {
+      clientApi.actionGang([mjStore.selectedList[0], mjStore.selectedList[1], mjStore.selectedList[2]]);
+    } catch (e) {
+      $q.notify({ message: "Action Kan failed", color: "negative", icon: "warning" });
+      console.error("Action Kan failed", e);
+    }
+  }
 }
+
 function ron() {
   //
+  try {
+    clientApi.actionHu();
+  } catch (e) {
+    $q.notify({ message: "Action Ron failed", color: "negative", icon: "warning" });
+    console.error("Aciton Ron failed", e);
+  }
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['column flex-center area-player', 'bg-green-0']">
+  <div :class="['column flex-center area-player', color]">
     <div class="row flex-center w-5">
       <comp-tile
         v-for="(tile, index) in mjStore.handTileLeft"
@@ -16,19 +16,17 @@
 </template>
 
 <script setup lang="ts">
-import { useMjStore } from "src/justin/stores/mj-store";
-import CompTile from "./CompTile.vue";
-
 defineOptions({
   name: "PlayerAreaLeft",
 });
 
-const mjStore = useMjStore();
-</script>
+import { useMjStore } from "src/justin/stores/mj-store";
+import CompTile from "./CompTile.vue";
+import { computed } from "vue";
+import { findDirectionForPostiion } from "../common/common";
 
-<style scoped>
-.movearea {
-  transition: 0.3s position ease;
-  transition: 0.3s top ease;
-}
-</style>
+const mjStore = useMjStore();
+const color = computed(() =>
+  findDirectionForPostiion(mjStore.myPos, 3) === mjStore.game?.current?.position ? "bg-green-5" : "bg-green-0",
+);
+</script>
