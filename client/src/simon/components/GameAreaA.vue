@@ -1,6 +1,6 @@
 <template>
   <div>
-    <q-toggle v-model="mjStore.open" label="明牌" />
+    <q-toggle v-model="mjStore.open" size="sm" class="q-mt-xs" label="明牌" />
     <q-btn label="Start" flat @click="start" />
     <q-btn label="Reset" flat @click="reset" />
   </div>

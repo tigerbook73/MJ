@@ -213,20 +213,29 @@ const canZimo = computed(() => {
   };
 });
 
+const maxSelectable = computed(() => {
+  // 别人的牌 → Chi/Peng/Gang
+  if (state.value === GameState.WaitingPass) {
+    if (canGang.value.show) return 3;   // 碰杠：手里要选 3 张
+    return 2;                           // Chi/Peng：选 2 张
+  }
+  // 轮到自己出牌（或自摸、暗杠等）时，你也可以按需要调整
+  return 2;
+});
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   const now = Date.now();
   if (now - lastClickTime < 500) {
-    dropTile();
-    lastClickTime = 0; // Reset last click time after double click
+    dropTile();           // 双击清选（模板里还有 @dblclick 会真正丢牌）
+    lastClickTime = 0;
     return;
   }
   lastClickTime = now;
+
   const idx = selectedTiles.value.indexOf(tile.id);
   if (idx !== -1) {
-    // if the tile is already selected, remove it
     selectedTiles.value.splice(idx, 1);
   } else {
-    if (selectedTiles.value.length < 2) {
+    if (selectedTiles.value.length < maxSelectable.value) {
       selectedTiles.value.push(tile.id);
     } else {
       selectedTiles.value.shift();
@@ -234,6 +243,7 @@ function onClick(tile: (typeof userMj.pBottomCards)[0]) {
     }
   }
 }
+
 
 const emits = defineEmits<{
   (e: "drop-tile", payload: TileId): void;
