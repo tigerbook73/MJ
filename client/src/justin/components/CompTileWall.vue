@@ -5,7 +5,7 @@
       <comp-tile
         v-for="(tile, i) in needReverse ? topRow.slice().reverse() : topRow"
         :key="i"
-        :type="mjStore.IDtoName(tile)"
+        :type="IDtoName(tile)"
         :position="props.position"
         back
       />
@@ -15,7 +15,7 @@
       <comp-tile
         v-for="(tile, i) in needReverse ? bottomRow.slice().reverse() : bottomRow"
         :key="i"
-        :type="mjStore.IDtoName(tile)"
+        :type="IDtoName(tile)"
         :position="props.position"
         back
       />
@@ -31,6 +31,7 @@ defineOptions({
 import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
+import { IDtoName } from "../common/common";
 
 interface Props {
   position: "top" | "left" | "right" | "bottom";

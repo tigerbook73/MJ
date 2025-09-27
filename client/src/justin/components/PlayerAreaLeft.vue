@@ -4,13 +4,13 @@
       <comp-tile
         v-for="(tile, index) in mjStore.handTileLeft"
         :key="index"
-        :type="mjStore.IDtoName(tile)"
+        :type="IDtoName(tile)"
         position="left"
         size="large"
         :back="true"
       ></comp-tile>
       <comp-tile type="" position="left"></comp-tile>
-      <comp-tile :type="mjStore.IDtoName(mjStore.newTileLeft)" position="left" size="large" :back="true"></comp-tile>
+      <comp-tile :type="IDtoName(mjStore.newTileLeft)" position="left" size="large" :back="true"></comp-tile>
     </div>
   </div>
 </template>
@@ -23,7 +23,7 @@ defineOptions({
 import { useMjStore } from "src/justin/stores/mj-store";
 import CompTile from "./CompTile.vue";
 import { computed } from "vue";
-import { findDirectionForPostiion } from "../common/common";
+import { findDirectionForPostiion, IDtoName } from "../common/common";
 
 const mjStore = useMjStore();
 const color = computed(() =>

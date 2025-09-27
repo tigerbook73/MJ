@@ -7,8 +7,22 @@ export const PlayerPosRotation = [
   [Position.North, Position.West, Position.South, Position.East],
 ];
 
+export enum AppState {
+  Unconnected = "UNCONNECTED",
+  UnSignedIn = "UNSIGNED_IN",
+  InLobby = "IN_LOBBY",
+  InGame = "IN_GAME",
+}
+
 export function findDirectionForPostiion(myPostion: Position, direction: number) {
   return PlayerPosRotation[myPostion][direction];
+}
+
+export function IDtoName(id: number) {
+  if (id == -1) {
+    return "";
+  }
+  return IDTileList[id];
 }
 
 export const IDTileList: string[] = [

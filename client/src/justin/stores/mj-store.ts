@@ -1,45 +1,19 @@
-import { defineStore } from "pinia";
-import type { Game, OpenedSet } from "@common/core/mj.game";
-import { GameState, Position } from "@common/core/mj.game";
-import type { TileId } from "@common/core/mj.tile-core";
-import { TileCore } from "@common/core/mj.tile-core";
-import type { RoomModel } from "@common/models/room.model";
 import { ref } from "vue";
-import { findDirectionForPostiion, IDTileList } from "/root/code/MJ/client/src/justin/common/common";
-
-export enum AppState {
-  Unconnected = "UNCONNECTED",
-  UnSignedIn = "UNSIGNED_IN",
-  InLobby = "IN_LOBBY",
-  InGame = "IN_GAME",
-}
-
-// [0, 3, 2, 1],
-// [1, 0, 3, 2],
-// [2, 1, 0, 3],
-// [3, 2, 1, 0],
-
-/*
-server
-    西
-  南  北
-    东
-actual
-    西
-  北  南
-    东
-
-    逆时针 server东北西南，bot right top left
-    server enum east0 south1 west2 north3
-
-*/
+import { TileCore } from "@common/core/mj.tile-core";
+import { AppState } from "src/example/stores/example-store";
+import { defineStore } from "pinia";
+import { GameState, Position } from "@common/core/mj.game";
+import { findDirectionForPostiion } from "/root/code/MJ/client/src/justin/common/common";
+import type { RoomModel } from "@common/models/room.model";
+import type { TileId } from "@common/core/mj.tile-core";
+import type { Game, OpenedSet } from "@common/core/mj.game";
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
+
   const myPos = ref<Position>(Position.None);
-  const isMyTurn = ref<boolean>(false);
 
   const open = ref<boolean>(false);
   const status = ref<boolean>(false);
@@ -50,6 +24,7 @@ export const useMjStore = defineStore("mj", () => {
   const canPon = ref<boolean>(false);
   const canKan = ref<boolean>(false);
   const canRon = ref<boolean>(false);
+  const isMyTurn = ref<boolean>(false);
 
   const selectedList = ref<TileId[]>([]);
   const allowMultiSelect = ref<boolean>(false);
@@ -97,13 +72,12 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   // signed in state
-  const signedIn = ref(false);
+  const signedIn = ref<boolean>(false);
   function setSignedIn(value: boolean) {
     signedIn.value = value;
 
     if (!value) {
       // reset other value
-      // user.value.password = "";
       roomList.value = [];
       room.value = null;
       myPos.value = Position.None;
@@ -113,13 +87,12 @@ export const useMjStore = defineStore("mj", () => {
   }
 
   // connected state
-  const connected = ref(false);
+  const connected = ref<boolean>(false);
   function setConnected(value: boolean) {
     connected.value = value;
 
     // reset other value
     signedIn.value = false;
-    // user.value.password = "";
     roomList.value = [];
     room.value = null;
     myPos.value = Position.None;
@@ -130,13 +103,6 @@ export const useMjStore = defineStore("mj", () => {
   function setGame(value: Game | null) {
     game.value = value;
     refreshAppState();
-  }
-
-  function IDtoName(id: number) {
-    if (id == -1) {
-      return "";
-    }
-    return IDTileList[id];
   }
 
   function refreshAll() {
@@ -268,8 +234,6 @@ export const useMjStore = defineStore("mj", () => {
     selectedList,
     selectTile,
     showSelected,
-
-    IDtoName,
 
     clearSelected,
     isWinning,
