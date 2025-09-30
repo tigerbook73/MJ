@@ -151,12 +151,17 @@ export class GameService {
       game.state === GameState.WaitingAction &&
       currentPlayerModel.type === UserType.Bot
     ) {
-      const tiles = [...currentPlayer.handTiles, currentPlayer.picked].sort(
-        (a, b) => a - b,
-      );
-      if (TileCore.canHu(tiles)) {
-        game.zimo();
-        return true;
+      const tiles = [...currentPlayer.handTiles];
+      const isPicked = currentPlayer.picked !== TileCore.voidId;
+      if (isPicked) {
+        tiles.push(currentPlayer.picked);
+      }
+      tiles.sort((a, b) => a - b);
+      if (!isPicked) {
+        if (TileCore.canHu(tiles)) {
+          game.zimo();
+          return true;
+        }
       }
 
       const toDrop = TileCore.decideDiscard(tiles);
