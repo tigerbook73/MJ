@@ -7,6 +7,7 @@ import { findDirectionForPostiion } from "src/justin/common/common";
 import type { RoomModel } from "@common/models/room.model";
 import type { TileId } from "@common/core/mj.tile-core";
 import type { Game, OpenedSet } from "@common/core/mj.game";
+import { bestDiscards, pickOneIdOfKind } from "../tenhou/alg";
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
@@ -26,6 +27,9 @@ export const useMjStore = defineStore("mj", () => {
   const canTsumo = ref<boolean>(false);
   const canAnKan = ref<boolean>(false);
   const isMyTurn = ref<boolean>(false);
+
+  const bestDiscardsList = ref<TileId[]>([]);
+  const idsToDiscard = ref<TileId[]>([]);
 
   const selectedList = ref<TileId[]>([]);
   const allowMultiSelect = ref<boolean>(false);
@@ -123,6 +127,11 @@ export const useMjStore = defineStore("mj", () => {
       newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
       meldsList[i].value = g.players?.[gi]?.openedSets ?? [];
     }
+
+    bestDiscardsList.value = bestDiscards(handTileBottom.value, newTileBottom.value);
+    idsToDiscard.value = bestDiscardsList.value
+      .map((k) => pickOneIdOfKind(k, handTileBottom.value, newTileBottom.value))
+      .filter((x): x is number => x !== null);
 
     checkMyHand();
     checkMyTurn();
@@ -233,6 +242,9 @@ export const useMjStore = defineStore("mj", () => {
     meldsLeft,
 
     meldsTiles,
+
+    bestDiscardsList,
+    idsToDiscard,
 
     allowMultiSelect,
     selectedList,
