@@ -16,8 +16,7 @@ export const useMjStore = defineStore("mj", () => {
   const myPos = ref<Position>(Position.None);
 
   const open = ref<boolean>(false);
-  const status = ref<boolean>(false);
-  const isWinning = ref<boolean>(false);
+  const state = ref<GameState>(GameState.Init);
   const appState = ref<AppState>(AppState.Unconnected);
 
   const canChi = ref<boolean>(false);
@@ -52,6 +51,7 @@ export const useMjStore = defineStore("mj", () => {
   const meldsTop = ref<OpenedSet[]>([]);
   const meldsLeft = ref<OpenedSet[]>([]);
   const meldsList = [meldsBottom, meldsRight, meldsTop, meldsLeft];
+  const meldsTiles = ref<TileId[]>([]);
 
   const newTileBottom = ref<TileId>(TileCore.voidId);
   const newTileRight = ref<TileId>(TileCore.voidId);
@@ -202,7 +202,7 @@ export const useMjStore = defineStore("mj", () => {
     roomList,
     open,
     myPos,
-    status,
+    state,
     appState,
 
     wallTop,
@@ -230,13 +230,14 @@ export const useMjStore = defineStore("mj", () => {
     meldsTop,
     meldsLeft,
 
+    meldsTiles,
+
     allowMultiSelect,
     selectedList,
     selectTile,
     showSelected,
 
     clearSelected,
-    isWinning,
 
     isMyTurn,
     canChi,

@@ -13,7 +13,7 @@ import type { GameEvent } from "@common/protocols/apis.models";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
-import { AppState } from "../common/common";
+import { AppState, updateDiscards } from "../common/common";
 defineOptions({
   name: "MainLayout",
 });
@@ -50,12 +50,14 @@ clientApi.gameSocket.onDisconnect(() => {
 
 clientApi.gameSocket.onReceive((event: GameEvent) => {
   event = clientApi.parseEvent(event);
+  const game = clientApi.findMyGame(event);
 
   mjStore.roomList = event.data.rooms;
   mjStore.room = clientApi.findMyRoom(event);
   mjStore.myPos = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
-  mjStore.setGame(clientApi.findMyGame(event));
-  // mjStore.refresh();
+
+  updateDiscards(game);
+  mjStore.setGame(game);
   mjStore.refreshAll();
 });
 </script>

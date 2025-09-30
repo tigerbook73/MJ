@@ -1,4 +1,6 @@
+import type { Game } from "src/common/core/mj.game";
 import { Position } from "src/common/core/mj.game";
+import type { TileId } from "@common/core/mj.tile-core";
 
 export const PlayerPosRotation = [
   [Position.East, Position.North, Position.West, Position.South],
@@ -23,6 +25,24 @@ export function IDtoName(id: number) {
     return "";
   }
   return IDTileList[id];
+}
+
+export function updateDiscards(game: Game | null) {
+  if (!game) return;
+
+  const meldsTiles = new Set<TileId>();
+
+  for (const player of game.players) {
+    if (!player) continue;
+
+    for (const openedSet of player.openedSets) {
+      meldsTiles.add(openedSet.target);
+    }
+  }
+
+  for (const discard of game.discards) {
+    discard.tiles = discard.tiles.filter((tile) => !meldsTiles.has(tile));
+  }
 }
 
 export const IDTileList: string[] = [

@@ -8,9 +8,25 @@
         position="left"
         size="large"
         :back="true"
-      ></comp-tile>
-      <comp-tile type="" position="left"></comp-tile>
-      <comp-tile :type="IDtoName(mjStore.newTileLeft)" position="left" size="large" :back="true"></comp-tile>
+      />
+      <comp-tile type="" position="left" />
+      <comp-tile :type="IDtoName(mjStore.newTileLeft)" position="left" size="large" :back="true" />
+      <div
+        class="row flex-center w-5"
+        v-for="(row, rowIndex) in mjStore.meldsLeft"
+        :key="rowIndex"
+        style="display: flex"
+      >
+        <comp-tile type="" position="left" />
+
+        <comp-tile
+          v-for="(tile, colIndex) in row.tiles"
+          :key="`${rowIndex}-${colIndex}`"
+          :type="IDtoName(tile)"
+          position="left"
+          size="large"
+        />
+      </div>
     </div>
   </div>
 </template>

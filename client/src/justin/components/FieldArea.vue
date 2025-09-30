@@ -8,8 +8,8 @@
 
     <div class="row h-18">
       <player-discard-left class="w-16 bg-grey-8"></player-discard-left>
-      <div class="w-18 column flex-center" :class="mjStore.isWinning ? 'bg-green-4' : 'bg-grey-6'">
-        <div class="flex-centre" style="font-size: 1000%" v-show="mjStore.isWinning">WIN</div>
+      <div class="w-18 column flex-center" :class="mjStore.state === GameState.End ? 'bg-green-4' : 'bg-grey-6'">
+        <div class="flex-centre" style="font-size: 1000%" v-show="mjStore.state === GameState.End">WIN</div>
       </div>
       <player-discard-right class="w-16 bg-grey-8"></player-discard-right>
     </div>
@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { GameState } from "src/common/core/mj.game";
 import PlayerDiscardBottom from "./PlayerDiscardBottom.vue";
 import PlayerDiscardLeft from "./PlayerDiscardLeft.vue";
 import PlayerDiscardRight from "./PlayerDiscardRight.vue";
