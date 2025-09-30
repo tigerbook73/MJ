@@ -25,8 +25,8 @@
   - 吃 按钮
     - 多牌选择模式  done  25/09
     - 手牌剔除  done 25/09
-    - discard 剔除  done 25/09
-    - 加入melds done 25/09
+    - discard 剔除  done 30/09
+    - 加入melds partially done 25/09
 
   - 玩家碰  done 27/09
   - 玩家杠  done 27/09

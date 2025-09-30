@@ -57,7 +57,6 @@ function ron() {
   //
   try {
     clientApi.actionHu();
-    mjStore.isWinning = true;
   } catch (e) {
     $q.notify({ message: "Action Ron failed", color: "negative", icon: "warning" });
     console.error("Aciton Ron failed", e);
