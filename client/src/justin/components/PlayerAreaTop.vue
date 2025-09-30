@@ -8,9 +8,25 @@
         position="top"
         size="large"
         :back="true"
-      ></comp-tile
-      ><comp-tile type="" position="top"></comp-tile>
-      <comp-tile :type="IDtoName(mjStore.newTileTop)" position="top" size="large" :back="true"></comp-tile>
+      />
+      <comp-tile type="" position="top" />
+      <comp-tile :type="IDtoName(mjStore.newTileTop)" position="top" size="large" :back="true" />
+      <div
+        class="row reverse flex-center"
+        v-for="(row, rowIndex) in mjStore.meldsTop"
+        :key="rowIndex"
+        style="display: flex"
+      >
+        <comp-tile type="" position="top" />
+
+        <comp-tile
+          v-for="(tile, colIndex) in row.tiles"
+          :key="`${rowIndex}-${colIndex}`"
+          :type="IDtoName(tile)"
+          position="top"
+          size="large"
+        />
+      </div>
     </div>
   </div>
 </template>
