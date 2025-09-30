@@ -58,22 +58,20 @@ export function mapPosition(myPosition: number, direction: Direction): Position 
 }
 
 export function updateDiscards(game: Game) {
-  if (!game?.players || !game?.discards) return;
+  // created set for opened tiles
+  const openedTiles = new Set<TileId>();
 
-  // 收集所有 target（每张牌 id 全局唯一）
-  const openedIds = new Set<TileId>();
-  for (const p of game.players) {
-    if (!p?.openedSets) continue;
-    for (const s of p.openedSets) {
-      if (s?.target != null) openedIds.add(s.target);
+  for (const player of game.players) {
+    if (!player) continue;
+
+    for (const openedSet of player.openedSets) {
+      openedTiles.add(openedSet.target);
     }
   }
-  if (openedIds.size === 0) return;
 
-  // 逐家过滤弃牌：命中 target 的直接移除
-  for (const d of game.discards) {
-    if (!d?.tiles) continue;
-    d.tiles = d.tiles.filter((id: TileId) => !openedIds.has(id));
+  // remove opened tiles from discards
+  for (const discard of game.discards) {
+    discard.tiles = discard.tiles.filter((tile) => !openedTiles.has(tile));
   }
 }
 

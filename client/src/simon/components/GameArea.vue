@@ -44,6 +44,8 @@ const mjStore = useMjStore();
 import { Direction, mapPosition } from "src/simon/stores/mj-store";
 import { roomStore } from "src/simon/stores/room-store";
 import type { TileId } from "src/common/core/mj.tile-core";
+// import type { Game } from "src/common/core/mj.game";
+// import type { GameEvent } from "src/common/protocols/apis.models";
 
 async function start() {
   try {
@@ -203,4 +205,20 @@ async function Zimo() {
   }
 }
 
+// clientApi.gameSocket.onReceive((event: GameEvent) => {
+//   event = clientApi.parseEvent(event);
+//   const game = clientApi.findMyGame(event);
+
+//   if (!game) {
+//     console.warn("No game found in event.");
+//     return;
+//   }
+
+//   handleGameUpdate(game);
+// });
+
+// function handleGameUpdate(game: Game) {
+//   setGame(game);
+//   mjStore.refresh();
+// }
 </script>
