@@ -23,6 +23,8 @@ export const useMjStore = defineStore("mj", () => {
   const canPon = ref<boolean>(false);
   const canKan = ref<boolean>(false);
   const canRon = ref<boolean>(false);
+  const canTsumo = ref<boolean>(false);
+  const canAnKan = ref<boolean>(false);
   const isMyTurn = ref<boolean>(false);
 
   const selectedList = ref<TileId[]>([]);
@@ -110,6 +112,7 @@ export const useMjStore = defineStore("mj", () => {
     const g = game.value;
 
     if (!g || pos === Position.None) return;
+    state.value = g.state;
 
     for (let i = 0; i < 4; i++) {
       const gi = findDirectionForPostiion(pos, i);
@@ -146,9 +149,8 @@ export const useMjStore = defineStore("mj", () => {
       canKan.value = TileCore.canGang(hand, g.latestTile);
       canRon.value = TileCore.canHu(hand, g.latestTile);
     } else if (g.state === GameState.WaitingAction) {
-      // canKan.value = TileCore.canGang(hand, g.latestTile);
-
-      canRon.value = TileCore.canHu(hand, g.latestTile);
+      canTsumo.value = TileCore.canHu(hand, newTileBottom.value);
+      canAnKan.value = TileCore.canAngang(hand);
     }
   }
 
@@ -243,7 +245,9 @@ export const useMjStore = defineStore("mj", () => {
     canChi,
     canPon,
     canKan,
+    canAnKan,
     canRon,
+    canTsumo,
     setAllFalse,
 
     refreshAll,
