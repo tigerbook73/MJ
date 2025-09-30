@@ -3,7 +3,7 @@ import { TileCore } from "@common/core/mj.tile-core";
 import { AppState } from "src/example/stores/example-store";
 import { defineStore } from "pinia";
 import { GameState, Position } from "@common/core/mj.game";
-import { findDirectionForPostiion } from "/root/code/MJ/client/src/justin/common/common";
+import { findDirectionForPostiion } from "src/justin/common/common";
 import type { RoomModel } from "@common/models/room.model";
 import type { TileId } from "@common/core/mj.tile-core";
 import type { Game, OpenedSet } from "@common/core/mj.game";
