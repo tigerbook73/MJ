@@ -2,6 +2,15 @@
   <div :class="['column flex-center area-player', color]">
     <div class="row flex-center">
       <comp-tile
+        v-for="(tile, index) in mjStore.idsToDiscard"
+        :key="index"
+        :type="IDtoName(tile)"
+        position="bottom"
+        size="large"
+      />
+    </div>
+    <div class="row flex-center">
+      <comp-tile
         v-for="(tile, index) in mjStore.handTileBottom"
         :key="index"
         :type="IDtoName(tile)"

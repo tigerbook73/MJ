@@ -7,6 +7,7 @@ import { findDirectionForPostiion } from "src/justin/common/common";
 import type { RoomModel } from "@common/models/room.model";
 import type { TileId } from "@common/core/mj.tile-core";
 import type { Game, OpenedSet } from "@common/core/mj.game";
+import { bestDiscards, pickOneIdOfKind } from "../tenhou/alg";
 
 export const useMjStore = defineStore("mj", () => {
   const game = ref<Game | null>(null);
@@ -23,7 +24,12 @@ export const useMjStore = defineStore("mj", () => {
   const canPon = ref<boolean>(false);
   const canKan = ref<boolean>(false);
   const canRon = ref<boolean>(false);
+  const canTsumo = ref<boolean>(false);
+  const canAnKan = ref<boolean>(false);
   const isMyTurn = ref<boolean>(false);
+
+  const bestDiscardsList = ref<TileId[]>([]);
+  const idsToDiscard = ref<TileId[]>([]);
 
   const selectedList = ref<TileId[]>([]);
   const allowMultiSelect = ref<boolean>(false);
@@ -110,6 +116,7 @@ export const useMjStore = defineStore("mj", () => {
     const g = game.value;
 
     if (!g || pos === Position.None) return;
+    state.value = g.state;
 
     for (let i = 0; i < 4; i++) {
       const gi = findDirectionForPostiion(pos, i);
@@ -120,6 +127,11 @@ export const useMjStore = defineStore("mj", () => {
       newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
       meldsList[i].value = g.players?.[gi]?.openedSets ?? [];
     }
+
+    bestDiscardsList.value = bestDiscards(handTileBottom.value, newTileBottom.value);
+    idsToDiscard.value = bestDiscardsList.value
+      .map((k) => pickOneIdOfKind(k, handTileBottom.value, newTileBottom.value))
+      .filter((x): x is number => x !== null);
 
     checkMyHand();
     checkMyTurn();
@@ -146,9 +158,8 @@ export const useMjStore = defineStore("mj", () => {
       canKan.value = TileCore.canGang(hand, g.latestTile);
       canRon.value = TileCore.canHu(hand, g.latestTile);
     } else if (g.state === GameState.WaitingAction) {
-      // canKan.value = TileCore.canGang(hand, g.latestTile);
-
-      canRon.value = TileCore.canHu(hand, g.latestTile);
+      canTsumo.value = TileCore.canHu(hand, newTileBottom.value);
+      canAnKan.value = TileCore.canAngang(hand);
     }
   }
 
@@ -232,6 +243,9 @@ export const useMjStore = defineStore("mj", () => {
 
     meldsTiles,
 
+    bestDiscardsList,
+    idsToDiscard,
+
     allowMultiSelect,
     selectedList,
     selectTile,
@@ -243,7 +257,9 @@ export const useMjStore = defineStore("mj", () => {
     canChi,
     canPon,
     canKan,
+    canAnKan,
     canRon,
+    canTsumo,
     setAllFalse,
 
     refreshAll,
