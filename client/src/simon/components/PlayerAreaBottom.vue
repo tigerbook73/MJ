@@ -1,34 +1,26 @@
 <template>
-  <div
-    :class="[
-      'column flex-center area-player',
-      userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
-    ]"
-  >
-    <div class="row flex-center q-gutter-xs" Justify-content="flex-start">
-      <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row">
-        <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
-      </div>
-      <div class="row flex-center">
-        <comp-tile
-          v-for="(tile, index) in userMj.pBottomCards"
-          :key="index"
-          :type="tile"
-          size="large"
-          :selected="selectedTiles.includes(tile.id)"
-          @click="onClick(tile)"
-          @dblclick="dropTile(tile.id)"
-        ></comp-tile>
+  <div :class="[
+    'row flex-center justify-around area-player',
+    userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
+  ]">
+    <!-- <div class="row flex-center q-gutter-xs" Justify-content="flex-start"> -->
 
-        <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
-        <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
-        <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
-        <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
-        <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
-        <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
-      </div>
+    <!-- </div> -->
+    <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row q-mr-lg">
+      <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
+    </div>
+    <div class="row flex-center">
+      <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
+        :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
+      <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
+      <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
+      <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
+      <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
+      <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
+      <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -213,13 +205,13 @@ const canZimo = computed(() => {
 });
 
 const maxSelectable = computed(() => {
-  // 别人的牌 → Chi/Peng/Gang
-  if (state.value === GameState.WaitingPass) {
-    if (canGang.value.show) return 3;   // 碰杠：手里要选 3 张
-    return 2;                           // Chi/Peng：选 2 张
-  }
-  // 轮到自己出牌（或自摸、暗杠等）时，你也可以按需要调整
-  return 2;
+  if (state.value !== GameState.WaitingPass) return 2;
+  // 明确判断一次，避免依赖 canGang 的计算
+  const canGangNow =
+    currentPosition.value !== myPosition.value &&
+    !!latestTile.value &&
+    TileCore.canGang(cleanHandIds.value, latestTile.value);
+  return canGangNow ? 3 : 2;
 });
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   const now = Date.now();
