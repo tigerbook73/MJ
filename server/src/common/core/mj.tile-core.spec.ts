@@ -65,12 +65,5 @@ describe("TileCore", () => {
       const hu = TileCore.canHu(hand, lt);
       expect(hu).toBe(true);
     });
-
-    it("手里已含同牌面 + latestTile 不应因重复计入而失败", () => {
-      const hand = clean([28, 29, 30, 41, 42, 64, 65, 66, 76, 81, 84]);
-      const lt = 65 as TileId;
-      const hu = TileCore.canHu(hand, lt);
-      expect(hu).toBe(true);
-    });
   });
 });

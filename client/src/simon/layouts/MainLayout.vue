@@ -32,6 +32,7 @@ import { roomStore } from "src/simon/stores/room-store";
 import { updateDiscards, useMjStore } from "src/simon/stores/mj-store";
 import type { GameEvent } from "@common/protocols/apis.models";
 import { userStore } from "../stores/user-store";
+import { setGame } from "../core/mjGame";
 
 
 const router = useRouter();
@@ -77,23 +78,54 @@ clientApi.gameSocket.onDisconnect(() => {
 });
 
 // 👂 Game event handler
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  const parsed = clientApi.parseEvent(event);
+// clientApi.gameSocket.onReceive((event: GameEvent) => {
+//   const parsed = clientApi.parseEvent(event);
 
-  useRoomStore.setRooms(parsed.data.rooms);
-  useRoomStore.currentRoom = clientApi.findMyRoom(event);
-  useRoomStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
+//   useRoomStore.setRooms(parsed.data.rooms);
+//   useRoomStore.currentRoom = clientApi.findMyRoom(event);
+//   useRoomStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
 
-  const game = clientApi.findMyGame(parsed);
+//   const game = clientApi.findMyGame(parsed);
+//   if (game) {
+//     useGameStore.setCurrentGame(game);
+//     // updateDiscards(game);
+//     useGameStore.refresh();
+//   } else {
+//     useGameStore.setCurrentGame(null);
+//   }
+// });
+
+clientApi.gameSocket.onReceive((raw: GameEvent) => {
+  const parsed = clientApi.parseEvent(raw);
+
+  // ---- Room state（统一用 parsed）----
+  useRoomStore.setRooms(parsed.data?.rooms ?? []);
+  useRoomStore.currentRoom = clientApi.findMyRoom(parsed);
+  useRoomStore.currentPosition =
+    clientApi.findMyPlayerModel(parsed)?.position ?? null;
+
+  // ---- 拿到本人的 game ----
+  const game = clientApi.findMyGame(parsed) ?? null;
+
   if (game) {
-    useGameStore.setCurrentGame(game);
+    // ① 先把弃牌与副露对齐（基于唯一 id 的 openedSet.target）
+    //    注意：这里直接改传入的 game（原地修改）
     updateDiscards(game);
+
+    // ② 写入引擎层（把 mjGame 指向这份最新的 game）
+    setGame(game);
+
+    // ③ 同步到 Pinia（给 UI/计算属性）
+    useGameStore.setCurrentGame(game);
+
+    // ④ 让 UI 从 mjGame 重新映射（p*Cards、discards、latestTile 等）
     useGameStore.refresh();
   } else {
+    // 没有局面时清空 UI（是否要清空 mjGame 看你的业务）
     useGameStore.setCurrentGame(null);
+    useGameStore.refresh();
   }
 });
-
 
 watch(
   () => useAppStore.appState,
