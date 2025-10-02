@@ -48,6 +48,7 @@ const leftRow = computed(() => {
       size,
       back: false,
       selected: false,
+      latest: tileId !== TileCore.voidId && tileId === exampleStore.currentGame?.latestTile,
     }),
   );
 });
@@ -69,6 +70,7 @@ const rightRow = computed(() => {
       size,
       back: false,
       selected: false,
+      latest: tileId !== TileCore.voidId && tileId === exampleStore.currentGame?.latestTile,
     }),
   );
 });

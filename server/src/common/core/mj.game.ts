@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import { type TileId, TileCore, ActionType } from "./mj.tile-core";
 
 export const enum ActionResult {
@@ -139,6 +140,9 @@ export class Game {
   public passedPlayers: Player[] = []; // 已经过的玩家，该属性仅用于client side
   public queuedActions: ActionDetail[] = []; // 等待处理的动作，该属性不用于Client Side
 
+  // logger
+  static logger = new Logger("Game");
+
   constructor(name: string = "default") {
     this.name = name;
   }
@@ -204,6 +208,8 @@ export class Game {
     this.assignDealer();
     this.dice();
     this.dispatch();
+
+    Game.logger.log(`Game "${this.name}": started.`);
   }
 
   /**
@@ -243,6 +249,9 @@ export class Game {
     // need a timeout
     this.handleQueuedActions();
 
+    Game.logger.log(
+      `Game "${this.name}": Player ${this.current.position}: dropped "${TileCore.fromId(tile).name}".`,
+    );
     return this;
   }
 
@@ -286,6 +295,10 @@ export class Game {
 
     this.pickReverse();
     this.setState(GameState.WaitingAction);
+
+    Game.logger.log(
+      `Game "${this.name}": Player ${this.current.position}: angang "${TileCore.fromId(tileIds[0]).name}".`,
+    );
   }
 
   /**
@@ -305,6 +318,10 @@ export class Game {
     }
 
     this.setState(GameState.End);
+
+    Game.logger.log(
+      `Game "${this.name}": Player ${this.current.position}: zimo.`,
+    );
     return this;
   }
 
@@ -345,6 +362,8 @@ export class Game {
     }
 
     this.handleQueuedActions();
+
+    Game.logger.log(`Game "${this.name}": Player ${player.position}: pass.`);
     return this;
   }
 
@@ -395,7 +414,13 @@ export class Game {
       }
     }
 
+    const latestTile = this.latestTile;
+
     this.handleQueuedActions();
+
+    Game.logger.log(
+      `Game "${this.name}": Player ${player.position}: chi "${TileCore.fromId(tileIds[0]).name}" "${TileCore.fromId(tileIds[1]).name}" => "${TileCore.fromId(latestTile).name}".`,
+    );
     return this;
   }
 
@@ -449,6 +474,9 @@ export class Game {
     }
 
     this.handleQueuedActions();
+    Game.logger.log(
+      `Game "${this.name}": Player ${player.position}: peng "${TileCore.fromId(tileIds[0]).name}".`,
+    );
     return this;
   }
 
@@ -498,6 +526,9 @@ export class Game {
     }
 
     this.handleQueuedActions();
+    Game.logger.log(
+      `Game "${this.name}": Player ${player.position}: gang "${TileCore.fromId(tileIds[0]).name}".`,
+    );
     return this;
   }
 
@@ -544,6 +575,9 @@ export class Game {
     }
 
     this.handleQueuedActions();
+    Game.logger.log(
+      `Game "${this.name}": Player ${player.position}: hu "${TileCore.fromId(this.latestTile).name}".`,
+    );
     return this;
   }
 
