@@ -1,14 +1,8 @@
 <template>
   <div @click="select">
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
-      <q-img
-        v-if="props.type.name && (!props.back || mjStore.open)"
-        :src="imgSrc"
-        :ratio="1 / 1"
-        fit="scale-down"
-        :width="width"
-        :style="imgStyle"
-      ></q-img>
+      <q-img v-if="props.type.name && shouldShowImg" :src="imgSrc" :ratio="1 / 1" fit="scale-down" :width="width"
+        :style="imgStyle"></q-img>
     </div>
   </div>
 </template>
@@ -83,9 +77,16 @@ const imgSrc = computed(() => {
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
+const isVoidSlot = computed(() =>
+  props.type.id === TileCore.voidId || props.type.id === -1
+);
 
+// 显示图片的条件：空位一定显示；否则沿用 back/open 的老规则
+const shouldShowImg = computed(() =>
+  isVoidSlot.value || (!!props.type.name && (!props.back || mjStore.open))
+);
 const tileClass = computed(() => {
-  if (props.back && !mjStore.open) {
+  if (!isVoidSlot.value && props.back && !mjStore.open) {
     return "mj-tile-back";
   }
   if (!props.type.name) {
@@ -139,7 +140,7 @@ const imgStyle = ref({
   position: "relative",
 });
 
-function select() {}
+function select() { }
 </script>
 
 <style lang="scss">
@@ -149,6 +150,7 @@ function select() {}
   border: 1px solid #000;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
+
   &:hover {
     background-color: #000;
     color: #f0f0f0;
@@ -161,6 +163,7 @@ function select() {}
   border: 1px solid #000;
   border-radius: 5px;
   box-shadow: 1px 1px 1px #000;
+
   &:hover {
     background-color: #f0f000;
     color: #f0f0f0;

@@ -6,19 +6,24 @@
     <!-- <div class="row flex-center q-gutter-xs" Justify-content="flex-start"> -->
 
     <!-- </div> -->
-    <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row q-mr-lg">
-      <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
+    <div class="row items-center justify-start">
+      <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row q-mr-lg">
+        <comp-tile v-for="(tile, index) in group" :key="index" :type="tile" size="small" />
+      </div>
     </div>
-    <div class="row flex-center">
-      <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
-        :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
-      <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
-      <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
-      <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
-      <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
-      <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
-      <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
+    <div class="row items-start justify-center q-gutter-xs no-wrap">
+      <div class="row flex-center">
+        <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
+          :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
+        <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
+        <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
+        <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
+        <q-btn v-if="canGang.show" flat @click="handleGang()" :disable="canGang.disabled">Gang</q-btn>
+        <q-btn v-if="canHu.show" flat @click="Hu()" :disable="canHu.disabled">Hu</q-btn>
+        <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
+      </div>
     </div>
+
   </div>
 
 </template>
@@ -80,7 +85,10 @@ const canPass = computed(() => {
     return { show: false, disabled: false };
   }
 
-  return { show: true, disabled: false };
+  const hasAnyAction =
+    canChi.value.show || canPeng.value.show || canGang.value.show || canHu.value.show;
+
+  return { show: hasAnyAction, disabled: false };
 });
 
 const canChi = computed(() => {
