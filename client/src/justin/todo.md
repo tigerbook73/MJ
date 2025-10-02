@@ -1,3 +1,4 @@
+# old stuff
 - 初始发牌
 
   - 玩家位置  done
@@ -47,7 +48,39 @@
     - fixed by remove duplicated position variable in mjStore 22/09
 
   - angang need to filter hand
+    - done  30/09
   - status of allowMultiSelect need to be updated
     - fixed 27/09
   - after chi pon kan there is bug to discard.
     - fixed 27/09
+
+
+# 02/10/2025 update
+
+- 游戏操作
+  - 出牌规则改为双击，如已选中则直接打出  done  02/10/2025
+
+- store优化
+  - 不直接export store.game, 将game拆分，只export必要内容 done  02/10/2025
+  - 优化update函数  done  02/10/2025
+  - room & room list 去 ref
+
+- 界面优化
+  - 修改discard按钮显示条件 done  02/10/2025
+  - 赢家须亮牌  done  02/10/2025
+  - 放铳家牌诃背景改红
+  - recommended discard指示器改成颜色条
+  - bug:  waiting action阶段，当前玩家的highlight异常
+
+- user auto login
+
+- tool bar
+
+
+- 牌效算法
+  - 加入副露牌的计算
+  - 剔除discard中已经打过的牌的数量
+  - 增加对最新打出的牌，纳入手牌中计算牌效，是否吃碰杠
+  -
+
+- 玩家加杠 （server 暂不支持）

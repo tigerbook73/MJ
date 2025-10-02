@@ -56,6 +56,7 @@
             @click="enterGame"
             >EnterGame</q-btn
           >
+          <q-btn @click="signOut">Sign Out</q-btn>
         </div>
       </div>
     </div>
@@ -69,8 +70,10 @@ import { Position } from "@common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { useMjStore } from "src/justin/stores/mj-store";
 import type { RoomModel } from "@common/models/room.model";
+import { useUserStore } from "../stores/user-store";
 
 const mjStore = useMjStore();
+const userStore = useUserStore();
 
 // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 const selectedRoom = ref<RoomProp | null>(null);
@@ -217,6 +220,16 @@ async function enterGame() {
     }
     await clientApi.enterGame(currentRoom.value.name);
     mjStore.myPos = currentPos.value;
+    userStore.refreshAppState();
+  } catch (error: any) {
+    window.alert(error.message);
+  }
+}
+
+async function signOut() {
+  try {
+    await clientApi.signOut();
+    userStore.setSignedIn(false);
   } catch (error: any) {
     window.alert(error.message);
   }

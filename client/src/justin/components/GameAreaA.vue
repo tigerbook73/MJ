@@ -13,13 +13,15 @@ defineOptions({
 
 import { clientApi } from "src/client/client-api";
 import { useMjStore } from "src/justin/stores/mj-store";
+import { useUserStore } from "../stores/user-store";
 
+const userStore = useUserStore();
 const mjStore = useMjStore();
 
 async function signOut() {
   try {
     await clientApi.signOut();
-    mjStore.setSignedIn(false);
+    userStore.setSignedIn(false);
   } catch (error: any) {
     window.alert(error.message);
   }

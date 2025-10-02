@@ -6,6 +6,7 @@
       :type="IDtoName(tile)"
       position="left"
       size="small"
+      :back="false"
     ></comp-tile>
   </div>
 </template>

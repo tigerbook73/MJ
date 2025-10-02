@@ -7,10 +7,10 @@
         :type="IDtoName(tile)"
         position="top"
         size="large"
-        :back="true"
+        :back="!showHand"
       />
       <comp-tile type="" position="top" />
-      <comp-tile :type="IDtoName(mjStore.newTileTop)" position="top" size="large" :back="true" />
+      <comp-tile :type="IDtoName(mjStore.newTileTop)" position="top" size="large" :back="!showHand" />
       <div
         class="row reverse flex-center"
         v-for="(row, rowIndex) in mjStore.meldsTop"
@@ -40,9 +40,13 @@ import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";
+import { GameState } from "src/common/core/mj.game";
 
 const color = computed(() =>
-  findDirectionForPostiion(mjStore.myPos, 2) === mjStore.game?.current?.position ? "bg-green-5" : "bg-green-0",
+  findDirectionForPostiion(mjStore.myPos, 2) === mjStore.currentPos ? "bg-green-5" : "bg-green-0",
+);
+const showHand = computed(
+  () => findDirectionForPostiion(mjStore.myPos, 2) === mjStore.currentPos && mjStore.state === GameState.End,
 );
 
 const mjStore = useMjStore();

@@ -12,7 +12,6 @@
     </div>
   </div>
 </template>
-<!-- v-if="props.type && (!props.back || mjStore.open)" -->
 
 <script setup lang="ts">
 import type { StyleValue } from "vue";

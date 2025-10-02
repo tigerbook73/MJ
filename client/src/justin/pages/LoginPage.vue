@@ -21,7 +21,6 @@
 import { ref } from "vue";
 import { useUserStore } from "src/justin/stores/user-store";
 import { clientApi } from "src/client/client-api";
-import { useMjStore } from "../stores/mj-store";
 
 defineOptions({
   name: "LoginPage",
@@ -31,17 +30,16 @@ const email = ref("Admin@mj.com");
 const password = ref("Password");
 const loading = ref(false);
 const userStore = useUserStore();
-const mjStore = useMjStore();
 
 // sign in
 async function signIn() {
   try {
     loading.value = true;
-    mjStore.setSignedIn(true);
+    userStore.setSignedIn(true);
     const user = await clientApi.signIn(email.value, password.value);
     userStore.user = user;
   } catch {
-    mjStore.setSignedIn(false);
+    userStore.setSignedIn(false);
     window.alert("failed");
   } finally {
     loading.value = false;
