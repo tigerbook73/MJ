@@ -27,7 +27,7 @@ export function IDtoName(id: number) {
   return IDTileList[id];
 }
 
-export function updateDiscards(game: Game | null) {
+export function filterDiscards(game: Game | null) {
   if (!game) return;
 
   const meldsTiles = new Set<TileId>();

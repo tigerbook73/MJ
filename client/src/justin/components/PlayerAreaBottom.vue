@@ -51,15 +51,33 @@ import type { TileId } from "@common/core/mj.tile-core";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";
+import { clientApi } from "src/client/client-api";
+import { useQuasar } from "quasar";
 
+const $q = useQuasar();
 const mjStore = useMjStore();
 
 const color = computed(() =>
-  findDirectionForPostiion(mjStore.myPos, 0) === mjStore.game?.current?.position ? "bg-green-5" : "bg-green-0",
+  findDirectionForPostiion(mjStore.myPos, 0) === mjStore.currentPos ? "bg-green-5" : "bg-green-0",
 );
 
 function onClick(tile: TileId) {
   //
-  mjStore.selectTile(tile);
+  if (mjStore.selectTile(tile)) {
+    //
+    discard();
+  }
+}
+
+function discard() {
+  try {
+    if (mjStore.selectedList.length === 1) {
+      clientApi.actionDrop(mjStore.selectedList[0]);
+      mjStore.clearSelected();
+    }
+  } catch (e) {
+    $q.notify({ message: "Discard tile failed", color: "negative", icon: "warning" });
+    console.error("Discard tile failed", e);
+  }
 }
 </script>

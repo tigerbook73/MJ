@@ -13,17 +13,19 @@ import type { GameEvent } from "@common/protocols/apis.models";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
 import { Position } from "src/common/core/mj.game";
-import { AppState, updateDiscards } from "../common/common";
+import { AppState } from "../common/common";
+import { useUserStore } from "../stores/user-store";
 defineOptions({
   name: "MainLayout",
 });
 const mjStore = useMjStore();
 const route = useRoute();
 const router = useRouter();
+const userStore = useUserStore();
 
 // to the correct page based on app state
 watch(
-  () => [mjStore.appState, route.fullPath],
+  () => [userStore.appState, route.fullPath],
   () => {
     const stateToPath = {
       [AppState.Unconnected]: "/justin/login",
@@ -31,7 +33,7 @@ watch(
       [AppState.InLobby]: "/justin/lobby",
       [AppState.InGame]: "/justin/game",
     };
-    const path = stateToPath[mjStore.appState];
+    const path = stateToPath[userStore.appState];
     if (path === route.fullPath) {
       return;
     }
@@ -42,22 +44,26 @@ watch(
 
 // connection status
 clientApi.gameSocket.onConnect(() => {
-  mjStore.setConnected(true);
+  userStore.setConnected(true);
 });
 clientApi.gameSocket.onDisconnect(() => {
-  mjStore.setConnected(false);
+  userStore.setConnected(false);
 });
 
 clientApi.gameSocket.onReceive((event: GameEvent) => {
   event = clientApi.parseEvent(event);
   const game = clientApi.findMyGame(event);
+  if (game) {
+    userStore.setInGame(true);
+  }
 
   mjStore.roomList = event.data.rooms;
   mjStore.room = clientApi.findMyRoom(event);
   mjStore.myPos = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
 
-  updateDiscards(game);
   mjStore.setGame(game);
+
+  userStore.refreshAppState();
   mjStore.refreshAll();
 });
 </script>

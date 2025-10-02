@@ -1,24 +1,24 @@
 import { ref } from "vue";
 import { TileCore } from "@common/core/mj.tile-core";
-import { AppState } from "src/example/stores/example-store";
 import { defineStore } from "pinia";
 import { GameState, Position } from "@common/core/mj.game";
-import { findDirectionForPostiion } from "src/justin/common/common";
+import { filterDiscards, findDirectionForPostiion } from "src/justin/common/common";
 import type { RoomModel } from "@common/models/room.model";
 import type { TileId } from "@common/core/mj.tile-core";
 import type { Game, OpenedSet } from "@common/core/mj.game";
 import { bestDiscards, pickOneIdOfKind } from "../tenhou/alg";
 
 export const useMjStore = defineStore("mj", () => {
-  const game = ref<Game | null>(null);
+  let game: Game | null = null;
+
   const room = ref<RoomModel | null>(null);
   const roomList = ref<RoomModel[]>([]);
 
   const myPos = ref<Position>(Position.None);
+  const currentPos = ref<Position>(Position.None);
 
   const open = ref<boolean>(false);
-  const state = ref<GameState>(GameState.Init);
-  const appState = ref<AppState>(AppState.Unconnected);
+  const state = ref<GameState>();
 
   const canChi = ref<boolean>(false);
   const canPon = ref<boolean>(false);
@@ -65,81 +65,47 @@ export const useMjStore = defineStore("mj", () => {
   const newTileLeft = ref<TileId>(TileCore.voidId);
   const newList = [newTileBottom, newTileRight, newTileTop, newTileLeft];
 
-  function refreshAppState() {
-    if (!connected.value) {
-      appState.value = AppState.Unconnected;
-    } else if (!signedIn.value) {
-      appState.value = AppState.UnSignedIn;
-    } else if (!game.value) {
-      appState.value = AppState.InLobby;
-    } else {
-      appState.value = AppState.InGame;
-    }
-  }
-
-  // signed in state
-  const signedIn = ref<boolean>(false);
-  function setSignedIn(value: boolean) {
-    signedIn.value = value;
-
-    if (!value) {
-      // reset other value
-      roomList.value = [];
-      room.value = null;
-      myPos.value = Position.None;
-      game.value = null;
-    }
-    refreshAppState();
-  }
-
-  // connected state
-  const connected = ref<boolean>(false);
-  function setConnected(value: boolean) {
-    connected.value = value;
-
-    // reset other value
-    signedIn.value = false;
-    roomList.value = [];
-    room.value = null;
-    myPos.value = Position.None;
-    game.value = null;
-    refreshAppState();
-  }
-
   function setGame(value: Game | null) {
-    game.value = value;
-    refreshAppState();
+    game = value;
   }
 
   function refreshAll() {
-    const pos = myPos.value;
-    const g = game.value;
-
-    if (!g || pos === Position.None) return;
-    state.value = g.state;
-
-    for (let i = 0; i < 4; i++) {
-      const gi = findDirectionForPostiion(pos, i);
-
-      wallList[i].value = g.walls?.[gi]?.tiles ?? [];
-      handList[i].value = g.players?.[gi]?.handTiles ?? [];
-      discardList[i].value = g.discards?.[gi]?.tiles ?? [];
-      newList[i].value = g.players?.[gi]?.picked ?? TileCore.voidId;
-      meldsList[i].value = g.players?.[gi]?.openedSets ?? [];
-    }
-
-    bestDiscardsList.value = bestDiscards(handTileBottom.value, newTileBottom.value);
-    idsToDiscard.value = bestDiscardsList.value
-      .map((k) => pickOneIdOfKind(k, handTileBottom.value, newTileBottom.value))
-      .filter((x): x is number => x !== null);
-
-    checkMyHand();
-    checkMyTurn();
+    stateUpdate();
+    filterDiscards(game);
+    tilesUpdate(game, myPos.value);
+    bestDiscardsUpdate(handTileBottom.value, newTileBottom.value);
+    checkMyHand(game, handTileBottom.value);
   }
 
-  function checkMyHand() {
-    const g = game.value;
-    const hand = handTileBottom.value;
+  function stateUpdate() {
+    if (!game) return;
+    state.value = game.state;
+    currentPos.value = game.current?.position ?? Position.None;
+  }
+
+  function tilesUpdate(game: Game | null, myPositionIndex: Position) {
+    if (!game || myPositionIndex === Position.None) return;
+
+    for (let i = 0; i < 4; i++) {
+      const gi = findDirectionForPostiion(myPositionIndex, i);
+
+      wallList[i].value = game.walls?.[gi]?.tiles ?? [];
+      handList[i].value = game.players?.[gi]?.handTiles ?? [];
+      discardList[i].value = game.discards?.[gi]?.tiles ?? [];
+      newList[i].value = game.players?.[gi]?.picked ?? TileCore.voidId;
+      meldsList[i].value = game.players?.[gi]?.openedSets ?? [];
+    }
+  }
+
+  function bestDiscardsUpdate(handTiles: TileId[], newTile: TileId) {
+    bestDiscardsList.value = bestDiscards(handTiles, newTile);
+    idsToDiscard.value = bestDiscardsList.value
+      .map((k) => pickOneIdOfKind(k, handTiles, newTile))
+      .filter((x): x is number => x !== null);
+  }
+
+  function checkMyHand(game: Game | null, hand: TileId[]) {
+    // const hand = handTileBottom.value;
 
     //首先全false
     //1 全场判断是否有吃碰杠和，如有，进入waiting pass状态，不管是否为自家
@@ -147,25 +113,27 @@ export const useMjStore = defineStore("mj", () => {
     //1.2 如有，则设置为true
     setAllFalse();
 
-    if (!g || g.current === null) return;
+    if (!game || game.current === null) return;
 
-    if (g.state === GameState.WaitingPass) {
+    if (game.state === GameState.WaitingPass) {
       //
-      if (g.current.position % 4 === (myPos.value += 1) % 4) {
-        canChi.value = TileCore.canChi(hand, g.latestTile);
+      if (game.current.position % 4 === (myPos.value += 1) % 4) {
+        canChi.value = TileCore.canChi(hand, game.latestTile);
       }
-      canPon.value = TileCore.canPeng(hand, g.latestTile);
-      canKan.value = TileCore.canGang(hand, g.latestTile);
-      canRon.value = TileCore.canHu(hand, g.latestTile);
-    } else if (g.state === GameState.WaitingAction) {
+      canPon.value = TileCore.canPeng(hand, game.latestTile);
+      canKan.value = TileCore.canGang(hand, game.latestTile);
+      canRon.value = TileCore.canHu(hand, game.latestTile);
+    } else if (game.state === GameState.WaitingAction) {
       canTsumo.value = TileCore.canHu(hand, newTileBottom.value);
-      canAnKan.value = TileCore.canAngang(hand);
+      canAnKan.value = TileCore.canAngang(hand.concat(newTileBottom.value));
     }
+
+    checkMyTurn();
   }
 
   function checkMyTurn() {
-    isMyTurn.value = canChi.value || canPon.value || canKan.value || canRon.value;
-    allowMultiSelect.value = canChi.value || canPon.value || canKan.value;
+    isMyTurn.value = canChi.value || canPon.value || canKan.value || canRon.value || canTsumo.value || canAnKan.value;
+    allowMultiSelect.value = canChi.value || canPon.value || canKan.value || canAnKan.value || canTsumo.value;
   }
 
   function setAllFalse() {
@@ -173,14 +141,19 @@ export const useMjStore = defineStore("mj", () => {
     canPon.value = false;
     canKan.value = false;
     canRon.value = false;
+    canAnKan.value = false;
+    canTsumo.value = false;
   }
 
   function selectTile(tile: TileId) {
     const index = selectedList.value.indexOf(tile);
     if (allowMultiSelect.value === false) {
+      //
       if (index === -1) {
         selectedList.value = [tile];
-      } else {
+      } else if (index !== -1 && myPos.value === currentPos.value) {
+        return true;
+      } else if (index !== -1 && myPos.value !== currentPos.value) {
         clearSelected();
       }
     } else if (allowMultiSelect.value === true) {
@@ -191,6 +164,7 @@ export const useMjStore = defineStore("mj", () => {
         selectedList.value.splice(index, 1);
       }
     }
+    return false;
   }
 
   function clearSelected() {
@@ -207,14 +181,14 @@ export const useMjStore = defineStore("mj", () => {
   refreshAll();
 
   return {
-    // state
-    game,
+    // game,
     room,
     roomList,
     open,
-    myPos,
     state,
-    appState,
+
+    myPos,
+    currentPos,
 
     wallTop,
     wallRight,
@@ -264,8 +238,6 @@ export const useMjStore = defineStore("mj", () => {
 
     refreshAll,
 
-    setConnected,
-    setSignedIn,
     setGame,
   };
 });
