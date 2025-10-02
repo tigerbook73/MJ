@@ -4,13 +4,8 @@
       <h1>Join a Game Room</h1>
       <q-btn color="primary" label="Refresh Rooms" :loading="loading" @click="refreshRooms" />
     </div>
-    <GameRoom
-      v-for="(room, index) in rooms"
-      :key="index"
-      :roomName="room.name"
-      :players="room.players"
-      @update="refreshRooms"
-    ></GameRoom>
+    <GameRoom v-for="(room, index) in rooms" :key="index" :roomName="room.name" :players="room.players"
+      @update="refreshRooms"></GameRoom>
   </q-page>
 </template>
 

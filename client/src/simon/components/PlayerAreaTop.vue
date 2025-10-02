@@ -3,9 +3,10 @@
     'row reverse flex-center justify-around area-player',
     userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Top) ? 'bg-blue' : 'bg-red',
   ]">
-
-    <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row q-mr-lg">
-      <comp-tile v-for="(tile, idx) in group" :key="idx" :type="tile" size="small" position="top" />
+    <div class="row reverse items-center justify-start">
+      <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="row q-mr-lg">
+        <comp-tile v-for="(tile, idx) in group" :key="idx" :type="tile" size="small" position="top" />
+      </div>
     </div>
 
     <div class="row reverse flex-center">

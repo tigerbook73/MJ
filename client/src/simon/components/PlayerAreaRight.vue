@@ -3,10 +3,12 @@
     'column reverse flex-center justify-around area-player',
     userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Right) ? 'bg-blue' : 'bg-red',
   ]">
-
-    <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="meld q-mr-lg">
-      <comp-tile v-for="(tile, idx) in group" :key="idx" :type="tile" size="small" position="right" />
+    <div class="column reverse items-center justify-start">
+      <div v-for="(group, gIdx) in meldGroups" :key="gIdx" class="meld q-mr-lg">
+        <comp-tile v-for="(tile, idx) in group" :key="idx" :type="tile" size="small" position="right" />
+      </div>
     </div>
+
     <div class="column reverse flex-center">
       <comp-tile v-for="(tile, index) in rightCardsVisible" :key="index" :type="tile" :back="!userMj.open" size="large"
         position="right" :selected="userMj.selectedCard.id == tile.id"></comp-tile>
