@@ -1,3 +1,4 @@
+import { Logger } from "@nestjs/common";
 import { type TileId, TileCore, ActionType } from "./mj.tile-core";
 
 export const enum ActionResult {
@@ -139,6 +140,9 @@ export class Game {
   public passedPlayers: Player[] = []; // 已经过的玩家，该属性仅用于client side
   public queuedActions: ActionDetail[] = []; // 等待处理的动作，该属性不用于Client Side
 
+  // logger
+  static logger = new Logger("Game");
+
   constructor(name: string = "default") {
     this.name = name;
   }
@@ -204,6 +208,8 @@ export class Game {
     this.assignDealer();
     this.dice();
     this.dispatch();
+
+    Game.logger.log(`Game "${this.name}": started.`);
   }
 
   /**
@@ -243,6 +249,7 @@ export class Game {
     // need a timeout
     this.handleQueuedActions();
 
+    Game.logger.log(`Game "${this.name}": Player ${this.current.position}: dropped "${TileCore.fromId(tile).name}".`);
     return this;
   }
 
@@ -286,6 +293,10 @@ export class Game {
 
     this.pickReverse();
     this.setState(GameState.WaitingAction);
+
+    Game.logger.log(
+      `Game "${this.name}": Player ${this.current.position}: angang "${TileCore.fromId(tileIds[0]).name}".`,
+    );
   }
 
   /**
@@ -305,6 +316,8 @@ export class Game {
     }
 
     this.setState(GameState.End);
+
+    Game.logger.log(`Game "${this.name}": Player ${this.current.position}: zimo.`);
     return this;
   }
 
@@ -329,9 +342,7 @@ export class Game {
     // if decision is made, then ignore
     if (
       this.queuedActions.find(
-        (action) =>
-          action.player.position === player.position &&
-          action.status !== ActionResult.Waiting,
+        (action) => action.player.position === player.position && action.status !== ActionResult.Waiting,
       )
     ) {
       return this;
@@ -345,6 +356,8 @@ export class Game {
     }
 
     this.handleQueuedActions();
+
+    Game.logger.log(`Game "${this.name}": Player ${player.position}: pass.`);
     return this;
   }
 
@@ -375,9 +388,7 @@ export class Game {
     // if decision is made, then ignore
     if (
       this.queuedActions.find(
-        (action) =>
-          action.player.position === player.position &&
-          action.status !== ActionResult.Waiting,
+        (action) => action.player.position === player.position && action.status !== ActionResult.Waiting,
       )
     ) {
       return this;
@@ -395,7 +406,13 @@ export class Game {
       }
     }
 
+    const latestTile = this.latestTile;
+
     this.handleQueuedActions();
+
+    Game.logger.log(
+      `Game "${this.name}": Player ${player.position}: chi "${TileCore.fromId(tileIds[0]).name}" "${TileCore.fromId(tileIds[1]).name}" => "${TileCore.fromId(latestTile).name}".`,
+    );
     return this;
   }
 
@@ -424,9 +441,7 @@ export class Game {
     // if decision is made, then ignore
     if (
       this.queuedActions.find(
-        (action) =>
-          action.player.position === player.position &&
-          action.status !== ActionResult.Waiting,
+        (action) => action.player.position === player.position && action.status !== ActionResult.Waiting,
       )
     ) {
       return this;
@@ -435,10 +450,7 @@ export class Game {
     // update player's peng action => accepting, update player's other actions => passed
     for (const action of this.queuedActions) {
       if (action.player.position === player.position) {
-        if (
-          action.type === ActionType.Peng ||
-          action.type === ActionType.Gang
-        ) {
+        if (action.type === ActionType.Peng || action.type === ActionType.Gang) {
           action.tiles = tileIds;
           action.type = ActionType.Peng; // change queue action to peng
           action.status = ActionResult.Accepting;
@@ -449,6 +461,7 @@ export class Game {
     }
 
     this.handleQueuedActions();
+    Game.logger.log(`Game "${this.name}": Player ${player.position}: peng "${TileCore.fromId(tileIds[0]).name}".`);
     return this;
   }
 
@@ -477,9 +490,7 @@ export class Game {
     // if decision is made, then ignore
     if (
       this.queuedActions.find(
-        (action) =>
-          action.player.position === player.position &&
-          action.status !== ActionResult.Waiting,
+        (action) => action.player.position === player.position && action.status !== ActionResult.Waiting,
       )
     ) {
       return this;
@@ -498,6 +509,7 @@ export class Game {
     }
 
     this.handleQueuedActions();
+    Game.logger.log(`Game "${this.name}": Player ${player.position}: gang "${TileCore.fromId(tileIds[0]).name}".`);
     return this;
   }
 
@@ -513,21 +525,14 @@ export class Game {
       throw new Error("current player is not set");
     }
 
-    if (
-      !TileCore.canHu(
-        player.handTiles,
-        player.picked !== TileCore.voidId ? player.picked : this.latestTile,
-      )
-    ) {
+    if (!TileCore.canHu(player.handTiles, player.picked !== TileCore.voidId ? player.picked : this.latestTile)) {
       throw new Error("you cannot hu");
     }
 
     // if decision is made, then ignore
     if (
       this.queuedActions.find(
-        (action) =>
-          action.player.position === player.position &&
-          action.status !== ActionResult.Waiting,
+        (action) => action.player.position === player.position && action.status !== ActionResult.Waiting,
       )
     ) {
       return this;
@@ -536,14 +541,12 @@ export class Game {
     // update player's hu action => accepting, update player's other actions => passed
     for (const action of this.queuedActions) {
       if (action.player.position === player.position) {
-        action.status =
-          action.type === ActionType.Hu
-            ? ActionResult.Accepting
-            : ActionResult.Passed;
+        action.status = action.type === ActionType.Hu ? ActionResult.Accepting : ActionResult.Passed;
       }
     }
 
     this.handleQueuedActions();
+    Game.logger.log(`Game "${this.name}": Player ${player.position}: hu "${TileCore.fromId(this.latestTile).name}".`);
     return this;
   }
 
@@ -560,9 +563,7 @@ export class Game {
    */
   private prepareQueueActions(): this {
     if (this.state !== GameState.WaitingPass) {
-      throw new Error(
-        "Queue actions can only be prepared in WaitingPass state",
-      );
+      throw new Error("Queue actions can only be prepared in WaitingPass state");
     }
 
     this.queuedActions = [];
@@ -575,22 +576,14 @@ export class Game {
      */
 
     // hu actions
-    for (
-      let player = this.getNextPlayer();
-      player !== this.current;
-      player = this.getNextPlayer(player)
-    ) {
+    for (let player = this.getNextPlayer(); player !== this.current; player = this.getNextPlayer(player)) {
       if (TileCore.canHu(player.handTiles, this.latestTile)) {
         this.queuedActions.push(new ActionDetail(ActionType.Hu, player));
       }
     }
 
     // peng/gang actions
-    for (
-      let player = this.getNextPlayer();
-      player !== this.current;
-      player = this.getNextPlayer(player)
-    ) {
+    for (let player = this.getNextPlayer(); player !== this.current; player = this.getNextPlayer(player)) {
       if (TileCore.canGang(player.handTiles, this.latestTile)) {
         this.queuedActions.push(new ActionDetail(ActionType.Gang, player));
       } else if (TileCore.canPeng(player.handTiles, this.latestTile)) {
@@ -627,9 +620,7 @@ export class Game {
     }
 
     if (![GameState.WaitingPass].includes(this.state)) {
-      throw new Error(
-        "Queued actions can only be handled in WaitingPass state",
-      );
+      throw new Error("Queued actions can only be handled in WaitingPass state");
     }
 
     // from high priority to low priority
@@ -779,9 +770,7 @@ export class Game {
    */
   setCurrentPlayer(player: Player): Game {
     if (![GameState.Dispatching, GameState.WaitingPass].includes(this.state)) {
-      throw new Error(
-        "Current player can only be set in Dispatching/WaitingPass state",
-      );
+      throw new Error("Current player can only be set in Dispatching/WaitingPass state");
     }
 
     this.current = player;
@@ -839,10 +828,7 @@ export class Game {
     this.shuffleArray(tiles);
 
     for (let index = 0; index < this.walls.length; index++) {
-      this.walls[index].tiles = tiles.slice(
-        index * (tiles.length / 4),
-        (index + 1) * (tiles.length / 4),
-      );
+      this.walls[index].tiles = tiles.slice(index * (tiles.length / 4), (index + 1) * (tiles.length / 4));
     }
   }
 
@@ -903,8 +889,7 @@ export class Game {
 
       this.reversePickIndex--;
       if (this.reversePickIndex < 0) {
-        this.reversePickIndex =
-          this.walls[this.reversePickPosition].tiles.length - 1;
+        this.reversePickIndex = this.walls[this.reversePickPosition].tiles.length - 1;
         this.reversePickPosition = (this.reversePickPosition + 3) % 4;
       }
       return taken;
@@ -1024,9 +1009,7 @@ export class Game {
 
     let i = 0;
     while (i < tiles.length - 1) {
-      if (
-        TileCore.fromId(tiles[i]).name !== TileCore.fromId(tiles[i + 1]).name
-      ) {
+      if (TileCore.fromId(tiles[i]).name !== TileCore.fromId(tiles[i + 1]).name) {
         continue;
       }
       pairs.push([i, i + 1]);
@@ -1034,10 +1017,7 @@ export class Game {
       const first = i;
 
       // change i to next tile with diffent name
-      while (
-        i < tiles.length - 1 &&
-        TileCore.fromId(first).name === TileCore.fromId(tiles[i + 1]).name
-      ) {
+      while (i < tiles.length - 1 && TileCore.fromId(first).name === TileCore.fromId(tiles[i + 1]).name) {
         i++;
       }
     }
@@ -1058,10 +1038,7 @@ export class Game {
         player = this.getNextPlayer(player)
       ) {
         // if the first queue action is not waiting, then the player is passed (acted!)
-        if (
-          this.queuedActions.find((action) => action.player === player)
-            ?.status !== ActionResult.Waiting
-        ) {
+        if (this.queuedActions.find((action) => action.player === player)?.status !== ActionResult.Waiting) {
           passedPlayers.push(player!);
         }
       }
@@ -1086,13 +1063,9 @@ export class Game {
   static fromJSON(data: any): Game {
     const game = new Game();
     game.name = data.name || "default";
-    game.players = data.players.map((playerData: any) =>
-      playerData ? Player.fromJSON(playerData) : null,
-    );
+    game.players = data.players.map((playerData: any) => (playerData ? Player.fromJSON(playerData) : null));
     game.walls = data.walls.map((wallData: any) => Wall.fromJSON(wallData));
-    game.discards = data.discards.map((discardData: any) =>
-      Discard.fromJSON(discardData),
-    );
+    game.discards = data.discards.map((discardData: any) => Discard.fromJSON(discardData));
     game.state = data.state;
     game.latestTile = data.latestTile;
     game.current = data.current !== null ? game.players[data.current] : null;
@@ -1101,9 +1074,7 @@ export class Game {
     game.pickIndex = data.pickIndex;
     game.reversePickPosition = data.reversePickPosition;
     game.reversePickIndex = data.reversePickIndex;
-    game.passedPlayers = data.passedPlayers.map(
-      (position: Position) => game.players[position],
-    );
+    game.passedPlayers = data.passedPlayers.map((position: Position) => game.players[position]);
     return game;
   }
 }

@@ -12,6 +12,8 @@ export interface GameTileProp {
   size?: "xs" | "sm" | "md" | "lg" | "xl" | number;
   back?: boolean;
   selected?: boolean;
+  taken?: boolean; // for discarded tile that was taken by another player
+  latest?: boolean; // for discarded tile that was just discarded
 }
 </script>
 
@@ -29,6 +31,8 @@ const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {
     size: "sm",
     back: false,
     selected: false,
+    taken: false,
+    latest: false,
   }),
 });
 
@@ -93,6 +97,8 @@ const tileClass = computed(() => ({
   tile: props.tile.id !== TileCore.voidId && !props.tile.back,
   tile_back: props.tile.id !== TileCore.voidId && props.tile.back,
   tile_selected: props.tile.selected,
+  tile_taken: props.tile.taken,
+  tile_latest: props.tile.latest,
 }));
 
 const tileStyle = {
@@ -129,6 +135,39 @@ const imageClass = computed(() => ({
 .tile_selected {
   position: relative;
   top: -8px;
+}
+
+.tile_taken {
+  // add a gray overlay
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128, 128, 128, 0.5);
+    border-radius: 5px; // match the tile's border radius
+    pointer-events: none; // allow clicks to pass through
+  }
+}
+
+.tile_latest {
+  // add a gray overlay
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px; // match the tile's border radius
+    border: 2px solid #ff0000;
+
+    pointer-events: none; // allow clicks to pass through
+  }
 }
 
 .image_top {
