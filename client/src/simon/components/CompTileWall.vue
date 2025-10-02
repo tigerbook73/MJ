@@ -1,10 +1,12 @@
 <template>
   <div class="flex-center" :class="flex1">
     <div :class="flex2">
-      <comp-tile v-for="(tile, value) in tiles1" :key="value" :type="tile" :position="props.position" back></comp-tile>
+      <comp-tile v-for="(tile, value) in reverse ? tiles1.slice().reverse() : tiles1" :key="value" :type="tile"
+        :position="props.position" back></comp-tile>
     </div>
     <div :class="flex2">
-      <comp-tile v-for="(tile, value) in tiles2" :key="value" :type="tile" :position="props.position" back></comp-tile>
+      <comp-tile v-for="(tile, value) in reverse ? tiles2.slice().reverse() : tiles2" :key="value" :type="tile"
+        :position="props.position" back></comp-tile>
     </div>
   </div>
 </template>
@@ -13,6 +15,7 @@
 defineOptions({
   name: "CompTileWall",
 });
+
 
 import CompTile from "src/simon/components/CompTile.vue";
 import { useMjStore } from "src/simon/stores/mj-store";
@@ -40,6 +43,9 @@ const tiles = computed(() => {
   return positions[props.position] || positions.bottom;
 });
 
+
+
 const tiles1 = computed(() => tiles.value.filter((tile, value) => value % 2));
 const tiles2 = computed(() => tiles.value.filter((tile, value) => (value + 1) % 2));
+const reverse = computed(() => props.position === "left" || props.position === "bottom");
 </script>
