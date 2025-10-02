@@ -195,7 +195,7 @@ export class RoomService {
       .map((player) => player.position);
 
     // create game
-    room.game = new Game();
+    room.game = new Game(room.name);
     room.game.init(positions);
 
     // change room status
