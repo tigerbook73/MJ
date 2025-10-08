@@ -84,3 +84,8 @@
   -
 
 - 玩家加杠 （server 暂不支持）
+
+- quit game不会把玩家direct回lobby页
+
+- lobby页 在刷新后不会自动显示玩家所在房间
+- auto login
