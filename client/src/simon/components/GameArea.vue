@@ -37,7 +37,7 @@ import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
 import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
 import { clientApi } from "src/client/client-api";
-import { setGame, mjGame } from "src/simon/core/mjGame";
+import { mjGame } from "src/simon/core/mjGame";
 import { useMjStore } from "src/simon/stores/mj-store";
 
 const mjStore = useMjStore();
@@ -52,8 +52,7 @@ async function start() {
     const response = await clientApi.startGame();
 
     if (response) {
-      setGame(response);
-      mjStore.refresh();
+      // Game started successfully
     } else {
       console.error("Game start failed: No game data in response");
     }
@@ -67,8 +66,7 @@ async function reset() {
     const response = await clientApi.resetGame();
 
     if (response) {
-      setGame(response);
-      mjStore.refresh();
+      // Game started successfully
     } else {
       console.error("Game start failed: No game data in response");
     }
@@ -96,8 +94,7 @@ async function dropTile(tileId?: TileId) {
 
     const response = await clientApi.actionDrop(tileId);
     if (response) {
-      setGame(response);
-      mjStore.refresh();
+      // Update game state
     } else {
       console.error("Drop failed: No game data in response");
     }
@@ -120,9 +117,8 @@ async function passTurn() {
 
     const response = await clientApi.actionPass();
     if (response) {
-      setGame(response);
       mjGame.pass(mjGame.current);
-      mjStore.refresh();
+
     } else {
       console.error("Pass failed: No game data in response");
     }
@@ -135,9 +131,7 @@ async function handleChi(tileIds: [TileId, TileId]) {
   try {
     const response = await clientApi.actionChi(tileIds);
     if (response) {
-      setGame(response); // Update game state
-      // Add to eat tiles
-      mjStore.refresh(); // Refresh UI
+      // Update game state
     } else {
       console.error("Chi failed: No game data in response");
     }
@@ -150,9 +144,7 @@ async function handlePeng(tileIds: [TileId, TileId]) {
   try {
     const response = await clientApi.actionPeng(tileIds);
     if (response) {
-      setGame(response); // Update game state
-
-      mjStore.refresh(); // Refresh UI
+      // Update game state
     } else {
       console.error("Peng failed: No game data in response");
     }
@@ -165,9 +157,7 @@ async function handleGang(tileIds: [TileId, TileId, TileId]) {
   try {
     const response = await clientApi.actionGang(tileIds);
     if (response) {
-      setGame(response); // Update game state
-
-      mjStore.refresh(); // Refresh UI
+      // Update game state
     } else {
       console.error("Gang failed: No game data in response");
     }
@@ -180,9 +170,7 @@ async function Hu() {
   try {
     const response = await clientApi.actionHu();
     if (response) {
-      setGame(response); // Update game state
-
-      mjStore.refresh(); // Refresh UI
+      // Update game state
     } else {
       console.error("Hu failed: No game data in response");
     }
@@ -194,9 +182,7 @@ async function Zimo() {
   try {
     const response = await clientApi.actionZimo();
     if (response) {
-      setGame(response); // Update game state
-
-      mjStore.refresh(); // Refresh UI
+      // Update game state
     } else {
       console.error("Zimo failed: No game data in response");
     }

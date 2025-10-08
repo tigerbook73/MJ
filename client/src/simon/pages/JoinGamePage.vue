@@ -1,11 +1,20 @@
 <template>
-  <q-page class="row flex-center q-gutter-md">
-    <div class="col-12 text-center">
-      <h1>Join a Game Room</h1>
-      <q-btn color="primary" label="Refresh Rooms" :loading="loading" @click="refreshRooms" />
+  <q-page class="page-join q-pa-xl">
+    <!-- 顶部标题区 -->
+    <div class="hero">
+      <h1 class="hero__title">Join a Game Room</h1>
+      <p class="hero__subtitle">Pick a room and start a match with bots or friends.</p>
+      <q-btn class="hero__refresh q-mt-md" color="primary" unelevated :loading="loading" icon="refresh"
+        label="Refresh Rooms" @click="refreshRooms" />
     </div>
-    <GameRoom v-for="(room, index) in rooms" :key="index" :roomName="room.name" :players="room.players"
-      @update="refreshRooms"></GameRoom>
+
+    <!-- 这里放你原本的房间内容（保持你原有结构，不受网格/卡片限制） -->
+
+    <div class="rooms-flow q-mt-xl">
+      <div class="room-item" v-for="(room, index) in rooms" :key="index">
+        <GameRoom :roomName="room.name" :players="room.players" @update="refreshRooms" />
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -70,10 +79,124 @@ async function refreshRooms() {
 refreshRooms();
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 .room {
   width: 400px;
   height: 400px;
   background-color: lightblue;
+}
+</style> -->
+<style scoped>
+/* 主题基色（可按需调整） */
+:root {
+  --c-bg-1: #f6f9ff;
+  --c-bg-2: #eef3ff;
+  --c-ink: #0f172a;
+  --c-muted: #64748b;
+  --c-card: #ffffff;
+  --shadow: 0 10px 30px rgba(2, 6, 23, 0.06);
+}
+
+.page-join {
+  min-height: 100%;
+  /* 柔和渐变背景 + 轻微网格噪点感 */
+  background: radial-gradient(1200px 600px at 50% -10%, var(--c-bg-1), transparent 60%),
+    radial-gradient(900px 500px at 120% 0%, var(--c-bg-2), transparent 55%),
+    linear-gradient(180deg, #fff, #f8fafc 40%, #f1f5f9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 顶部标题区 */
+.hero {
+  text-align: center;
+  max-width: 980px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.hero__title {
+  margin: 0;
+  font-size: clamp(28px, 6vw, 56px);
+  line-height: 1.1;
+  letter-spacing: 0.3px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #111827, #334155, #111827);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__subtitle {
+  margin: 8px 0 0;
+  font-size: clamp(14px, 2.2vw, 18px);
+  color: var(--c-muted);
+}
+
+.hero__refresh {
+  padding: 8px 18px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+/* 房间网格：自适应列数，卡片大小一致 */
+.rooms-grid {
+  width: min(1200px, 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* 卡片样式与交互 */
+.room-card {
+  background: var(--c-card);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  border: 1px solid rgba(2, 6, 23, 0.06);
+  overflow: hidden;
+}
+
+.room-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.10);
+  border-color: rgba(2, 6, 23, 0.12);
+}
+
+.room-card__content {
+  padding: 16px;
+}
+
+.rooms-flow {
+  width: min(1200px, 100%);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  /* 每列最小 360px，能并排就并排 */
+  gap: 24px;
+  justify-items: center;
+  /* 卡片居中 */
+}
+
+/* 单个房间外层，控制最大宽度（避免拉太宽） */
+.room-item {
+  width: 100%;
+  max-width: 520px;
+  /* 依据你的 GameRoom 视觉尺寸可微调 */
+}
+
+/* 细节：在较窄屏幕时内边距略小，网格更紧凑 */
+@media (max-width: 600px) {
+  .page-join {
+    padding: 16px;
+  }
+
+  .rooms-grid {
+    gap: 14px;
+  }
+
+  .room-card__content {
+    padding: 12px;
+  }
 }
 </style>

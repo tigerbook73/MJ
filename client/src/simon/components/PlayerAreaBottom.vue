@@ -243,7 +243,6 @@ function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   }
 }
 
-
 const emits = defineEmits<{
   (e: "drop-tile", payload: TileId): void;
   (e: "pass-turn"): void;
