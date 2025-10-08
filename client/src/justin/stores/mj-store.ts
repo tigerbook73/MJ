@@ -181,7 +181,7 @@ export const useMjStore = defineStore("mj", () => {
   refreshAll();
 
   return {
-    // game,
+    game,
     room,
     roomList,
     open,

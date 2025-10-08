@@ -2,8 +2,8 @@
   <q-page class="q-pa-md bg-green-2 column flex-center">
     <q-card class="q-pa-md bg-grey-1" style="width: 50%">
       <q-card-section class="q-pa-md row q-col-gutter-md">
-        <q-input filled v-model="email" class="col-6" label="Username" placeholder="e.g. user1234" />
-        <q-input filled v-model="password" class="col-6" label="Password" placeholder="e.g. password1234" />
+        <q-input filled v-model="userStore.email" class="col-6" label="Username" placeholder="e.g. user1234@mj.com" />
+        <q-input filled v-model="userStore.password" class="col-6" label="Password" placeholder="e.g. password1234" />
       </q-card-section>
       <q-separator></q-separator>
       <q-card-actions align="right">
@@ -18,26 +18,33 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "src/justin/stores/user-store";
 import { clientApi } from "src/client/client-api";
+import { AppState } from "../common/common";
 
 defineOptions({
   name: "LoginPage",
 });
 
-const email = ref("Admin@mj.com");
-const password = ref("Password");
 const loading = ref(false);
 const userStore = useUserStore();
+onBeforeMount(() => {
+  if (userStore.appState !== AppState.UnSignedIn) {
+    return;
+  }
+
+  if (userStore.user !== null && userStore.email && userStore.password) {
+    signIn();
+  }
+});
 
 // sign in
 async function signIn() {
   try {
     loading.value = true;
+    await clientApi.signIn(userStore.email, userStore.password);
     userStore.setSignedIn(true);
-    const user = await clientApi.signIn(email.value, password.value);
-    userStore.user = user;
   } catch {
     userStore.setSignedIn(false);
     window.alert("failed");

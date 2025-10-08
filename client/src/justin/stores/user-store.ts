@@ -9,6 +9,8 @@ const mjStore = useMjStore();
 
 export const useUserStore = defineStore("user", () => {
   const user = ref<UserModel | null>(null);
+  const email = ref<string>("");
+  const password = ref<string>("");
   const appState = ref<AppState>(AppState.Unconnected);
   const inGame = ref<boolean>(false);
 
@@ -22,6 +24,22 @@ export const useUserStore = defineStore("user", () => {
     } else {
       appState.value = AppState.InGame;
     }
+  }
+
+  // connected state
+  const connected = ref<boolean>(false);
+  function setConnected(value: boolean) {
+    connected.value = value;
+    if (!value) {
+      signedIn.value = false;
+      mjStore.roomList = [];
+      mjStore.room = null;
+      mjStore.myPos = Position.None;
+      mjStore.setGame(null);
+      // reset other value
+    }
+
+    refreshAppState();
   }
 
   // signed in state
@@ -39,30 +57,19 @@ export const useUserStore = defineStore("user", () => {
     refreshAppState();
   }
 
-  // connected state
-  const connected = ref<boolean>(false);
-  function setConnected(value: boolean) {
-    connected.value = value;
-
-    // reset other value
-    signedIn.value = false;
-    mjStore.roomList = [];
-    mjStore.room = null;
-    mjStore.myPos = Position.None;
-    mjStore.setGame(null);
-    refreshAppState();
-  }
-
   function setInGame(value: boolean) {
     inGame.value = value;
 
     if (!value) {
       mjStore.setGame(null);
     }
+    refreshAppState();
   }
 
   return {
     user,
+    email,
+    password,
     inGame,
     appState,
 

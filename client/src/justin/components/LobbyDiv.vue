@@ -24,7 +24,7 @@ export interface MyPlayer {
 </script>
 <script setup lang="ts">
 import type { Position } from "@common/core/mj.game";
-import { defineProps, defineEmits } from "vue";
+import { defineEmits } from "vue";
 
 defineProps<{
   room: RoomProp;

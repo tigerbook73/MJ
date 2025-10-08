@@ -72,6 +72,8 @@
   - recommended discard指示器改成颜色条
   - bug:  waiting action阶段，当前玩家的highlight异常
 
+- quit game不会把玩家direct回lobby页  done  08/10/2025
+
 - user auto login
 
 - tool bar
@@ -84,3 +86,8 @@
   -
 
 - 玩家加杠 （server 暂不支持）
+
+
+- lobby页 在刷新后不会自动显示玩家所在房间
+
+- room store?
