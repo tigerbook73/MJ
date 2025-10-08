@@ -22,8 +22,8 @@ async function signOut() {
   try {
     await clientApi.signOut();
     userStore.setSignedIn(false);
-  } catch (error: any) {
-    window.alert(error.message);
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -34,6 +34,7 @@ async function quitGame() {
 
   try {
     await clientApi.quitGame(mjStore.room.name);
+    userStore.setInGame(false);
   } catch (e) {
     console.error(e);
   }
