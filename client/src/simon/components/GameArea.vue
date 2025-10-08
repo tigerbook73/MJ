@@ -16,9 +16,9 @@
 
     <!-- bottom -->
     <div class="row h-10">
-      <game-area-c class="w-10" @zi-mo="Zimo"></game-area-c>
+      <game-area-c class="w-10"></game-area-c>
       <player-area-bottom class="w-70" @drop-tile="dropTile" @pass-turn="passTurn" @handle-chi="handleChi"
-        @handle-peng="handlePeng" @handle-gang="handleGang" @hu="Hu"></player-area-bottom>
+        @handle-peng="handlePeng" @handle-gang="handleGang" @hu="Hu" @zi-mo="Zimo"></player-area-bottom>
       <game-area-d class="w-10"></game-area-d>
     </div>
   </div>
