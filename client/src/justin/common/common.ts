@@ -9,6 +9,8 @@ export const PlayerPosRotation = [
   [Position.North, Position.West, Position.South, Position.East],
 ];
 
+export const currentSeatOrder = [Position.None, Position.None, Position.None, Position.None];
+
 export enum AppState {
   Unconnected = "UNCONNECTED",
   UnSignedIn = "UNSIGNED_IN",
@@ -17,6 +19,9 @@ export enum AppState {
 }
 
 export function findDirectionForPostiion(myPostion: Position, direction: number) {
+  if (myPostion == Position.None) {
+    return Position.None;
+  }
   return PlayerPosRotation[myPostion][direction];
 }
 

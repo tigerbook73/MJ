@@ -117,7 +117,7 @@ export const useMjStore = defineStore("mj", () => {
 
     if (game.state === GameState.WaitingPass) {
       //
-      if (game.current.position % 4 === (myPos.value += 1) % 4) {
+      if (game.current.position % 4 === (myPos.value + 1) % 4) {
         canChi.value = TileCore.canChi(hand, game.latestTile);
       }
       canPon.value = TileCore.canPeng(hand, game.latestTile);

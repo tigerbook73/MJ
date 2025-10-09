@@ -219,7 +219,6 @@ async function enterGame() {
       return;
     }
     await clientApi.enterGame(currentRoom.value.name);
-    mjStore.myPos = currentPos.value;
     userStore.refreshAppState();
   } catch (error: any) {
     window.alert(error.message);

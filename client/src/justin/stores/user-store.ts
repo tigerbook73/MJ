@@ -71,6 +71,7 @@ export const useUserStore = defineStore("user", () => {
     email,
     password,
     inGame,
+
     appState,
 
     setInGame,
