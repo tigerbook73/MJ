@@ -10,8 +10,9 @@
     </div>
 
     <div class="row reverse flex-center">
-      <comp-tile v-for="(tile, index) in topCardsVisible" :key="index" :type="tile" :back="!userMj.open" size="large"
-        position="top" :selected="userMj.selectedCard.id == tile.id"></comp-tile>
+      <comp-tile v-for="(tile, index) in topCardsVisible" :key="index" :type="tile"
+        :back="!shouldRevealTop && isReal(tile.id)" position="top"
+        :selected="userMj.selectedCard.id == tile.id"></comp-tile>
     </div>
   </div>
 </template>
@@ -25,15 +26,11 @@ import CompTile from "src/simon/components/CompTile.vue";
 import { roomStore } from "../stores/room-store";
 import { computed } from "vue";
 import { ActionType, TileCore } from "src/common/core/mj.tile-core";
+import { GameState } from "src/common/core/mj.game";
 
 const userMj = useMjStore();
 const room = roomStore();
-const topCardsVisible = computed(() => {
-  // 明牌开 -> 原数组；关 -> 过滤掉占位
-  return userMj.open
-    ? userMj.p2Cards
-    : userMj.p2Cards.filter(c => c.id !== TileCore.voidId && c.id !== -1);
-});
+
 
 const mySeat = computed(() => room.currentPosition);
 const targetSeat = computed(() =>
@@ -62,4 +59,20 @@ const meldGroups = computed(() => {
       })
     );
 });
+
+const isTopCurrent = computed(() => userMj.currentGame?.current?.position === targetSeat.value);
+
+
+// 是否需要亮牌（只亮左家自己、或者你有个全局“明牌开关”时也可亮）
+const shouldRevealTop = computed(() => {
+  // 仅胡的人亮
+  // return hasHuTop.value;
+  // 如果“局已结束时”亮全员，可改为：
+  return isTopCurrent.value && (userMj.currentGame?.state === GameState.End);
+});
+
+const isReal = (id: number) => id !== TileCore.voidId && id !== -1;
+
+// 别再 filter 占位牌，直接返回完整数组
+const topCardsVisible = computed(() => userMj.p2Cards);
 </script>

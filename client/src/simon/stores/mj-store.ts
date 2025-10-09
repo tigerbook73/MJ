@@ -116,25 +116,17 @@ export const useMjStore = defineStore("mj", () => {
   const myLatestPickCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
   const selectedCard = ref({ name: "", id: TileCore.voidId, options: { selected: false } });
   function refresh() {
-    topWall.value = mjGame.walls[0].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-    rightWall.value = mjGame.walls[1].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-    bottomWall.value = mjGame.walls[2].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-    leftWall.value = mjGame.walls[3].tiles.map((tileId) => {
-      return mapTile(tileId);
-    });
-
     const myPos = useRoomStore.currentPosition;
 
     if (myPos === null) {
       console.warn("myPos is null, cannot map player positions.");
       return;
     }
+
+    topWall.value = mjGame.walls[mapPosition(myPos, Direction.Top)].tiles.map(mapTile);
+    rightWall.value = mjGame.walls[mapPosition(myPos, Direction.Right)].tiles.map(mapTile);
+    bottomWall.value = mjGame.walls[mapPosition(myPos, Direction.Bottom)].tiles.map(mapTile);
+    leftWall.value = mjGame.walls[mapPosition(myPos, Direction.Left)].tiles.map(mapTile);
 
     pBottomCards.value = copy(mapPosition(myPos, Direction.Bottom));
     p1Cards.value = copy(mapPosition(myPos, Direction.Left));

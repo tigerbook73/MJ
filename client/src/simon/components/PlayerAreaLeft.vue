@@ -11,8 +11,9 @@
 
 
     <div class="column flex-center">
-      <comp-tile v-for="(tile, index) in leftCardsVisible" :key="index" :type="tile" :back="!userMj.open" size="large"
-        position="left" :selected="userMj.selectedCard.id == tile.id"></comp-tile>
+      <comp-tile v-for="(tile, index) in leftCardsVisible" :key="index" :type="tile"
+        :back="!shouldRevealLeft && isReal(tile.id)" size="large" position="left"
+        :selected="userMj.selectedCard.id == tile.id"></comp-tile>
     </div>
   </div>
 
@@ -25,17 +26,13 @@ import CompTile from "./CompTile.vue";
 import { roomStore } from "../stores/room-store";
 import { computed } from "vue";
 import { ActionType, TileCore } from "src/common/core/mj.tile-core";
+import { GameState } from "src/common/core/mj.game";
+// import { GameState } from "src/common/core/mj.game";
 
 defineOptions({ name: "PlayerAreaLeft" });
 
 const userMj = useMjStore();
 const room = roomStore();
-const leftCardsVisible = computed(() => {
-  // 明牌开 -> 原数组；关 -> 过滤掉占位
-  return userMj.open
-    ? userMj.p1Cards
-    : userMj.p1Cards.filter(c => c.id !== TileCore.voidId && c.id !== -1);
-});
 
 // 我的座位（Bottom 的基准）
 const mySeat = computed(() => room.currentPosition);
@@ -69,6 +66,21 @@ const meldGroups = computed(() => {
       })
     );
 });
+
+const isLeftCurrent = computed(() => userMj.currentGame?.current?.position === targetSeat.value);
+
+// 是否需要亮牌（只亮左家自己、或者你有个全局“明牌开关”时也可亮）
+const shouldRevealLeft = computed(() => {
+  // 仅胡的人亮
+  // return hasHuLeft.value;
+  // 如果“局已结束时”亮全员，可改为：
+  return isLeftCurrent.value && (userMj.currentGame?.state === GameState.End);
+});
+
+const isReal = (id: number) => id !== TileCore.voidId && id !== -1;
+
+// 别再 filter 占位牌，直接返回完整数组
+const leftCardsVisible = computed(() => userMj.p1Cards);
 </script>
 
 <style scoped>
