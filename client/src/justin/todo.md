@@ -91,3 +91,5 @@
 - lobby页 在刷新后不会自动显示玩家所在房间
 
 - room store?
+
+- fixed bug, when myPos = Position.None, component compute variable will throw error

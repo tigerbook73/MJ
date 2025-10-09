@@ -1,15 +1,15 @@
 <template>
   <q-page class="q-pa-md column flex-center bg-blue-grey-5">
-    <div class="row" style="width: 80%; min-height: 500px">
+    <div class="row" style="width: 80%; min-height: 700px">
       <div class="q-pa-md col-5 row flex-center bg-green-2" style="align-items: start">
         <div
           class="q-pa-md column flex-center"
-          style="width: 80%; margin: 5px; align-items: start; font-size: x-large; font-weight: 800"
+          style="width: 80%; margin: 5px; align-items: start; font-size: x-large; font-weight: 800; gap: 5px"
         >
-          <div>Room List</div>
+          <div class="q-pa-md no-select" style="font-size: xx-large">Room List</div>
 
           <div
-            class="row fit q-pa-md no-select"
+            class="row fit q-pa-md no-select room"
             style="font-size: x-large; font-weight: 500; cursor: pointer"
             v-for="(room, index) in rooms"
             :key="index"
@@ -21,42 +21,49 @@
           </div>
         </div>
       </div>
-      <div class="col-7 q-pa-md column flex-center bg-green-1">
-        <div class="q-pa-sm row flex-center bg-blue-1" style="height: 70%; width: 100%">
+      <div class="col-7 q-pa-md column flex-center bg-grey-5">
+        <div class="q-pa-sm row flex-center bg-grey-5" style="height: 65%; width: 100%">
           <div class="column flex-center" style="width: 100%">
             <div v-for="rowIndex in 3" :key="rowIndex" class="row flex-center" style="width: 100%">
               <div v-for="colIndex in 3" :key="colIndex" class="col-4">
+                <!-- seats -->
                 <template v-for="seat in seatLayout" :key="seat.label">
                   <div
                     v-if="seat.row === rowIndex - 1 && seat.col === colIndex - 1"
-                    class="column col-4 flex-center no-select"
+                    class="column col-4 q-pa-sm flex-center no-select room"
                     :class="{ current: seat.pos === selectedPos }"
-                    style="font-size: x-large; font-weight: 500; cursor: pointer"
+                    style="font-size: xx-large; font-weight: 700; cursor: pointer"
                     @dblclick="selectPos(seat.pos)"
                   >
                     {{ seat.label }}
-                    <div>
-                      {{ rooms[roomNumber]?.players?.[seat.pos]?.name }}
-                    </div>
+                    <div>{{ rooms[roomNumber]?.players?.[seat.pos]?.name ?? "\u00A0" }}</div>
                   </div>
                 </template>
+
+                <div
+                  v-if="rowIndex === 2 && colIndex === 2"
+                  class="column col-4 items-center justify-center q-pa-md"
+                  style="font-size: xx-large; font-weight: 700; cursor: pointer"
+                  @click="enterGame"
+                >
+                  {{ "Enter Game" }}
+                </div>
+                <div>{{ "\u00A0" }}</div>
               </div>
             </div>
           </div>
         </div>
-        <div class="q-pa-sm column flex-center" style="flex: auto">
-          <div class="column flex-center" style="font-weight: bold; font-size: large">
-            <div>room: {{ selectedRoom?.name || "None" }}</div>
-            <div>pos: {{ positionNames[currentPos] }}</div>
-          </div>
+        <div class="q-pa-sm column flex-center" style="flex: auto; gap: 5px">
           <q-btn
             flat
-            class="q-pa-sm flex-center bg-white"
+            class="q-pa-sm flex-center bg-grey-4"
             style="font-size: large; font-weight: bold"
             @click="enterGame"
             >EnterGame</q-btn
           >
-          <q-btn @click="signOut">Sign Out</q-btn>
+          <q-btn flat class="q-pa-sm flex-center bg-grey-4" style="font-size: large; font-weight: bold" @click="signOut"
+            >Sign Out</q-btn
+          >
         </div>
       </div>
     </div>
@@ -85,14 +92,6 @@ const currentRoom = ref<RoomModel | null>(null);
 const currentPos = ref<Position>(Position.None);
 const in_room = ref(false);
 const in_pos = ref(false);
-
-const positionNames = {
-  [Position.West]: "West",
-  [Position.North]: "North",
-  [Position.South]: "South",
-  [Position.East]: "East",
-  [Position.None]: "None",
-};
 
 const seatLayout = [
   { label: "West", pos: Position.West, row: 0, col: 1 },
@@ -247,7 +246,7 @@ refreshStatus();
 }
 
 .current {
-  background-color: lightcoral;
+  background-color: rgb(255, 145, 145);
   color: black;
 }
 
@@ -260,5 +259,10 @@ refreshStatus();
 
 .seat {
   outline-color: black;
+}
+
+.room {
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px #414141 inset; /* looks like an outline */
 }
 </style>
