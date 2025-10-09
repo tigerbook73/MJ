@@ -14,6 +14,7 @@
         <div class="row q-gutter-sm items-center">
           <div>{{ exampleStore.user.email }}</div>
           <q-btn v-if="exampleStore.appState === AppState.InGame" dense flat label="Quit Game" @click="quitGame" />
+          <q-btn v-if="exampleStore.appState === AppState.InGame" dense flat label="Fake Data" @click="fakeData" />
           <q-btn v-if="exampleStore.appState === AppState.InLobby" dense flat label="Sign Out" @click="signOut" />
         </div>
       </q-toolbar>
@@ -48,6 +49,7 @@ import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { clientApi } from "src/client/client-api";
 import type { GameEvent } from "@common/protocols/apis.models";
+import { getFakeEvent } from "src/common/test/helper";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -120,4 +122,15 @@ clientApi.gameSocket.onReceive((event: GameEvent) => {
   exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
   exampleStore.setCurrentGame(clientApi.findMyGame(event));
 });
+
+function fakeData() {
+  const fakeEvent = getFakeEvent();
+  fakeEvent.data.clients[0].id = clientApi?.gameSocket?.socket?.id || "";
+  const event = clientApi.parseEvent(fakeEvent);
+
+  exampleStore.roomList = event.data.rooms;
+  exampleStore.currentRoom = clientApi.findMyRoom(event);
+  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
+  exampleStore.setCurrentGame(clientApi.findMyGame(event));
+}
 </script>
