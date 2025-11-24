@@ -1,4 +1,3 @@
-import { Logger } from "@nestjs/common";
 import { type TileId, TileCore, ActionType } from "./mj.tile-core";
 
 export const enum ActionResult {
@@ -141,7 +140,7 @@ export class Game {
   public queuedActions: ActionDetail[] = []; // 等待处理的动作，该属性不用于Client Side
 
   // logger
-  static logger = new Logger("Game");
+  static logger = console;
 
   constructor(name: string = "default") {
     this.name = name;
