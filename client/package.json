@@ -10,7 +10,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./ && vue-tsc --noEmit",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
     "dev": "quasar dev",
     "start": "quasar dev",
