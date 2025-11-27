@@ -2,13 +2,15 @@ import type { Game } from "@common/core/mj.game";
 import { Position } from "@common/core/mj.game";
 import type { TileId } from "src/common/core/mj.tile-core";
 
-export enum Direction {
-  Top = "top",
-  Bottom = "bottom",
-  Right = "right",
-  Left = "left",
-  None = "none",
-}
+export const Direction = {
+  Top: "top",
+  Bottom: "bottom",
+  Right: "right",
+  Left: "left",
+  None: "none",
+} as const;
+
+export type Direction = (typeof Direction)[keyof typeof Direction];
 
 const directionTextMap = {
   [Direction.Top]: "上",
@@ -76,8 +78,8 @@ export class CommonUtil {
     // position === (myPosition + 2) %4 => top
     // position === (myPosition + 3) %4 => right
 
-    const directionMap = ["bottom", "left", "top", "right"];
-    return directionMap[((position - myPosition + 4) % 4) as Position] as Direction;
+    const directionMap = [Direction.Bottom, Direction.Left, Direction.Top, Direction.Right];
+    return directionMap[(position - myPosition + 4) % 4];
   }
 
   static extendArrayToLength<T>(array: T[], length: number, fillValue: T): T[] {

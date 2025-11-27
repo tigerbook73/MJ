@@ -37,7 +37,7 @@ import { Position } from "src/common/core/mj.game";
 
 // define props
 const props = defineProps<{
-  direction: Direction.Left | Direction.Right;
+  direction: typeof Direction.Left | typeof Direction.Right;
 }>();
 
 const exampleStore = useExampleStore();

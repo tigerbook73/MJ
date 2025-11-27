@@ -23,7 +23,7 @@ import { TileCore } from "src/common/core/mj.tile-core";
 
 // define props
 const props = defineProps<{
-  direction: Direction.Bottom | Direction.Top;
+  direction: typeof Direction.Bottom | typeof Direction.Top;
 }>();
 
 const exampleStore = useExampleStore();
