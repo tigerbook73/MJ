@@ -87,7 +87,7 @@ const selectedRoom = ref<RoomProp | null>(null);
 const selectedPos = ref<Position>(Position.None);
 const roomNumber = ref(-1);
 
-const display = ref({ roomname: "", pos: Position.None });
+const display = ref<{ roomname: string; pos: Position }>({ roomname: "", pos: Position.None });
 const currentRoom = ref<RoomModel | null>(null);
 const currentPos = ref<Position>(Position.None);
 const in_room = ref(false);

@@ -4,12 +4,14 @@ import { userStore } from "./user-store";
 import { roomStore } from "./room-store";
 import { useMjStore } from "./mj-store";
 
-export enum AppState {
-  NotConnected,
-  NotLoggedIn,
-  InLobby,
-  InGame,
-}
+export const AppState = {
+  NotConnected: 0,
+  NotLoggedIn: 1,
+  InLobby: 2,
+  InGame: 3,
+} as const;
+
+export type AppState = (typeof AppState)[keyof typeof AppState];
 
 const mjStore = useMjStore();
 const useUserStore = userStore();

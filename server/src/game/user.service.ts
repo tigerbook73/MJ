@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { Position } from "src/common/core/mj.game";
+import { Position, getPositionName } from "src/common/core/mj.game";
 import { UserType } from "src/common/models/common.types";
 import { UserCreateDto, UserModel } from "src/common/models/user.model";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -39,7 +39,7 @@ export class UserService {
     const bot = new UserModel(
       `bot-${position}`,
       "bot",
-      Position[position],
+      getPositionName(position),
       `${position}@mj-game.com`,
       "",
       UserType.Bot,
@@ -68,7 +68,8 @@ export class UserService {
     return (
       this.users.find(
         (user) =>
-          user.type === UserType.Bot && user.lastName === Position[position],
+          user.type === UserType.Bot &&
+          user.lastName === getPositionName(position),
       ) ?? null
     );
   }
