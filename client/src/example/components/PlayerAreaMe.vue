@@ -32,11 +32,11 @@
 </template>
 
 <script lang="ts">
-enum State {
-  None = 0,
-  MyTurn = 1,
-  WaitingPass = 2,
-}
+const State = {
+  None: 0,
+  MyTurn: 1,
+  WaitingPass: 2,
+} as const;
 
 interface ShowState {
   show: boolean;

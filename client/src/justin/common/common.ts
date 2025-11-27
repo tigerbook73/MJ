@@ -11,12 +11,14 @@ export const PlayerPosRotation = [
 
 export const currentSeatOrder = [Position.None, Position.None, Position.None, Position.None];
 
-export enum AppState {
-  Unconnected = "UNCONNECTED",
-  UnSignedIn = "UNSIGNED_IN",
-  InLobby = "IN_LOBBY",
-  InGame = "IN_GAME",
-}
+export const AppState = {
+  Unconnected: "UNCONNECTED",
+  UnSignedIn: "UNSIGNED_IN",
+  InLobby: "IN_LOBBY",
+  InGame: "IN_GAME",
+} as const;
+
+export type AppState = (typeof AppState)[keyof typeof AppState];
 
 export function findDirectionForPostiion(myPostion: Position, direction: number) {
   if (myPostion == Position.None) {

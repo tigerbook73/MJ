@@ -3,12 +3,14 @@ import type { Game, Position } from "@common/core/mj.game";
 import type { RoomModel } from "@common/models/room.model";
 import { ref } from "vue";
 
-export enum AppState {
-  Unconnected = "UNCONNECTED",
-  UnSignedIn = "UNSIGNED_IN",
-  InLobby = "IN_LOBBY",
-  InGame = "IN_GAME",
-}
+export const AppState = {
+  Unconnected: "UNCONNECTED",
+  UnSignedIn: "UNSIGNED_IN",
+  InLobby: "IN_LOBBY",
+  InGame: "IN_GAME",
+} as const;
+
+export type AppState = (typeof AppState)[keyof typeof AppState];
 
 export const useExampleStore = defineStore("example-store", () => {
   // app state

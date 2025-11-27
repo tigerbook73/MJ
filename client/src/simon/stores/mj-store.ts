@@ -15,12 +15,14 @@ export interface HandCard {
   options: { selected: boolean };
 }
 
-export enum Direction {
-  Top = "top",
-  Bottom = "bottom",
-  Right = "right",
-  Left = "left",
-}
+export const Direction = {
+  Top: "top",
+  Bottom: "bottom",
+  Right: "right",
+  Left: "left",
+} as const;
+
+export type Direction = (typeof Direction)[keyof typeof Direction];
 
 export function mapTile(tileId: number): HandCard {
   const tile = TileCore.fromId(tileId);
