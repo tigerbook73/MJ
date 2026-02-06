@@ -1,4 +1,5 @@
 import { NestFactory } from "@nestjs/core";
+import { ValidationPipe } from "@nestjs/common";
 import { AppModule } from "./app.module";
 import * as Express from "express";
 import { join } from "path";
@@ -6,6 +7,7 @@ import { join } from "path";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix("api");
+  app.useGlobalPipes(new ValidationPipe());
 
   const spaPath = ["..", "public"];
   app.use(Express.static(join(__dirname, ...spaPath)));
