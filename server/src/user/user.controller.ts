@@ -33,6 +33,11 @@ export class UserController {
     return this.userService.findAll();
   }
 
+  @Get("email/:email")
+  findByEmail(@Param("email") email: string) {
+    return this.userService.findByEmail(email);
+  }
+
   @Get(":id")
   findOne(@Param("id", ParseIntPipe) id: number) {
     return this.userService.findById(id);
@@ -51,10 +56,5 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   remove(@Param("id", ParseIntPipe) id: number) {
     return this.userService.delete(id);
-  }
-
-  @Get("email/:email")
-  findByEmail(@Param("email") email: string) {
-    return this.userService.findByEmail(email);
   }
 }

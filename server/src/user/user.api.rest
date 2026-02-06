@@ -11,11 +11,9 @@ POST http://localhost:3000/api/users
 Content-Type: application/json
 
 {
-  "username": "testuser",
   "email": "testuser@example.com",
   "password": "password123",
-  "firstName": "Test",
-  "lastName": "User"
+  "name": "Test User"
 }
 
 ### Update user
@@ -23,10 +21,8 @@ PUT http://localhost:3000/api/users/1
 Content-Type: application/json
 
 {
-  "username": "updateduser",
   "email": "updated@example.com",
-  "firstName": "Updated",
-  "lastName": "User"
+  "name": "Updated User"
 }
 
 ### Patch user
@@ -39,6 +35,10 @@ Content-Type: application/json
 
 ### Delete user
 DELETE http://localhost:3000/api/users/1
+Content-Type: application/json
+
+### Get user by email
+GET http://localhost:3000/api/users/email/testuser@example.com
 Content-Type: application/json
 
 ### User login
