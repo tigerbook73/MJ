@@ -1,5 +1,9 @@
-export class UpdateUserDto {
-  email?: string;
-  name?: string;
-  password?: string;
-}
+import { z } from "zod";
+
+export const UpdateUserSchema = z.object({
+  email: z.string().email().optional(),
+  name: z.string().optional(),
+  password: z.string().min(8).optional(),
+});
+
+export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;

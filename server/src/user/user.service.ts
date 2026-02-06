@@ -7,7 +7,8 @@ import {
 } from "@nestjs/common";
 import { hash, verify } from "argon2";
 import { UserRepository } from "./user.repository";
-import { CreateUserDto, UpdateUserDto, UserResponseDto } from "./dto";
+import { UserResponseDto } from "./dto";
+import type { CreateUserDto, UpdateUserDto } from "./dto";
 
 @Injectable()
 export class UserService {

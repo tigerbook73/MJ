@@ -11,7 +11,9 @@ import {
   HttpStatus,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
-import { CreateUserDto, UpdateUserDto } from "./dto";
+import { CreateUserSchema, UpdateUserSchema } from "./dto";
+import type { CreateUserDto, UpdateUserDto } from "./dto";
+import { ZodValidationPipe } from "../common/pipes/zod-validation.pipe";
 
 @Controller("users")
 export class UserController {
@@ -19,7 +21,10 @@ export class UserController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto) {
+  create(
+    @Body(new ZodValidationPipe(CreateUserSchema))
+    createUserDto: CreateUserDto,
+  ) {
     return this.userService.create(createUserDto);
   }
 
@@ -36,7 +41,8 @@ export class UserController {
   @Put(":id")
   update(
     @Param("id", ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(new ZodValidationPipe(UpdateUserSchema))
+    updateUserDto: UpdateUserDto,
   ) {
     return this.userService.update(id, updateUserDto);
   }

@@ -31,7 +31,8 @@
     "@prisma/client": "6.8.2",
     "argon2": "^0.44.0",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2"
+    "rxjs": "^7.8.2",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

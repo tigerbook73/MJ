@@ -6,7 +6,7 @@ import {
   NotFoundException,
   BadRequestException,
 } from "@nestjs/common";
-import { CreateUserDto, UpdateUserDto } from "./dto";
+import type { CreateUserDto, UpdateUserDto } from "./dto";
 
 describe("UserService", () => {
   let service: UserService;
