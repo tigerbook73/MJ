@@ -1,9 +1,26 @@
-import { Controller, Post, Body, HttpCode, HttpStatus } from "@nestjs/common";
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from "@nestjs/swagger";
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  HttpCode,
+  HttpStatus,
+  UseGuards,
+} from "@nestjs/common";
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { LoginDto, RegisterDto, AuthResponseDto } from "./dto";
+import { JwtAuthGuard } from "./guards/jwt.guard";
+import { User } from "../libs/decorators/user.decorator";
+import { UserResponseDto } from "../user/dto";
 
-@ApiTags("auth")
+@ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -35,5 +52,19 @@ export class AuthController {
   @ApiResponse({ status: 401, description: "Invalid credentials" })
   async login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
+  }
+
+  @Get("profile")
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: "Get logged-in user profile" })
+  @ApiResponse({
+    status: 200,
+    description: "User profile retrieved successfully",
+    type: UserResponseDto,
+  })
+  getProfile(@User() user: UserResponseDto): UserResponseDto {
+    return user;
   }
 }

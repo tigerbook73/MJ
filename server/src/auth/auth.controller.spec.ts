@@ -70,4 +70,22 @@ describe("AuthController", () => {
       expect(service.login).toHaveBeenCalledWith(loginDto);
     });
   });
+
+  describe("getProfile", () => {
+    it("should return logged-in user profile using @User() decorator", () => {
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        name: "Test User",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      const result = controller.getProfile(mockUser);
+
+      expect(result).toEqual(mockUser);
+      expect(result.id).toBe(1);
+      expect(result.email).toBe("test@example.com");
+    });
+  });
 });
