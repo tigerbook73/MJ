@@ -16,7 +16,7 @@ import {
 } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { LoginDto, RegisterDto, AuthResponseDto } from "./dto";
-import { JwtAuthGuard } from "./guards/jwt.guard";
+import { JwtAuthGuard } from "../libs/guards/jwt.guard";
 import { User } from "../libs/decorators/user.decorator";
 import { UserResponseDto } from "../user/dto";
 
