@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -16,11 +17,19 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { UserService } from "./user.service";
 import { CreateUserDto, UpdateUserDto, UserResponseDto } from "./dto";
+import { JwtAuthGuard } from "../auth/guards/jwt.guard";
 
-@ApiTags("users")
+@ApiTags("User")
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
+@ApiResponse({
+  status: 401,
+  description: "Unauthorized - missing or invalid token",
+})
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}

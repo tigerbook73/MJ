@@ -16,12 +16,16 @@ async function bootstrap() {
     .setTitle("MJ Game API")
     .setDescription("Mahjong Game REST API Documentation")
     .setVersion("1.0")
-    .addTag("users", "User management endpoints")
-    .addTag("game", "Game action endpoints")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api/docs", app, document);
+  SwaggerModule.setup("api/docs", app, document, {
+    swaggerOptions: {
+      tagsSorter: "alpha",
+      schemasSorter: "alpha", // currently not working, TODO
+      persistAuthorization: true,
+    },
+  });
 
   const spaPath = ["../..", "public"];
   app.use(Express.static(join(__dirname, ...spaPath)));
