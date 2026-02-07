@@ -11,9 +11,11 @@ import { PrismaModule } from "../prisma/prisma.module";
 @Module({
   imports: [
     PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || "your-secret-key",
-      signOptions: { expiresIn: "1h" },
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.JWT_SECRET || "your-secret-key",
+        signOptions: { expiresIn: "1h" },
+      }),
     }),
     UserModule,
     PrismaModule,
