@@ -25,14 +25,6 @@ Content-Type: application/json
   "name": "Updated User"
 }
 
-### Patch user
-PATCH http://localhost:3000/api/users/1
-Content-Type: application/json
-
-{
-  "email": "newemail@example.com"
-}
-
 ### Delete user
 DELETE http://localhost:3000/api/users/1
 Content-Type: application/json
