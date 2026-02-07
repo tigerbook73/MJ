@@ -23,7 +23,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup("api/docs", app, document);
 
-  const spaPath = ["..", "public"];
+  const spaPath = ["../..", "public"];
   app.use(Express.static(join(__dirname, ...spaPath)));
   app.use(
     (
