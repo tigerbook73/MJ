@@ -1,0 +1,162 @@
+import { Test, TestingModule } from "@nestjs/testing";
+import { AuthService } from "./auth.service";
+import { UserService } from "../user/user.service";
+import { UserRepository } from "../user/user.repository";
+import { JwtService } from "@nestjs/jwt";
+import { ConflictException, UnauthorizedException } from "@nestjs/common";
+import * as argon2 from "argon2";
+
+jest.mock("argon2");
+
+describe("AuthService", () => {
+  let service: AuthService;
+  let userService: UserService;
+  let userRepository: UserRepository;
+  let jwtService: JwtService;
+
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        AuthService,
+        {
+          provide: UserService,
+          useValue: {
+            findById: jest.fn(),
+          },
+        },
+        {
+          provide: UserRepository,
+          useValue: {
+            findByEmail: jest.fn(),
+            create: jest.fn(),
+          },
+        },
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn().mockReturnValue("mock-token"),
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<AuthService>(AuthService);
+    userService = module.get<UserService>(UserService);
+    userRepository = module.get<UserRepository>(UserRepository);
+    jwtService = module.get<JwtService>(JwtService);
+  });
+
+  describe("register", () => {
+    it("should register a new user", async () => {
+      const registerDto = {
+        email: "test@example.com",
+        name: "Test User",
+        password: "password123",
+      };
+
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        name: "Test User",
+        password: "hashed-password",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(null);
+      jest.spyOn(argon2, "hash").mockResolvedValue("hashed-password");
+      jest.spyOn(userRepository, "create").mockResolvedValue(mockUser);
+
+      const result = await service.register(registerDto);
+
+      expect(result.accessToken).toBe("mock-token");
+      expect(result.userId).toBe(1);
+      expect(result.email).toBe("test@example.com");
+    });
+
+    it("should throw ConflictException if user already exists", async () => {
+      const registerDto = {
+        email: "existing@example.com",
+        name: "Test User",
+        password: "password123",
+      };
+
+      const existingUser = {
+        id: 1,
+        email: "existing@example.com",
+        name: "Test User",
+        password: "hashed-password",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(existingUser);
+
+      await expect(service.register(registerDto)).rejects.toThrow(
+        ConflictException,
+      );
+    });
+  });
+
+  describe("login", () => {
+    it("should login a valid user", async () => {
+      const loginDto = {
+        email: "test@example.com",
+        password: "password123",
+      };
+
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        name: "Test User",
+        password: "hashed-password",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(mockUser);
+      jest.spyOn(argon2, "verify").mockResolvedValue(true);
+
+      const result = await service.login(loginDto);
+
+      expect(result.accessToken).toBe("mock-token");
+      expect(result.userId).toBe(1);
+    });
+
+    it("should throw UnauthorizedException for invalid email", async () => {
+      const loginDto = {
+        email: "nonexistent@example.com",
+        password: "password123",
+      };
+
+      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(null);
+
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+
+    it("should throw UnauthorizedException for invalid password", async () => {
+      const loginDto = {
+        email: "test@example.com",
+        password: "wrongpassword",
+      };
+
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        name: "Test User",
+        password: "hashed-password",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(mockUser);
+      jest.spyOn(argon2, "verify").mockResolvedValue(false);
+
+      await expect(service.login(loginDto)).rejects.toThrow(
+        UnauthorizedException,
+      );
+    });
+  });
+});
