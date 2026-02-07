@@ -4,7 +4,8 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from "@nestjs/common";
-import { PrismaClient } from "@generated/client";
+import { PrismaClient } from "../../generated/prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 
 @Injectable()
 export class PrismaService
@@ -12,6 +13,19 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   private readonly logger = new Logger(PrismaService.name);
+
+  constructor() {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error("DATABASE_URL environment variable is required");
+    }
+
+    const adapter = new PrismaBetterSqlite3({
+      url: databaseUrl,
+    });
+
+    super({ adapter });
+  }
 
   async onModuleInit() {
     await this.$connect();

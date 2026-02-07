@@ -1,7 +1,17 @@
-import { PrismaClient } from "../generated/prisma";
+import "dotenv/config";
+import { PrismaClient } from "../generated/prisma/client";
+import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import * as argon2 from "argon2";
 
-const prisma = new PrismaClient();
+const databaseUrl = process.env.DATABASE_URL;
+if (!databaseUrl) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
+
+const adapter = new PrismaBetterSqlite3({
+  url: databaseUrl,
+});
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Starting database seeding...");
