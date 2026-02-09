@@ -9,6 +9,11 @@ export class AppController {
     private readonly roomService: RoomService,
   ) {}
 
+  @Get()
+  getRoot(): string {
+    return this.appService.getHello();
+  }
+
   @Get("/hello")
   getHello(): string {
     return this.appService.getHello();
