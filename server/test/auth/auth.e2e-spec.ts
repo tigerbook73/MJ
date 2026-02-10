@@ -124,8 +124,6 @@ describe("AuthController (e2e)", () => {
         });
     });
 
-    return;
-
     it("should fail to login with incorrect password", () => {
       return request(app.getHttpServer())
         .post("/api/auth/login")
