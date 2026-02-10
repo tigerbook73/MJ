@@ -5,8 +5,11 @@ import { AuthService } from "./auth.service";
 import { ClientService } from "./client.service";
 import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
+import { WsJwtGuard } from "./ws-jwt.guard";
+import { AuthModule } from "src/auth/auth.module";
 
 @Module({
+  imports: [AuthModule],
   providers: [
     MjGameGateway,
     GameService,
@@ -14,6 +17,7 @@ import { RoomService } from "./room.service";
     ClientService,
     UserService,
     RoomService,
+    WsJwtGuard,
   ],
   exports: [UserService, RoomService, GameService, AuthService, ClientService],
 })

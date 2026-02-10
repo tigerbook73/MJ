@@ -1,7 +1,6 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { AuthService } from "./auth.service";
 import { UserService } from "../user/user.service";
-import { UserRepository } from "../user/user.repository";
 import { JwtService } from "@nestjs/jwt";
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import * as argon2 from "argon2";
@@ -10,11 +9,7 @@ jest.mock("argon2");
 
 describe("AuthService", () => {
   let service: AuthService;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   let userService: UserService;
-  let userRepository: UserRepository;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -24,12 +19,8 @@ describe("AuthService", () => {
           provide: UserService,
           useValue: {
             findById: jest.fn(),
-          },
-        },
-        {
-          provide: UserRepository,
-          useValue: {
             findByEmail: jest.fn(),
+            findAuthByEmail: jest.fn(),
             create: jest.fn(),
           },
         },
@@ -44,8 +35,6 @@ describe("AuthService", () => {
 
     service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    userRepository = module.get<UserRepository>(UserRepository);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe("register", () => {
@@ -65,9 +54,9 @@ describe("AuthService", () => {
         updatedAt: new Date(),
       };
 
-      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(null);
+      jest.spyOn(userService, "findAuthByEmail").mockResolvedValue(null);
       jest.spyOn(argon2, "hash").mockResolvedValue("hashed-password");
-      jest.spyOn(userRepository, "create").mockResolvedValue(mockUser);
+      jest.spyOn(userService, "create").mockResolvedValue(mockUser);
 
       const result = await service.register(registerDto);
 
@@ -92,7 +81,9 @@ describe("AuthService", () => {
         updatedAt: new Date(),
       };
 
-      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(existingUser);
+      jest
+        .spyOn(userService, "findAuthByEmail")
+        .mockResolvedValue(existingUser);
 
       await expect(service.register(registerDto)).rejects.toThrow(
         ConflictException,
@@ -116,7 +107,7 @@ describe("AuthService", () => {
         updatedAt: new Date(),
       };
 
-      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(mockUser);
+      jest.spyOn(userService, "findAuthByEmail").mockResolvedValue(mockUser);
       jest.spyOn(argon2, "verify").mockResolvedValue(true);
 
       const result = await service.login(loginDto);
@@ -131,7 +122,7 @@ describe("AuthService", () => {
         password: "password123",
       };
 
-      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(null);
+      jest.spyOn(userService, "findAuthByEmail").mockResolvedValue(null);
 
       await expect(service.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
@@ -153,7 +144,7 @@ describe("AuthService", () => {
         updatedAt: new Date(),
       };
 
-      jest.spyOn(userRepository, "findByEmail").mockResolvedValue(mockUser);
+      jest.spyOn(userService, "findAuthByEmail").mockResolvedValue(mockUser);
       jest.spyOn(argon2, "verify").mockResolvedValue(false);
 
       await expect(service.login(loginDto)).rejects.toThrow(
