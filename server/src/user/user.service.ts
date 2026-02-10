@@ -8,6 +8,7 @@ import {
 import { hash, verify } from "argon2";
 import { UserRepository } from "./user.repository";
 import { CreateUserDto, UpdateUserDto, UserResponseDto } from "./dto";
+import { User } from "src/generated/prisma/client";
 
 @Injectable()
 export class UserService {
@@ -96,6 +97,13 @@ export class UserService {
     }
 
     return this.sanitizeUser(user);
+  }
+
+  async findAuthByEmail(email: string): Promise<User | null> {
+    this.logger.log(`Fetching user for auth with email: ${email}`);
+    const user = await this.userRepository.findByEmail(email);
+
+    return user; // Return full user object for authentication purposes
   }
 
   async update(

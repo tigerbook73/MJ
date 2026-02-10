@@ -66,6 +66,7 @@ import { AuthService } from "./auth.service";
 import { ClientModel } from "src/common/models/client.model";
 import { Game, Player } from "src/common/core/mj.game";
 import { Interval } from "@nestjs/schedule";
+import { WsJwtGuard } from "./ws-jwt.guard";
 
 type RequestHandler = {
   update: boolean;
@@ -95,6 +96,7 @@ export class MjGameGateway
     public userService: UserService,
     public roomService: RoomService,
     public gameService: GameService,
+    private wsJwtGuard: WsJwtGuard,
   ) {
     //
     this.messageHandlers = new Map<string, RequestHandler>([
@@ -202,19 +204,55 @@ export class MjGameGateway
     this.logger.log("Initialized!");
   }
 
-  handleConnection(client: Socket) {
+  async handleConnection(client: Socket) {
     try {
+      // Validate JWT token at connection time
+      await this.wsJwtGuard.validateClient(client);
+      const userPayload = client.data.user;
+
       const clientModel = this.clientService.create({
         id: client.id,
         socketId: client.id,
         socket: client,
       });
 
-      this.logger.log(`Client connected: ${client.id}`);
+      // Auto sign-in for authenticated users (not guests)
+      if (!userPayload.isGuest) {
+        // For JWT-authenticated users, use email from token
+        const userEmail = userPayload.email || userPayload.sub;
+        let user = this.userService.find(userEmail);
+
+        if (!user) {
+          user = this.userService.create({
+            name: userEmail,
+            firstName:
+              userPayload.name?.split(" ")[0] || userEmail.split("@")[0],
+            lastName:
+              userPayload.name?.split(" ")[1] || userEmail.split("@")[1],
+            email: userEmail,
+          });
+        }
+
+        clientModel.user = user;
+
+        this.logger.log(`Client connected: ${client.id} (User: ${user.name})`);
+      } else {
+        this.logger.log(`Client connected: ${client.id} (Guest)`);
+      }
+
+      // Notify connection
+      this.server.emit("mj:game", {
+        type: GameEventType.GAME_UPDATED,
+        data: {
+          clients: this.clientService.findAll(),
+          rooms: this.roomService.findAll(),
+        },
+      });
 
       return clientModel;
     } catch (error) {
       this.logger.warn(error);
+      client.disconnect();
     }
   }
 
@@ -226,12 +264,14 @@ export class MjGameGateway
       }
 
       this.logger.log(`Client disconnected: ${client.id}`);
-      this.clientService.delete(clientModel);
 
       if (clientModel.user) {
         this.roomService.addUserDropList(clientModel.user);
+        // Keep user reference for potential reconnection
         clientModel.user = null;
       }
+
+      this.clientService.delete(clientModel);
     } catch (error) {
       this.logger.warn(error);
     }
@@ -292,6 +332,10 @@ export class MjGameGateway
     client: ClientModel,
   ): SignOutResponse {
     this.authService.signOut(client);
+
+    // Disconnect the socket on sign-out
+    client.socket?.disconnect(true);
+
     return {
       type: request.type,
       status: "success",

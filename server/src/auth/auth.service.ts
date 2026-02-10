@@ -6,34 +6,30 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import * as argon2 from "argon2";
 import { UserService } from "../user/user.service";
-import { UserRepository } from "../user/user.repository";
 import { LoginDto, RegisterDto, AuthResponseDto } from "./dto";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
     // Check if user already exists
-    const existingUser = await this.userRepository.findByEmail(
+
+    const existingUser = await this.userService.findAuthByEmail(
       registerDto.email,
     );
     if (existingUser) {
       throw new ConflictException("User with this email already exists");
     }
 
-    // Hash password
-    const hashedPassword = await argon2.hash(registerDto.password);
-
     // Create user
-    const user = await this.userRepository.create({
+    const user = await this.userService.create({
       email: registerDto.email,
       name: registerDto.name,
-      password: hashedPassword,
+      password: registerDto.password,
     });
 
     // Generate JWT
@@ -42,7 +38,7 @@ export class AuthService {
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
     // Find user by email
-    const user = await this.userRepository.findByEmail(loginDto.email);
+    const user = await this.userService.findAuthByEmail(loginDto.email);
     if (!user) {
       throw new UnauthorizedException("Invalid email or password");
     }
