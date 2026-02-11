@@ -19,7 +19,7 @@ export interface GameTileProp {
 
 <script setup lang="ts">
 import { computed } from "vue";
-import { TileCore, type TileId } from "@common/core/mj.tile-core";
+import { TileCore, type TileId } from "@mj/shared";
 import { Direction } from "../common/common";
 
 const props = withDefaults(defineProps<{ tile: GameTileProp }>(), {

@@ -19,7 +19,7 @@ import GameTile from "./GameTile.vue";
 import { computed } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
-import { TileCore } from "src/common/core/mj.tile-core";
+import { TileCore } from "@mj/shared";
 
 // define props
 const props = defineProps<{

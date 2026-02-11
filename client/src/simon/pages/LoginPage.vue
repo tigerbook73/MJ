@@ -17,7 +17,7 @@
 import { ref, onMounted } from "vue";
 
 import { clientApi } from "src/client/client-api";
-import { UserModel } from "@common/models/user.model";
+import { UserModel } from "@mj/shared";
 import { userStore } from "src/simon/stores/user-store";
 import { useQuasar } from "quasar";
 

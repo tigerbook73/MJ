@@ -30,10 +30,9 @@ import { clientApi } from "src/client/client-api";
 import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { updateDiscards, useMjStore } from "src/simon/stores/mj-store";
-import type { GameEvent } from "@common/protocols/apis.models";
+import type { GameEvent } from "@mj/shared";
 import { userStore } from "../stores/user-store";
 import { setGame } from "../core/mjGame";
-
 
 const router = useRouter();
 const useAppStore = appStore();
@@ -101,8 +100,7 @@ clientApi.gameSocket.onReceive((raw: GameEvent) => {
   // ---- Room state（统一用 parsed）----
   useRoomStore.setRooms(parsed.data?.rooms ?? []);
   useRoomStore.currentRoom = clientApi.findMyRoom(parsed);
-  useRoomStore.currentPosition =
-    clientApi.findMyPlayerModel(parsed)?.position ?? null;
+  useRoomStore.currentPosition = clientApi.findMyPlayerModel(parsed)?.position ?? null;
 
   // ---- 拿到本人的 game ----
   const game = clientApi.findMyGame(parsed) ?? null;

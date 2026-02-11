@@ -6,7 +6,7 @@ const config: Config = {
   setupFiles: ["<rootDir>/../test/jest-setup.ts"],
   moduleNameMapper: {
     "^src/(.*)$": "<rootDir>/$1",
-    "^@mj/shared$": "<rootDir>/../../shared/dist",
+    "^@mj/shared$": "<rootDir>/../../shared/src",
   },
   testRegex: ".*\\.spec\\.ts$",
   transform: {

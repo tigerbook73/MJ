@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
-import type { Game, Position } from "@common/core/mj.game";
-import type { RoomModel } from "@common/models/room.model";
+import type { Game, Position, RoomModel } from "@mj/shared";
 import { ref } from "vue";
 
 export const AppState = {

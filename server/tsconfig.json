@@ -19,8 +19,12 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@mj/shared": [
-        "../shared/dist"
+        "../shared/src/index"
       ]
-    }
-  }
+    },
+  },
+  "include": [
+    "src/**/*",
+    "../shared/src/**/*"
+  ]
 }

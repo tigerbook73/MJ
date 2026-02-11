@@ -27,13 +27,12 @@ export default { name: "PlayerAreaVert" };
 </script>
 
 <script setup lang="ts">
-import { TileCore } from "@common/core/mj.tile-core";
+import { TileCore, Position } from "@mj/shared";
 import type { GameTileProp } from "./GameTile.vue";
 import GameTile from "./GameTile.vue";
 import { computed } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
-import { Position } from "src/common/core/mj.game";
 
 // define props
 const props = defineProps<{

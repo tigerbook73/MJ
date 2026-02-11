@@ -1,6 +1,5 @@
-import type { Game } from "@common/core/mj.game";
-import { Position } from "@common/core/mj.game";
-import type { TileId } from "src/common/core/mj.tile-core";
+import { Position } from "@mj/shared";
+import type { Game, TileId } from "@mj/shared";
 
 export const Direction = {
   Top: "top",

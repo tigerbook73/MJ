@@ -1,6 +1,5 @@
-import type { Game } from "src/common/core/mj.game";
-import { Position } from "src/common/core/mj.game";
-import type { TileId } from "@common/core/mj.tile-core";
+import { Position } from "@mj/shared";
+import type { Game, TileId } from "@mj/shared";
 
 export const PlayerPosRotation = [
   [Position.East, Position.North, Position.West, Position.South],

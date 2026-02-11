@@ -1,11 +1,8 @@
 import { ref } from "vue";
-import { TileCore } from "@common/core/mj.tile-core";
+import { TileCore, GameState, Position } from "@mj/shared";
 import { defineStore } from "pinia";
-import { GameState, Position } from "@common/core/mj.game";
 import { filterDiscards, findDirectionForPostiion } from "src/justin/common/common";
-import type { RoomModel } from "@common/models/room.model";
-import type { TileId } from "@common/core/mj.tile-core";
-import type { Game, OpenedSet } from "@common/core/mj.game";
+import type { RoomModel, TileId, Game, OpenedSet } from "@mj/shared";
 import { bestDiscards, pickOneIdOfKind } from "../tenhou/alg";
 
 export const useMjStore = defineStore("mj", () => {

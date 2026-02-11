@@ -7,11 +7,10 @@
     "lint-client": "cd client && yarn lint",
     "dev-client": "cd client && yarn dev",
     "dev-server": "cd server && yarn dev",
-    "build-shared": "cd shared && yarn build",
     "build-client": "cd client && yarn build",
     "build-server": "cd server && yarn build",
     "build-react": "git submodule update --init --remote && cd react && yarn && yarn build && yarn build-copy",
-    "build": "yarn build-shared && yarn build-server && yarn build-client",
+    "build": "yarn build-server && yarn build-client",
     "test-client": "cd client && yarn test",
     "test-server": "cd server && yarn test",
     "test": "yarn test-server && yarn test-client",
@@ -22,5 +21,6 @@
     "client",
     "shared"
   ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "dependencies": {}
 }
