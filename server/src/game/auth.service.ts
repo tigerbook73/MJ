@@ -1,7 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ClientModel } from "src/common/models/client.model";
-import { UserModel } from "src/common/models/user.model";
-import { SignInRequest } from "src/common/protocols/apis.models";
+import { ClientModel, UserModel, SignInRequest } from "@mj/shared";
 import { RoomService } from "./room.service";
 import { UserService } from "./user.service";
 

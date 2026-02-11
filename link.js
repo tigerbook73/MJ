@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const symlinkDir = require("symlink-dir");
 
-const source = path.resolve(__dirname, "server/src/common");
+const source = path.resolve(__dirname, "shared/src");
 const target = path.resolve(__dirname, "client/src/common");
 
 async function createLink() {

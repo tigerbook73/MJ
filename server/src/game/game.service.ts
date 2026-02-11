@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { Game, GameState, Player } from "src/common/core/mj.game";
 import {
+  Game,
+  GameState,
+  Player,
   ActionType,
   TileCore,
   type TileId,
-} from "src/common/core/mj.tile-core";
-import { UserType } from "src/common/models/common.types";
-import { RoomModel } from "src/common/models/room.model";
+  UserType,
+  RoomModel,
+} from "@mj/shared";
 
 @Injectable()
 export class GameService {
