@@ -12,6 +12,7 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "jest --passWithNoTests",
     "test:debug": "node --inspect node_modules/jest/bin/jest.js --runInBand",
+    "test:e2e": "echo e2e test not implemented yet",
     "dev": "quasar dev",
     "start": "quasar dev",
     "build": "quasar build && cp -r ./dist/spa/* ../server/public",
