@@ -79,6 +79,7 @@ export default defineConfig((/* ctx */) => {
 
       alias: {
         "@common": fileURLToPath(new URL("src/common", import.meta.url)),
+        "@mj/shared": fileURLToPath(new URL("../shared/src", import.meta.url)),
       },
     },
 

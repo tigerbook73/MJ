@@ -47,7 +47,7 @@
 defineOptions({ name: "PlayerAreaBottom" });
 
 import CompTile from "src/justin/components/CompTile.vue";
-import type { TileId } from "@common/core/mj.tile-core";
+import type { TileId } from "@mj/shared";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";

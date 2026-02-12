@@ -40,7 +40,7 @@ import { useMjStore } from "src/justin/stores/mj-store";
 import CompTile from "./CompTile.vue";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";
-import { GameState } from "src/common/core/mj.game";
+import { GameState } from "@mj/shared";
 
 const mjStore = useMjStore();
 const color = computed(() =>

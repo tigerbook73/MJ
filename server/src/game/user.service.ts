@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { Position, getPositionName } from "src/common/core/mj.game";
-import { UserType } from "src/common/models/common.types";
-import { UserCreateDto, UserModel } from "src/common/models/user.model";
+import {
+  Position,
+  getPositionName,
+  UserType,
+  UserCreateDto,
+  UserModel,
+} from "@mj/shared";
 import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()

@@ -57,14 +57,13 @@ import {
   ActionGangResponse,
   ActionHuRequest,
   ActionHuResponse,
-} from "src/common/protocols/apis.models";
+} from "@mj/shared";
 import { ClientService } from "./client.service";
 import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
 import { AuthService } from "./auth.service";
-import { ClientModel } from "src/common/models/client.model";
-import { Game, Player } from "src/common/core/mj.game";
+import { ClientModel, Game, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
 import { WsJwtGuard } from "./ws-jwt.guard";
 

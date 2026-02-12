@@ -40,7 +40,7 @@ import CompTile from "src/justin/components/CompTile.vue";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";
-import { GameState } from "src/common/core/mj.game";
+import { GameState } from "@mj/shared";
 
 const color = computed(() =>
   findDirectionForPostiion(mjStore.myPos, 2) === mjStore.currentPos ? "bg-green-5" : "bg-green-0",

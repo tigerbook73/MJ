@@ -1,8 +1,10 @@
 <template>
-  <div :class="[
-    'row flex-center justify-around area-player',
-    userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
-  ]">
+  <div
+    :class="[
+      'row flex-center justify-around area-player',
+      userMj.current?.position !== mapPosition(roomStore().currentPosition!, Direction.Bottom) ? 'bg-blue' : 'bg-red',
+    ]"
+  >
     <!-- <div class="row flex-center q-gutter-xs" Justify-content="flex-start"> -->
 
     <!-- </div> -->
@@ -13,8 +15,15 @@
     </div>
     <div class="row items-start justify-center q-gutter-xs no-wrap">
       <div class="row flex-center">
-        <comp-tile v-for="(tile, index) in userMj.pBottomCards" :key="index" :type="tile" size="large"
-          :selected="selectedTiles.includes(tile.id)" @click="onClick(tile)" @dblclick="dropTile(tile.id)"></comp-tile>
+        <comp-tile
+          v-for="(tile, index) in userMj.pBottomCards"
+          :key="index"
+          :type="tile"
+          size="large"
+          :selected="selectedTiles.includes(tile.id)"
+          @click="onClick(tile)"
+          @dblclick="dropTile(tile.id)"
+        ></comp-tile>
         <q-btn v-if="canPass.show" flat @click="passTurn()" :disable="canPass.disabled">Pass</q-btn>
         <q-btn v-if="canChi.show" flat @click="handleChi()" :disable="canChi.disabled">Chi</q-btn>
         <q-btn v-if="canPeng.show" flat @click="handlePeng()" :disable="canPeng.disabled">Peng</q-btn>
@@ -23,9 +32,7 @@
         <q-btn v-if="canZimo.show" flat @click="Zimo()" :disable="canZimo.disabled">Zi Mo</q-btn>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -35,11 +42,10 @@ import CompTile from "src/simon/components/CompTile.vue";
 
 import type { HandCard } from "src/simon/stores/mj-store";
 import { Direction, mapPosition, useMjStore } from "src/simon/stores/mj-store";
-import { ActionType, TileCore, type TileId } from "@common/core/mj.tile-core";
-// import { TileCore } from "@common/core/mj.tile-core";
+import { ActionType, TileCore, type TileId, GameState } from "@mj/shared";
+// import { TileCore } from "@mj/shared/core/mj.tile-core";
 import { roomStore } from "../stores/room-store";
 import { computed, ref } from "vue";
-import { GameState } from "src/common/core/mj.game";
 const room = roomStore();
 const userMj = useMjStore();
 let lastClickTime = 0;
@@ -85,8 +91,7 @@ const canPass = computed(() => {
     return { show: false, disabled: false };
   }
 
-  const hasAnyAction =
-    canChi.value.show || canPeng.value.show || canGang.value.show || canHu.value.show;
+  const hasAnyAction = canChi.value.show || canPeng.value.show || canGang.value.show || canHu.value.show;
 
   return { show: hasAnyAction, disabled: false };
 });
@@ -224,7 +229,7 @@ const maxSelectable = computed(() => {
 function onClick(tile: (typeof userMj.pBottomCards)[0]) {
   const now = Date.now();
   if (now - lastClickTime < 500) {
-    dropTile();           // 双击清选（模板里还有 @dblclick 会真正丢牌）
+    dropTile(); // 双击清选（模板里还有 @dblclick 会真正丢牌）
     lastClickTime = 0;
     return;
   }

@@ -27,8 +27,9 @@ async function bootstrap() {
     },
   });
 
-  const spaPath = ["../..", "public"];
-  app.use(Express.static(join(__dirname, ...spaPath)));
+  // using process.cwd(), command must start from server's root directory
+  const publicPath = join(process.cwd(), "public");
+  app.use(Express.static(publicPath));
   app.use(
     (
       req: Express.Request,
@@ -41,9 +42,9 @@ async function bootstrap() {
         !req.url.startsWith("/react/api")
       ) {
         if (req.url.startsWith("/react")) {
-          res.sendFile(join(__dirname, ...spaPath, "react", "index.html"));
+          res.sendFile(join(publicPath, "react", "index.html"));
         } else {
-          res.sendFile(join(__dirname, ...spaPath, "index.html"));
+          res.sendFile(join(publicPath, "index.html"));
         }
       } else {
         next();

@@ -3,7 +3,7 @@
  * 依赖：你的 IDTileList 顺序是每种牌连续 4 张（m1..z7 各4张），voidId = -1。
  */
 
-import { TileCore } from "src/common/core/mj.tile-core";
+import { TileCore } from "@mj/shared";
 import { IDTileList } from "../common/common";
 
 // ================= 工具：TileId <-> 种类索引 =================

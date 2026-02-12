@@ -1,8 +1,14 @@
 <template>
   <div @click="select">
     <div class="flex justify-center items-center" :class="tileClass" :style="tileStyle">
-      <q-img v-if="props.type.name && shouldShowImg" :src="imgSrc" :ratio="1 / 1" fit="scale-down" :width="width"
-        :style="imgStyle"></q-img>
+      <q-img
+        v-if="props.type.name && shouldShowImg"
+        :src="imgSrc"
+        :ratio="1 / 1"
+        fit="scale-down"
+        :width="width"
+        :style="imgStyle"
+      ></q-img>
     </div>
   </div>
 </template>
@@ -11,7 +17,7 @@
 import type { StyleValue } from "vue";
 import { computed, ref } from "vue";
 import { useMjStore } from "src/simon/stores/mj-store";
-import { TileCore } from "@common/core/mj.tile-core";
+import { TileCore } from "@mj/shared";
 // import { voidTileId } from "src/simon/core/mjCard";
 
 interface Props {
@@ -77,14 +83,10 @@ const imgSrc = computed(() => {
 
 const width = props.size == "small" ? "3vh" : "3.5vh";
 const height = props.size == "small" ? "4.2vh" : "4.8vh";
-const isVoidSlot = computed(() =>
-  props.type.id === TileCore.voidId || props.type.id === -1
-);
+const isVoidSlot = computed(() => props.type.id === TileCore.voidId || props.type.id === -1);
 
 // 显示图片的条件：空位一定显示；否则沿用 back/open 的老规则
-const shouldShowImg = computed(() =>
-  isVoidSlot.value || (!!props.type.name && (!props.back || mjStore.open))
-);
+const shouldShowImg = computed(() => isVoidSlot.value || (!!props.type.name && (!props.back || mjStore.open)));
 const tileClass = computed(() => {
   if (!isVoidSlot.value && props.back && !mjStore.open) {
     return "mj-tile-back";
@@ -140,7 +142,7 @@ const imgStyle = ref({
   position: "relative",
 });
 
-function select() { }
+function select() {}
 </script>
 
 <style lang="scss">

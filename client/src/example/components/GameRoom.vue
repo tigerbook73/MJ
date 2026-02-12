@@ -65,13 +65,11 @@ export interface GameRoomProp {
 import type { GameSeatProp } from "./GameSeat.vue";
 import GameSeat from "./GameSeat.vue";
 import { useExampleStore } from "../stores/example-store";
-import type { RoomModel } from "@common/models/room.model";
-import { RoomStatus } from "@common/models/room.model";
-import { Position } from "@common/core/mj.game";
+import type { RoomModel } from "@mj/shared";
+import { RoomStatus, Position, UserType } from "@mj/shared";
 import { computed, ref } from "vue";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
-import { UserType } from "@common/models/common.types";
 
 const exampleStore = useExampleStore();
 const $q = useQuasar();

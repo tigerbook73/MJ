@@ -9,10 +9,10 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { clientApi } from "src/client/client-api";
-import type { GameEvent } from "@common/protocols/apis.models";
+import type { GameEvent } from "@mj/shared";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
-import { Position } from "src/common/core/mj.game";
+import { Position } from "@mj/shared";
 import { AppState } from "../common/common";
 import { useUserStore } from "../stores/user-store";
 defineOptions({

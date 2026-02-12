@@ -17,8 +17,16 @@
     <!-- bottom -->
     <div class="row h-10">
       <game-area-c class="w-10"></game-area-c>
-      <player-area-bottom class="w-70" @drop-tile="dropTile" @pass-turn="passTurn" @handle-chi="handleChi"
-        @handle-peng="handlePeng" @handle-gang="handleGang" @hu="Hu" @zi-mo="Zimo"></player-area-bottom>
+      <player-area-bottom
+        class="w-70"
+        @drop-tile="dropTile"
+        @pass-turn="passTurn"
+        @handle-chi="handleChi"
+        @handle-peng="handlePeng"
+        @handle-gang="handleGang"
+        @hu="Hu"
+        @zi-mo="Zimo"
+      ></player-area-bottom>
       <game-area-d class="w-10"></game-area-d>
     </div>
   </div>
@@ -43,9 +51,9 @@ import { useMjStore } from "src/simon/stores/mj-store";
 const mjStore = useMjStore();
 import { Direction, mapPosition } from "src/simon/stores/mj-store";
 import { roomStore } from "src/simon/stores/room-store";
-import type { TileId } from "src/common/core/mj.tile-core";
-// import type { Game } from "src/common/core/mj.game";
-// import type { GameEvent } from "src/common/protocols/apis.models";
+import type { TileId } from "@mj/shared";
+// import type { Game } from "@mj/shared";
+// import type { GameEvent } from "@mj/shared";
 
 async function start() {
   try {
@@ -118,7 +126,6 @@ async function passTurn() {
     const response = await clientApi.actionPass();
     if (response) {
       mjGame.pass(mjGame.current);
-
     } else {
       console.error("Pass failed: No game data in response");
     }

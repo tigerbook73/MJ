@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ClientCreateDto, ClientModel } from "src/common/models/client.model";
+import { ClientCreateDto, ClientModel } from "@mj/shared";
 import { UserService } from "./user.service";
 
 @Injectable()

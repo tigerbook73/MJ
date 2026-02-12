@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import GameArea from "src/simon/components/GameArea.vue";
 // import { useQuasar } from "quasar";
-import { Position } from "@common/core/mj.game";
+import { Position } from "@mj/shared";
 import { mjGame } from "src/simon/core/mjGame";
 // import { useMjStore } from "src/simon/stores/mj-store";
 // import { mjGame } from "src/core/mjGame";

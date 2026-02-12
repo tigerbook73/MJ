@@ -73,10 +73,10 @@
 <script setup lang="ts">
 import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
-import { Position } from "@common/core/mj.game";
+import { Position } from "@mj/shared";
 import { clientApi } from "src/client/client-api";
 import { useMjStore } from "src/justin/stores/mj-store";
-import type { RoomModel } from "@common/models/room.model";
+import type { RoomModel } from "@mj/shared";
 import { useUserStore } from "../stores/user-store";
 
 const mjStore = useMjStore();

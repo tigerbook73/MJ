@@ -3,12 +3,14 @@ import {
   RoomCreateDto,
   RoomModel,
   RoomStatus,
-} from "src/common/models/room.model";
-import { UserModel } from "src/common/models/user.model";
+  UserModel,
+  PlayerModel,
+  PlayerRole,
+  UserType,
+  Game,
+  Position,
+} from "@mj/shared";
 import { UserService } from "./user.service";
-import { PlayerModel } from "src/common/models/player.model";
-import { PlayerRole, UserType } from "src/common/models/common.types";
-import { Game, Position } from "src/common/core/mj.game";
 import { Interval } from "@nestjs/schedule";
 import { ClientService } from "./client.service";
 

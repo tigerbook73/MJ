@@ -1,9 +1,9 @@
 import { defineStore } from "pinia";
-import type { UserModel } from "@common/models/user.model";
+import type { UserModel } from "@mj/shared";
 import { ref } from "vue";
 import { AppState } from "../common/common";
 import { useMjStore } from "./mj-store";
-import { Position } from "src/common/core/mj.game";
+import { Position } from "@mj/shared";
 
 const mjStore = useMjStore();
 

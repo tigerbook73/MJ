@@ -1,0 +1,6 @@
+{
+  "name": "@mj/shared",
+  "version": "0.0.1",
+  "description": "Shared utilities, models, and protocols for MJ",
+  "private": true
+}

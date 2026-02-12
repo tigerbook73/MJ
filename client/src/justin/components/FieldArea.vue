@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { GameState } from "src/common/core/mj.game";
+import { GameState } from "@mj/shared";
 import PlayerDiscardBottom from "./PlayerDiscardBottom.vue";
 import PlayerDiscardLeft from "./PlayerDiscardLeft.vue";
 import PlayerDiscardRight from "./PlayerDiscardRight.vue";

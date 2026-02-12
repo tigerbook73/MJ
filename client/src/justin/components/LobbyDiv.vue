@@ -23,7 +23,7 @@ export interface MyPlayer {
 }
 </script>
 <script setup lang="ts">
-import type { Position } from "@common/core/mj.game";
+import type { Position } from "@mj/shared";
 import { defineEmits } from "vue";
 
 defineProps<{

@@ -49,15 +49,13 @@ function canDo(showState: ShowState) {
 </script>
 
 <script setup lang="ts">
-import type { TileId } from "@common/core/mj.tile-core";
-import { TileCore } from "@common/core/mj.tile-core";
+import type { TileId } from "@mj/shared";
+import { TileCore, Position, GameState } from "@mj/shared";
 import type { GameTileProp } from "./GameTile.vue";
 import GameTile from "./GameTile.vue";
 import { computed, ref } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
-import { Position } from "@common/core/mj.game";
-import { GameState } from "@common/core/mj.game";
 import { clientApi } from "src/client/client-api";
 import { useQuasar } from "quasar";
 
