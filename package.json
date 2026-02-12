@@ -11,10 +11,10 @@
     "build-server": "cd server && yarn build",
     "build-react": "git submodule update --init --remote && cd react && yarn && yarn build && yarn build-copy",
     "build": "yarn build-server && yarn build-client",
+    "start:prod": "cd server && yarn start:prod",
     "test-client": "cd client && yarn test",
     "test-server": "cd server && yarn test",
-    "test": "yarn test-server && yarn test-client",
-    "postinstall": "node link.js"
+    "test": "yarn test-server && yarn test-client"
   },
   "workspaces": [
     "server",
