@@ -5,6 +5,7 @@
   "entryFile": "../dist/server/src/main",
   "compilerOptions": {
     "deleteOutDir": true,
+    "tsConfigPath": "tsconfig.build.json",
     "builder": "tsc",
     "webpack": false
   }

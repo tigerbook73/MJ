@@ -25,6 +25,13 @@
   },
   "include": [
     "src/**/*",
-    "../shared/src/**/*"
+    "test/**/*",
+    "script/**/*",
+    "../shared/src/**/*",
+    "*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }
