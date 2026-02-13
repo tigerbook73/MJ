@@ -1,7 +1,7 @@
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 import type { GameEvent, GameRequest, GameResponse } from "./apis.models";
-import { NO_TOKEN, LocalStorageTokenStorage, type TokenStorage } from "./token-storage";
+import { NO_TOKEN, localTokenStorage, type TokenStorage } from "./token-storage";
 
 export class GameSocket {
   public socket: Socket | null = null;
@@ -14,7 +14,7 @@ export class GameSocket {
   private tokenStorage: TokenStorage;
 
   constructor(url?: string, tokenStorage?: TokenStorage) {
-    this.tokenStorage = tokenStorage || new LocalStorageTokenStorage();
+    this.tokenStorage = tokenStorage || localTokenStorage;
     // Get JWT token from storage or use NO_TOKEN for backward compatibility
     const token = this.getAuthToken();
 
@@ -77,9 +77,9 @@ export class GameSocket {
    * Update the socket authentication token and reconnect
    * Call this after successful login/logout
    */
-  updateAuth(token: string | null) {
+  updateAuth(token: string | null, expiresIn?: number) {
     const authToken = token || NO_TOKEN;
-    this.tokenStorage.setToken(token);
+    this.tokenStorage.setToken(token, expiresIn);
     if (this.socket) {
       (this.socket.io.opts as any).auth = { token: authToken };
 
