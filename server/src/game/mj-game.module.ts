@@ -7,9 +7,10 @@ import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { WsJwtGuard } from "./ws-jwt.guard";
 import { AuthModule } from "src/auth/auth.module";
+import { UserModule } from "src/user/user.module";
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, UserModule],
   providers: [
     MjGameGateway,
     GameService,

@@ -16,8 +16,8 @@ export class AuthService {
       throw new Error("User already signed in");
     }
 
-    if (data.email === "" || data.password === "") {
-      throw new Error("Email or password is empty");
+    if (data.email === "") {
+      throw new Error("Email is empty");
     }
 
     // check email format is a valid email
@@ -35,11 +35,6 @@ export class AuthService {
         lastName: data.email.split("@")[1],
         email: data.email,
       });
-      user.password = data.password;
-    }
-
-    if (user.password !== data.password) {
-      throw new Error("Password is incorrect");
     }
 
     client.user = user;

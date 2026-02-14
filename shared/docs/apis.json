@@ -130,9 +130,9 @@
         ]
       }
     },
-    "/api/auth/profile": {
+    "/api/auth/me": {
       "get": {
-        "operationId": "AuthController_getProfile",
+        "operationId": "AuthController_getMe",
         "parameters": [],
         "responses": {
           "200": {
@@ -148,10 +148,52 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
-        "summary": "Get logged-in user profile",
+        "summary": "Get current user profile",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/ws-token": {
+      "get": {
+        "operationId": "AuthController_getWsToken",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "WebSocket token generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WsTokenResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "cookie": []
+          }
+        ],
+        "summary": "Get a short-lived WebSocket authentication token",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Logged out successfully"
+          }
+        },
+        "summary": "Logout user",
         "tags": [
           "Auth"
         ]
@@ -452,16 +494,6 @@
       "AuthResponseDto": {
         "type": "object",
         "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "JWT access token",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-          },
-          "expiresIn": {
-            "type": "number",
-            "description": "Token expiration time in seconds",
-            "example": 3600
-          },
           "userId": {
             "type": "number",
             "description": "User ID",
@@ -471,13 +503,18 @@
             "type": "string",
             "description": "User email",
             "example": "user@example.com"
+          },
+          "name": {
+            "type": "object",
+            "description": "User name",
+            "example": "John Doe",
+            "nullable": true
           }
         },
         "required": [
-          "accessToken",
-          "expiresIn",
           "userId",
-          "email"
+          "email",
+          "name"
         ]
       },
       "LoginDto": {
@@ -538,6 +575,19 @@
           "name",
           "createdAt",
           "updatedAt"
+        ]
+      },
+      "WsTokenResponseDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "Short-lived WebSocket authentication token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          }
+        },
+        "required": [
+          "token"
         ]
       },
       "CreateUserDto": {

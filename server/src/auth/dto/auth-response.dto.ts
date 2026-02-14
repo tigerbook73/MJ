@@ -2,18 +2,6 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class AuthResponseDto {
   @ApiProperty({
-    description: "JWT access token",
-    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  })
-  accessToken: string;
-
-  @ApiProperty({
-    description: "Token expiration time in seconds",
-    example: 3600,
-  })
-  expiresIn: number;
-
-  @ApiProperty({
     description: "User ID",
     example: 1,
   })
@@ -24,4 +12,19 @@ export class AuthResponseDto {
     example: "user@example.com",
   })
   email: string;
+
+  @ApiProperty({
+    description: "User name",
+    example: "John Doe",
+    nullable: true,
+  })
+  name: string | null;
+}
+
+export class WsTokenResponseDto {
+  @ApiProperty({
+    description: "Short-lived WebSocket authentication token",
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  })
+  token: string;
 }

@@ -1,3 +1,3 @@
 export { LoginDto } from "./login.dto";
 export { RegisterDto } from "./register.dto";
-export { AuthResponseDto } from "./auth-response.dto";
+export { AuthResponseDto, WsTokenResponseDto } from "./auth-response.dto";
