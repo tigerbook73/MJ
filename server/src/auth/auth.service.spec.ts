@@ -60,9 +60,9 @@ describe("AuthService", () => {
 
       const result = await service.register(registerDto);
 
-      expect(result.accessToken).toBe("mock-token");
       expect(result.userId).toBe(1);
       expect(result.email).toBe("test@example.com");
+      expect(result.name).toBe("Test User");
     });
 
     it("should throw ConflictException if user already exists", async () => {
@@ -112,8 +112,9 @@ describe("AuthService", () => {
 
       const result = await service.login(loginDto);
 
-      expect(result.accessToken).toBe("mock-token");
       expect(result.userId).toBe(1);
+      expect(result.email).toBe("test@example.com");
+      expect(result.name).toBe("Test User");
     });
 
     it("should throw UnauthorizedException for invalid email", async () => {
@@ -150,6 +151,20 @@ describe("AuthService", () => {
       await expect(service.login(loginDto)).rejects.toThrow(
         UnauthorizedException,
       );
+    });
+  });
+
+  describe("generateToken", () => {
+    it("should generate an HTTP JWT token", () => {
+      const token = service.generateToken(1, "test@example.com");
+      expect(token).toBe("mock-token");
+    });
+  });
+
+  describe("generateWsToken", () => {
+    it("should generate a WS JWT token", () => {
+      const token = service.generateWsToken(1);
+      expect(token).toBe("mock-token");
     });
   });
 });

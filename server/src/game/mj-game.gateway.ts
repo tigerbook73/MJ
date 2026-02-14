@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Inject, Logger } from "@nestjs/common";
 import {
   ConnectedSocket,
   MessageBody,
@@ -63,6 +63,7 @@ import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
 import { AuthService } from "./auth.service";
+import { UserService as DbUserService } from "../user/user.service";
 import { ClientModel, Game, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
 import { WsJwtGuard } from "./ws-jwt.guard";
@@ -74,7 +75,8 @@ type RequestHandler = {
 
 @WebSocketGateway({
   cors: {
-    origin: "*",
+    origin: process.env.CORS_ORIGIN || "http://localhost:9000",
+    credentials: true,
   },
 })
 export class MjGameGateway
@@ -96,6 +98,7 @@ export class MjGameGateway
     public roomService: RoomService,
     public gameService: GameService,
     private wsJwtGuard: WsJwtGuard,
+    @Inject(DbUserService) private dbUserService: DbUserService,
   ) {
     //
     this.messageHandlers = new Map<string, RequestHandler>([
@@ -215,29 +218,24 @@ export class MjGameGateway
         socket: client,
       });
 
-      // Auto sign-in for authenticated users (not guests)
-      if (!userPayload.isGuest) {
-        // For JWT-authenticated users, use email from token
-        const userEmail = userPayload.email || userPayload.sub;
-        let user = this.userService.find(userEmail);
+      // Look up user from database by userId (sub)
+      const dbUser = await this.dbUserService.findById(userPayload.sub);
+      const userEmail = dbUser.email;
 
-        if (!user) {
-          user = this.userService.create({
-            name: userEmail,
-            firstName:
-              userPayload.name?.split(" ")[0] || userEmail.split("@")[0],
-            lastName:
-              userPayload.name?.split(" ")[1] || userEmail.split("@")[1],
-            email: userEmail,
-          });
-        }
+      let user = this.userService.find(userEmail);
 
-        clientModel.user = user;
-
-        this.logger.log(`Client connected: ${client.id} (User: ${user.name})`);
-      } else {
-        this.logger.log(`Client connected: ${client.id} (Guest)`);
+      if (!user) {
+        user = this.userService.create({
+          name: userEmail,
+          firstName: dbUser.name?.split(" ")[0] || userEmail.split("@")[0],
+          lastName: dbUser.name?.split(" ")[1] || userEmail.split("@")[1],
+          email: userEmail,
+        });
       }
+
+      clientModel.user = user;
+
+      this.logger.log(`Client connected: ${client.id} (User: ${user.name})`);
 
       // Notify connection
       this.server.emit("mj:game", {

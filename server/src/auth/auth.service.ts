@@ -31,8 +31,11 @@ export class AuthService {
       password: registerDto.password,
     });
 
-    // Generate JWT
-    return this.generateToken(user.id, user.email);
+    return {
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+    };
   }
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
@@ -51,8 +54,11 @@ export class AuthService {
       throw new UnauthorizedException("Invalid email or password");
     }
 
-    // Generate JWT
-    return this.generateToken(user.id, user.email);
+    return {
+      userId: user.id,
+      email: user.email,
+      name: user.name,
+    };
   }
 
   async validateUser(payload: { sub: number; email: string }) {
@@ -63,22 +69,25 @@ export class AuthService {
     return user;
   }
 
-  private generateToken(userId: number, email: string): AuthResponseDto {
+  generateToken(userId: number, email: string): string {
     const payload = {
       sub: userId,
       email,
     };
 
-    const expiresIn = 3600; // 1 hour
-    const accessToken = this.jwtService.sign(payload, {
-      expiresIn,
+    return this.jwtService.sign(payload, {
+      expiresIn: "7d",
     });
+  }
 
-    return {
-      accessToken,
-      expiresIn,
-      userId,
-      email,
+  generateWsToken(userId: number): string {
+    const payload = {
+      sub: userId,
+      type: "ws",
     };
+
+    return this.jwtService.sign(payload, {
+      expiresIn: "10m",
+    });
   }
 }
