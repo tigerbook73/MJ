@@ -75,7 +75,7 @@ type RequestHandler = {
 
 @WebSocketGateway({
   cors: {
-    origin: process.env.CORS_ORIGIN || "http://localhost:9000",
+    origin: process.env.CORS_ORIGIN || "*",
     credentials: true,
   },
 })
