@@ -17,7 +17,7 @@ import {
   ApiResponse,
   ApiParam,
   ApiBody,
-  ApiBearerAuth,
+  ApiCookieAuth,
 } from "@nestjs/swagger";
 import { UserService } from "./user.service";
 import { CreateUserDto, UpdateUserDto, UserResponseDto } from "./dto";
@@ -25,7 +25,7 @@ import { JwtAuthGuard } from "../libs/guards/jwt.guard";
 
 @ApiTags("User")
 @UseGuards(JwtAuthGuard)
-@ApiBearerAuth()
+@ApiCookieAuth()
 @ApiResponse({
   status: 401,
   description: "Unauthorized - missing or invalid token",

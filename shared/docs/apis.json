@@ -236,7 +236,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Create a new user",
@@ -267,7 +267,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Get all users",
@@ -311,7 +311,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Get user by email",
@@ -355,7 +355,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Get user by ID",
@@ -410,7 +410,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Update user",
@@ -445,7 +445,7 @@
         },
         "security": [
           {
-            "bearer": []
+            "cookie": []
           }
         ],
         "summary": "Delete user",
