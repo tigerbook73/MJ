@@ -45,10 +45,6 @@ import {
   QuitGameResponse,
   ResetGameRequest,
   ResetGameResponse,
-  SignInRequest,
-  SignInResponse,
-  SignOutRequest,
-  SignOutResponse,
   StartGameRequest,
   StartGameResponse,
   ActionPengRequest,
@@ -62,7 +58,6 @@ import { ClientService } from "./client.service";
 import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
-import { AuthService } from "./auth.service";
 import { UserService as DbUserService } from "../user/user.service";
 import { ClientModel, Game, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
@@ -93,7 +88,6 @@ export class MjGameGateway
 
   constructor(
     public clientService: ClientService,
-    public authService: AuthService,
     public userService: UserService,
     public roomService: RoomService,
     public gameService: GameService,
@@ -102,16 +96,6 @@ export class MjGameGateway
   ) {
     //
     this.messageHandlers = new Map<string, RequestHandler>([
-      // Authentication
-      [
-        GameRequestType.SIGN_IN,
-        { update: true, handler: this.handleSignInRequest },
-      ],
-      [
-        GameRequestType.SIGN_OUT,
-        { update: true, handler: this.handleSignOutRequest },
-      ],
-
       // clients
       [
         GameRequestType.LIST_CLIENT,
@@ -310,33 +294,6 @@ export class MjGameGateway
       };
       return response;
     }
-  }
-
-  handleSignInRequest(
-    request: SignInRequest,
-    client: ClientModel,
-  ): SignInResponse {
-    const user = this.authService.signIn(request.data, client);
-    return {
-      type: request.type,
-      status: "success",
-      data: user,
-    };
-  }
-
-  handleSignOutRequest(
-    request: SignOutRequest,
-    client: ClientModel,
-  ): SignOutResponse {
-    this.authService.signOut(client);
-
-    // Disconnect the socket on sign-out
-    client.socket?.disconnect(true);
-
-    return {
-      type: request.type,
-      status: "success",
-    };
   }
 
   handleListClientRequest(request: ListClientRequest): ListClientResponse {
