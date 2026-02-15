@@ -195,7 +195,6 @@ export class MjGameGateway
         dbUser.name?.split(" ")[0] || dbUser.email.split("@")[0],
         dbUser.name?.split(" ")[1] || dbUser.email.split("@")[1],
         dbUser.email,
-        "",
         UserType.Human,
       );
 
