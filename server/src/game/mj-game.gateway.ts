@@ -25,8 +25,6 @@ import {
   CreateRoomResponse,
   DeleteRoomRequest,
   DeleteRoomResponse,
-  DeleteUserRequest,
-  DeleteUserResponse,
   EnterGameRequest,
   EnterGameResponse,
   GameEventType,
@@ -39,8 +37,6 @@ import {
   ListClientResponse,
   ListRoomRequest,
   ListRoomResponse,
-  ListUserRequest,
-  ListUserResponse,
   QuitGameRequest,
   QuitGameResponse,
   ResetGameRequest,
@@ -53,12 +49,13 @@ import {
   ActionGangResponse,
   ActionHuRequest,
   ActionHuResponse,
+  UserModel,
+  UserType,
 } from "@mj/shared";
 import { ClientService } from "./client.service";
-import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
-import { UserService as DbUserService } from "../user/user.service";
+import { UserService } from "../user/user.service";
 import { ClientModel, Game, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
 import { WsJwtGuard } from "./ws-jwt.guard";
@@ -88,11 +85,10 @@ export class MjGameGateway
 
   constructor(
     public clientService: ClientService,
-    public userService: UserService,
     public roomService: RoomService,
     public gameService: GameService,
     private wsJwtGuard: WsJwtGuard,
-    @Inject(DbUserService) private dbUserService: DbUserService,
+    @Inject(UserService) private userService: UserService,
   ) {
     //
     this.messageHandlers = new Map<string, RequestHandler>([
@@ -100,16 +96,6 @@ export class MjGameGateway
       [
         GameRequestType.LIST_CLIENT,
         { update: false, handler: this.handleListClientRequest },
-      ],
-
-      // users
-      [
-        GameRequestType.LIST_USER,
-        { update: false, handler: this.handleListUserRequest },
-      ],
-      [
-        GameRequestType.DELETE_USER,
-        { update: true, handler: this.handleDeleteUserRequest },
       ],
 
       // rooms
@@ -203,19 +189,15 @@ export class MjGameGateway
       });
 
       // Look up user from database by userId (sub)
-      const dbUser = await this.dbUserService.findById(userPayload.sub);
-      const userEmail = dbUser.email;
-
-      let user = this.userService.find(userEmail);
-
-      if (!user) {
-        user = this.userService.create({
-          name: userEmail,
-          firstName: dbUser.name?.split(" ")[0] || userEmail.split("@")[0],
-          lastName: dbUser.name?.split(" ")[1] || userEmail.split("@")[1],
-          email: userEmail,
-        });
-      }
+      const dbUser = await this.userService.findById(userPayload.sub);
+      const user = new UserModel(
+        dbUser.name || dbUser.email.split("@")[0],
+        dbUser.name?.split(" ")[0] || dbUser.email.split("@")[0],
+        dbUser.name?.split(" ")[1] || dbUser.email.split("@")[1],
+        dbUser.email,
+        "",
+        UserType.Human,
+      );
 
       clientModel.user = user;
 
@@ -302,29 +284,6 @@ export class MjGameGateway
       type: request.type,
       status: "success",
       data: clients,
-    };
-  }
-
-  handleListUserRequest(request: ListUserRequest): ListUserResponse {
-    const users = this.userService.findAll();
-    return {
-      type: request.type,
-      status: "success",
-      data: users,
-    };
-  }
-
-  handleDeleteUserRequest(request: DeleteUserRequest): DeleteUserResponse {
-    const user = this.userService.find(request.data.name);
-    if (!user) {
-      throw new Error(`User ${request.data.name} not found.`);
-    }
-
-    this.userService.delete(user.name);
-    return {
-      type: request.type,
-      status: "success",
-      data: user,
     };
   }
 
