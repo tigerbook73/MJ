@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 import { watch } from "vue";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import type { GameEvent } from "@mj/shared";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
@@ -43,23 +43,23 @@ watch(
 );
 
 // connection status
-clientApi.gameSocket.onConnect(() => {
+socketClient.onConnect(() => {
   userStore.setConnected(true);
 });
-clientApi.gameSocket.onDisconnect(() => {
+socketClient.onDisconnect(() => {
   userStore.setConnected(false);
 });
 
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  event = clientApi.parseEvent(event);
-  const game = clientApi.findMyGame(event);
+socketClient.onReceive((event: GameEvent) => {
+  event = socketClient.parseEvent(event);
+  const game = socketClient.findMyGame(event);
   if (game) {
     userStore.setInGame(true);
   }
 
   mjStore.roomList = event.data.rooms;
-  mjStore.room = clientApi.findMyRoom(event);
-  mjStore.myPos = clientApi.findMyPlayerModel(event)?.position ?? Position.None;
+  mjStore.room = socketClient.findMyRoom(event);
+  mjStore.myPos = socketClient.findMyPlayerModel(event)?.position ?? Position.None;
 
   mjStore.setGame(game);
 

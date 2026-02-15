@@ -56,7 +56,7 @@ import GameTile from "./GameTile.vue";
 import { computed, ref } from "vue";
 import { CommonUtil, Direction } from "../common/common";
 import { useExampleStore } from "../stores/example-store";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();
@@ -204,7 +204,7 @@ const showDrop = computed<ShowState>(() => {
 function handleDrop() {
   if (canDo(showDrop.value)) {
     try {
-      clientApi.actionDrop(selectedTiles.value[0]);
+      socketClient.actionDrop(selectedTiles.value[0]);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -236,7 +236,7 @@ const showZimo = computed<ShowState>(() => {
 function handleZimo() {
   if (canDo(showZimo.value)) {
     try {
-      clientApi.actionZimo();
+      socketClient.actionZimo();
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -260,7 +260,7 @@ const showPass = computed(() => {
 function handlePass() {
   if (showPass.value) {
     try {
-      clientApi.actionPass();
+      socketClient.actionPass();
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -296,7 +296,7 @@ function handlePeng() {
   const game = exampleStore.currentGame!;
   if (canDo(showPeng.value)) {
     try {
-      clientApi.actionPeng([selectedTiles.value[0], selectedTiles.value[1]]);
+      socketClient.actionPeng([selectedTiles.value[0], selectedTiles.value[1]]);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -333,7 +333,7 @@ function handleGang() {
   const game = exampleStore.currentGame!;
   if (canDo(showGang.value)) {
     try {
-      clientApi.actionGang([selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2]]);
+      socketClient.actionGang([selectedTiles.value[0], selectedTiles.value[1], selectedTiles.value[2]]);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -384,7 +384,7 @@ function handleChi() {
   const game = exampleStore.currentGame!;
   if (canDo(showChi.value)) {
     try {
-      clientApi.actionChi([selectedTiles.value[0], selectedTiles.value[1]]);
+      socketClient.actionChi([selectedTiles.value[0], selectedTiles.value[1]]);
       clearSelected();
     } catch (e) {
       $q.notify({
@@ -419,7 +419,7 @@ const showHu = computed<ShowState>(() => {
 function handleHu() {
   if (canDo(showHu.value)) {
     try {
-      clientApi.actionHu();
+      socketClient.actionHu();
     } catch (e) {
       $q.notify({
         message: "Hu failed",

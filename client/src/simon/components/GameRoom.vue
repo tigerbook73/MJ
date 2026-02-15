@@ -54,7 +54,7 @@ import type { PlayerModel } from "@mj/shared";
 import { computed } from "vue";
 // import { useRouter } from "vue-router";
 import PositionPlayer from "./PositionPlayer.vue";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 
 interface Props {
   roomName: string;
@@ -92,7 +92,7 @@ const canStartGame = computed(() => {
 // function startGame using socketStartGameAndWaitAck
 async function enterGame() {
   try {
-    const response = await clientApi.enterGame(props.roomName);
+    const response = await socketClient.enterGame(props.roomName);
     if (response) {
       // Assuming response contains the game state or confirmation
     } else {

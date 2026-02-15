@@ -41,7 +41,7 @@ import { GameState, Position } from "@mj/shared";
 import { useExampleStore } from "../stores/example-store";
 import { CommonUtil, Direction } from "../common/common";
 import { computed } from "vue";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();
@@ -80,7 +80,7 @@ const btnCommand = computed(() => {
 
 function handleStart() {
   try {
-    clientApi.startGame();
+    socketClient.startGame();
   } catch (e) {
     $q.notify({
       message: "Game start failed",
@@ -93,7 +93,7 @@ function handleStart() {
 
 function handleReset() {
   try {
-    clientApi.resetGame();
+    socketClient.resetGame();
   } catch (e) {
     $q.notify({
       message: "Game reset failed",

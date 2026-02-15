@@ -20,8 +20,8 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
 import { useUserStore } from "src/justin/stores/user-store";
-import { clientApi } from "src/client/client-api";
 import { AppState } from "../common/common";
+import { authService } from "src/client/auth-service";
 
 defineOptions({
   name: "LoginPage",
@@ -43,7 +43,7 @@ onBeforeMount(() => {
 async function signIn() {
   try {
     loading.value = true;
-    await clientApi.signIn(userStore.email, userStore.password);
+    await authService.login(userStore.email, userStore.password);
     userStore.setSignedIn(true);
   } catch {
     userStore.setSignedIn(false);

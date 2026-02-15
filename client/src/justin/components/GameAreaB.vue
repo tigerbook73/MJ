@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 
 defineOptions({ name: "GameAreaB" });
@@ -16,7 +16,7 @@ const $q = useQuasar();
 
 function start() {
   try {
-    clientApi.startGame();
+    socketClient.startGame();
   } catch (e) {
     $q.notify({ message: "Game start failed", color: "negative", icon: "warning" });
     console.error("Game start failed", e);
@@ -25,7 +25,7 @@ function start() {
 
 function reset() {
   try {
-    clientApi.resetGame();
+    socketClient.resetGame();
   } catch (e) {
     $q.notify({ message: "Game reset failed", color: "negative", icon: "warning" });
     console.error("Game reset failed", e);

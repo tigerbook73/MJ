@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import type { Game, Position, RoomModel } from "@mj/shared";
 import { ref } from "vue";
+import { authService } from "src/client/auth-service";
 
 export const AppState = {
   Unconnected: "UNCONNECTED",
@@ -62,6 +63,24 @@ export const useExampleStore = defineStore("example-store", () => {
     }
     refreshAppState();
   }
+
+  // Setup auth service callbacks
+  authService.onAuthStateChanged = (user) => {
+    signedIn.value = user !== null;
+    refreshAppState();
+  };
+
+  authService.onConnected = () => {
+    setConnected(true);
+  };
+
+  authService.onDisconnected = () => {
+    setConnected(false);
+  };
+
+  authService.onError = (error) => {
+    console.error("Auth service error:", error);
+  };
 
   // room info
   const roomList = ref<RoomModel[]>([]);

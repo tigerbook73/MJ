@@ -280,8 +280,39 @@ export interface GameEvent {
   };
 }
 
-export class ClientApi {
-  constructor(public gameSocket: GameSocket) {}
+export class SocketClient {
+  constructor(protected gameSocket: GameSocket) {}
+
+  /**
+   * Connection APIs
+   */
+  connect(token: string) {
+    this.gameSocket.connect(token);
+  }
+
+  disconnect() {
+    this.gameSocket.disconnect();
+  }
+
+  getClientId() {
+    return this.gameSocket.getSocketId();
+  }
+
+  isConnected() {
+    return this.gameSocket.isConnected();
+  }
+
+  onConnect(callback: () => void) {
+    this.gameSocket.onConnect(callback);
+  }
+
+  onDisconnect(callback: () => void) {
+    this.gameSocket.onDisconnect(callback);
+  }
+
+  onReceive(callback: (data: GameEvent) => void) {
+    this.gameSocket.onReceive(callback);
+  }
 
   /**
    * auth APIs
@@ -519,16 +550,16 @@ export class ClientApi {
   }
 
   findMyClient(event: GameEvent): ClientModel | null {
-    const socket = this.gameSocket.socket;
-    if (!socket) {
+    const socketId = this.gameSocket.getSocketId();
+    if (!socketId) {
       return null;
     }
 
-    if (!socket.connected) {
+    if (!this.gameSocket.isConnected()) {
       return null;
     }
 
-    return event.data.clients.find((client) => client.id === socket.id) || null;
+    return event.data.clients.find((client) => client.id === socketId) || null;
   }
 
   findMyUser(event: GameEvent): UserModel | null {

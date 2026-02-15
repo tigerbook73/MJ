@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import { useMjStore } from "../stores/mj-store";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 
 defineOptions({ name: "BoardAreaD" });
 
@@ -23,7 +23,7 @@ function chi() {
   //
   if (mjStore.selectedList.length === 2) {
     try {
-      clientApi.actionChi([mjStore.selectedList[0], mjStore.selectedList[1]]);
+      socketClient.actionChi([mjStore.selectedList[0], mjStore.selectedList[1]]);
     } catch (e) {
       $q.notify({ message: "Action Chi failed", color: "negative", icon: "warning" });
       console.error("Action Chi failed", e);
@@ -35,7 +35,7 @@ function pon() {
   //
   if (mjStore.selectedList.length === 2) {
     try {
-      clientApi.actionPeng([mjStore.selectedList[0], mjStore.selectedList[1]]);
+      socketClient.actionPeng([mjStore.selectedList[0], mjStore.selectedList[1]]);
     } catch (e) {
       $q.notify({ message: "Action Pon failed", color: "negative", icon: "warning" });
       console.error("Action Pon failed", e);
@@ -47,7 +47,7 @@ function kan() {
   //
   if (mjStore.selectedList.length === 3) {
     try {
-      clientApi.actionGang([mjStore.selectedList[0], mjStore.selectedList[1], mjStore.selectedList[2]]);
+      socketClient.actionGang([mjStore.selectedList[0], mjStore.selectedList[1], mjStore.selectedList[2]]);
     } catch (e) {
       $q.notify({ message: "Action Kan failed", color: "negative", icon: "warning" });
       console.error("Action Kan failed", e);
@@ -58,7 +58,7 @@ function anKan() {
   //
   if (mjStore.selectedList.length === 3) {
     try {
-      clientApi.actionAngang([
+      socketClient.actionAngang([
         mjStore.selectedList[0],
         mjStore.selectedList[1],
         mjStore.selectedList[2],
@@ -74,7 +74,7 @@ function anKan() {
 function ron() {
   //
   try {
-    clientApi.actionHu();
+    socketClient.actionHu();
   } catch (e) {
     $q.notify({ message: "Action Ron failed", color: "negative", icon: "warning" });
     console.error("Aciton Ron failed", e);
@@ -84,7 +84,7 @@ function ron() {
 function tsumo() {
   //
   try {
-    clientApi.actionZimo();
+    socketClient.actionZimo();
   } catch (e) {
     $q.notify({ message: "Action tsumo failed", color: "negative", icon: "warning" });
     console.error("Aciton tsumo failed", e);

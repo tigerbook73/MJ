@@ -5,7 +5,7 @@
         <q-form @submit.prevent="signIn" class="q-gutter-md">
           <q-input v-model="exampleStore.user.email" label="Email" type="email" required />
           <q-input v-model="password" label="Password" type="password" required />
-          <q-btn type="submit" label="Sign In" color="primary" />
+          <q-btn type="submit" label="Sign In" color="primary" :disable="loading" />
         </q-form>
         <q-inner-loading color="primary" :showing="loading"> </q-inner-loading>
       </q-card-section>
@@ -15,7 +15,7 @@
 
 <script setup lang="ts">
 import { useQuasar } from "quasar";
-import { clientApi } from "src/client/client-api";
+import { authService } from "src/client/auth-service";
 import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { onBeforeMount, ref } from "vue";
 
@@ -23,35 +23,44 @@ const exampleStore = useExampleStore();
 const $q = useQuasar();
 
 const password = ref("password");
+const loading = ref(false);
 
-onBeforeMount(() => {
-  if (exampleStore.appState !== AppState.UnSignedIn) {
-    return;
-  }
+onBeforeMount(async () => {
+  // Try to restore session from existing JWT cookie
+  if (exampleStore.appState === AppState.Unconnected) {
+    loading.value = true;
+    const restored = await authService.restoreSession();
+    loading.value = false;
 
-  if (exampleStore.user.email && exampleStore.user.password) {
-    password.value = exampleStore.user.password;
-    signIn();
+    if (restored) {
+      console.log("Session restored successfully");
+    }
   }
 });
 
-const loading = ref(false);
 async function signIn() {
-  if (!exampleStore.user.email && !password.value) {
+  if (!exampleStore.user.email || !password.value) {
+    $q.notify({
+      type: "warning",
+      message: "Please enter email and password",
+    });
     return;
   }
 
   try {
     loading.value = true;
-    await clientApi.signIn(exampleStore.user.email, password.value);
-    exampleStore.user.password = password.value; // Save the password for future use
-    exampleStore.setSignedIn(true);
-  } catch {
-    exampleStore.setSignedIn(false);
+    await authService.login(exampleStore.user.email, password.value);
+
+    $q.notify({
+      type: "positive",
+      message: "Signed in successfully",
+    });
+  } catch (error) {
+    console.error("Sign in error:", error);
 
     $q.notify({
       type: "negative",
-      message: "Sign in failed. Please check your email and password.",
+      message: error instanceof Error ? error.message : "Sign in failed. Please check your email and password.",
     });
   } finally {
     loading.value = false;

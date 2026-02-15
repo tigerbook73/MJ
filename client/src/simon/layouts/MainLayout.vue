@@ -25,7 +25,7 @@ defineOptions({
 
 import { watch } from "vue";
 import { useRouter } from "vue-router";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 
 import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
@@ -33,6 +33,7 @@ import { updateDiscards, useMjStore } from "src/simon/stores/mj-store";
 import type { GameEvent } from "@mj/shared";
 import { userStore } from "../stores/user-store";
 import { setGame } from "../core/mjGame";
+import { authService } from "src/client/auth-service";
 
 const router = useRouter();
 const useAppStore = appStore();
@@ -43,7 +44,7 @@ const useUserStore = userStore();
 
 async function signOut() {
   try {
-    await clientApi.signOut();
+    await authService.logout();
     useUserStore.user = null;
     useUserStore.setSignedIn(false);
   } catch (error) {
@@ -56,7 +57,7 @@ async function quitGame() {
     return;
   }
   try {
-    await clientApi.quitGame(useRoomStore.currentRoom.name);
+    await socketClient.quitGame(useRoomStore.currentRoom.name);
     useRoomStore.currentRoom = null;
     useRoomStore.currentPosition = null;
     useGameStore.setCurrentGame(null);
@@ -64,11 +65,11 @@ async function quitGame() {
     console.error("Error quitting game:", error);
   }
 }
-clientApi.gameSocket.onConnect(() => {
+socketClient.onConnect(() => {
   useAppStore.setConnected(true);
 });
 
-clientApi.gameSocket.onDisconnect(() => {
+socketClient.onDisconnect(() => {
   useAppStore.setConnected(false);
   // useRoomStore.roomList = [];
   // useRoomStore.currentRoom = null;
@@ -77,7 +78,7 @@ clientApi.gameSocket.onDisconnect(() => {
 });
 
 // 👂 Game event handler
-// clientApi.gameSocket.onReceive((event: GameEvent) => {
+// clientApi.onReceive((event: GameEvent) => {
 //   const parsed = clientApi.parseEvent(event);
 
 //   useRoomStore.setRooms(parsed.data.rooms);
@@ -94,16 +95,16 @@ clientApi.gameSocket.onDisconnect(() => {
 //   }
 // });
 
-clientApi.gameSocket.onReceive((raw: GameEvent) => {
-  const parsed = clientApi.parseEvent(raw);
+socketClient.onReceive((raw: GameEvent) => {
+  const parsed = socketClient.parseEvent(raw);
 
   // ---- Room state（统一用 parsed）----
   useRoomStore.setRooms(parsed.data?.rooms ?? []);
-  useRoomStore.currentRoom = clientApi.findMyRoom(parsed);
-  useRoomStore.currentPosition = clientApi.findMyPlayerModel(parsed)?.position ?? null;
+  useRoomStore.currentRoom = socketClient.findMyRoom(parsed);
+  useRoomStore.currentPosition = socketClient.findMyPlayerModel(parsed)?.position ?? null;
 
   // ---- 拿到本人的 game ----
-  const game = clientApi.findMyGame(parsed) ?? null;
+  const game = socketClient.findMyGame(parsed) ?? null;
 
   if (game) {
     // ① 先把弃牌与副露对齐（基于唯一 id 的 openedSet.target）
