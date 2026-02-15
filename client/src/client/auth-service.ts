@@ -12,9 +12,6 @@ export class AuthService {
 
   // Callbacks for state changes
   public onAuthStateChanged: (user: UserResponseDto | null) => void = () => {};
-  public onConnected: () => void = () => {};
-  public onDisconnected: () => void = () => {};
-  public onError: (error: Error) => void = () => {};
 
   /**
    * Login with email and password
@@ -24,12 +21,14 @@ export class AuthService {
    */
   async login(email: string, password: string): Promise<UserResponseDto> {
     try {
-      // Step 1: Login via REST (sets JWT cookie)
-      await unwrapResponse(
-        apiClient.POST("/api/auth/login", {
-          body: { email, password },
-        }),
-      );
+      // Step 1: Login or Register via REST (sets JWT cookie)
+      const loginResponse = apiClient.POST("/api/auth/login", {
+        body: { email, password },
+      });
+      const loginResult = apiClient.POST("/api/auth/register", {
+        body: { email, name: email.split("@")[0], password },
+      });
+      await Promise.any([unwrapResponse(loginResponse), unwrapResponse(loginResult)]);
 
       // Step 2: Get user profile
       const user = await unwrapResponse(apiClient.GET("/api/auth/me"));

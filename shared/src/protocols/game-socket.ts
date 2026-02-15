@@ -23,7 +23,7 @@ export class GameSocket {
     this.socket.on("connect", this.onConnected);
     this.socket.on("disconnect", this.onDisconnected);
     this.socket.on("connect_error", this.onConnectError);
-    this.socket.on("mj:game", this.onReceiveCallback);
+    this.socket.on("mj:game", this.onReceived);
   }
 
   getSocketId() {
@@ -42,6 +42,11 @@ export class GameSocket {
   private onDisconnected = () => {
     console.log("Disconnected from the server");
     this.disconnectedCallback();
+  };
+
+  private onReceived = (data: GameEvent) => {
+    console.log("Received data:", data);
+    this.onReceiveCallback(data);
   };
 
   private onConnectError = (err: Error) => {

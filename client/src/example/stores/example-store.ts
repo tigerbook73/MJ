@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import type { Game, Position, RoomModel } from "@mj/shared";
 import { ref } from "vue";
-import { authService } from "src/client/auth-service";
 
 export const AppState = {
   Unconnected: "UNCONNECTED",
@@ -14,32 +13,15 @@ export type AppState = (typeof AppState)[keyof typeof AppState];
 
 export const useExampleStore = defineStore("example-store", () => {
   // app state
-  const appState = ref<AppState>(AppState.Unconnected);
+  const appState = ref<AppState>(AppState.UnSignedIn);
   function refreshAppState() {
-    if (!connected.value) {
-      appState.value = AppState.Unconnected;
-    } else if (!signedIn.value) {
+    if (!signedIn.value) {
       appState.value = AppState.UnSignedIn;
     } else if (!currentGame.value) {
       appState.value = AppState.InLobby;
     } else {
       appState.value = AppState.InGame;
     }
-  }
-
-  // connected state
-  const connected = ref(false);
-  function setConnected(value: boolean) {
-    connected.value = value;
-
-    // reset other value
-    signedIn.value = false;
-    user.value.password = "";
-    roomList.value = [];
-    currentRoom.value = null;
-    currentPosition.value = null;
-    currentGame.value = null;
-    refreshAppState();
   }
 
   // user info
@@ -63,24 +45,6 @@ export const useExampleStore = defineStore("example-store", () => {
     }
     refreshAppState();
   }
-
-  // Setup auth service callbacks
-  authService.onAuthStateChanged = (user) => {
-    signedIn.value = user !== null;
-    refreshAppState();
-  };
-
-  authService.onConnected = () => {
-    setConnected(true);
-  };
-
-  authService.onDisconnected = () => {
-    setConnected(false);
-  };
-
-  authService.onError = (error) => {
-    console.error("Auth service error:", error);
-  };
 
   // room info
   const roomList = ref<RoomModel[]>([]);
@@ -106,7 +70,6 @@ export const useExampleStore = defineStore("example-store", () => {
     currentGame,
     open,
     refreshAppState,
-    setConnected,
     setSignedIn,
     setCurrentGame,
   };

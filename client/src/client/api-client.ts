@@ -6,7 +6,6 @@ import type { paths } from "@mj/shared";
  * Automatically infers request/response types from OpenAPI spec
  */
 export const apiClient = createClient<paths>({
-  baseUrl: "/api",
   credentials: "include", // Include cookies for JWT auth
 });
 
@@ -29,9 +28,5 @@ export async function unwrapResponse<T>(
     throw new Error(errorMessage || `API error: ${result.response.status}`);
   }
 
-  if (!result.data) {
-    throw new Error("No data returned from API");
-  }
-
-  return result.data;
+  return result.data as T;
 }

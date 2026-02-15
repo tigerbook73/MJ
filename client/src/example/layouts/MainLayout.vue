@@ -49,8 +49,7 @@ import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { authService } from "src/client/auth-service";
 import { socketClient } from "src/client/socket-client";
-import type { GameEvent } from "@mj/shared";
-import { getFakeEvent } from "@mj/shared";
+import { type GameEvent, getFakeEvent } from "@mj/shared";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -103,6 +102,13 @@ async function quitGame() {
     console.error(e);
   }
 }
+
+// Setup auth service callbacks
+authService.onAuthStateChanged = (signedInUser) => {
+  exampleStore.user.email = signedInUser?.email || "";
+  exampleStore.user.password = "";
+  exampleStore.setSignedIn(!!signedInUser);
+};
 
 // game event - listen for game state updates
 socketClient.onReceive((event: GameEvent) => {

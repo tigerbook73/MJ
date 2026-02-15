@@ -13,8 +13,10 @@
 <script setup lang="ts">
 import GameRoom from "src/example/components/GameRoom.vue";
 import { useExampleStore } from "../stores/example-store";
+import { socketClient } from "src/client/socket-client";
 
 const exampleStore = useExampleStore();
+socketClient.listRoom();
 </script>
 
 <style scoped lang="scss">
