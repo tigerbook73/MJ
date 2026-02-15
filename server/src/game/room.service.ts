@@ -46,7 +46,6 @@ export class RoomService {
       "bot",
       getPositionName(position),
       `${position}@mj-game.com`,
-      "",
       UserType.Bot,
     );
     this.bots.push(bot);
