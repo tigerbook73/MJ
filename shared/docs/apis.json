@@ -130,6 +130,38 @@
         ]
       }
     },
+    "/api/auth/login-or-register": {
+      "post": {
+        "operationId": "AuthController_loginOrRegister",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login or registration successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "Login or register user",
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/auth/me": {
       "get": {
         "operationId": "AuthController_getMe",

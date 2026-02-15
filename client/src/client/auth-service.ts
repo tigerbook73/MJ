@@ -14,21 +14,19 @@ export class AuthService {
   public onAuthStateChanged: (user: UserResponseDto | null) => void = () => {};
 
   /**
-   * Login with email and password
-   * 1. Calls REST /auth/login to get JWT cookie
+   * Register a new user
+   * 1. Calls REST /auth/register to get JWT cookie
    * 2. Fetches WS token
    * 3. Connects WebSocket with WS token
    */
-  async login(email: string, password: string): Promise<UserResponseDto> {
+  async register(email: string, name: string, password: string): Promise<UserResponseDto> {
     try {
-      // Step 1: Login or Register via REST (sets JWT cookie)
-      const loginResponse = apiClient.POST("/api/auth/login", {
-        body: { email, password },
-      });
-      const loginResult = apiClient.POST("/api/auth/register", {
-        body: { email, name: email.split("@")[0], password },
-      });
-      await Promise.any([unwrapResponse(loginResponse), unwrapResponse(loginResult)]);
+      // Step 1: Register via REST (sets JWT cookie)
+      await unwrapResponse(
+        apiClient.POST("/api/auth/register", {
+          body: { email, name, password },
+        }),
+      );
 
       // Step 2: Get user profile
       const user = await unwrapResponse(apiClient.GET("/api/auth/me"));
@@ -47,17 +45,42 @@ export class AuthService {
   }
 
   /**
-   * Register a new user
-   * 1. Calls REST /auth/register to get JWT cookie
+   * Login with email and password
+   * 1. Calls REST /auth/login to get JWT cookie
    * 2. Fetches WS token
    * 3. Connects WebSocket with WS token
    */
-  async register(email: string, name: string, password: string): Promise<UserResponseDto> {
+  async login(email: string, password: string): Promise<UserResponseDto> {
     try {
-      // Step 1: Register via REST (sets JWT cookie)
+      // Step 1: Login or Register via REST (sets JWT cookie)
       await unwrapResponse(
-        apiClient.POST("/api/auth/register", {
-          body: { email, name, password },
+        apiClient.POST("/api/auth/login", {
+          body: { email, password },
+        }),
+      );
+
+      // Step 2: Get user profile
+      const user = await unwrapResponse(apiClient.GET("/api/auth/me"));
+      this.currentUser = user;
+
+      // Step 3: Connect WebSocket
+      await this.connectWebSocket();
+
+      this.onAuthStateChanged(user);
+      return user;
+    } catch (error) {
+      this.currentUser = null;
+      this.onAuthStateChanged(null);
+      throw error;
+    }
+  }
+
+  async loginOrRegister(email: string, password: string): Promise<UserResponseDto> {
+    try {
+      // Step 1: Login or Register via REST (sets JWT cookie)
+      await unwrapResponse(
+        apiClient.POST("/api/auth/login-or-register", {
+          body: { email, password },
         }),
       );
 
