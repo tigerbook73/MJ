@@ -43,7 +43,7 @@ onBeforeMount(() => {
 async function signIn() {
   try {
     loading.value = true;
-    await authService.login(userStore.email, userStore.password);
+    await authService.loginOrRegister(userStore.email, userStore.password);
     userStore.setSignedIn(true);
   } catch {
     userStore.setSignedIn(false);

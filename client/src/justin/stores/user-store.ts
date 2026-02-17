@@ -11,13 +11,11 @@ export const useUserStore = defineStore("user", () => {
   const user = ref<UserModel | null>(null);
   const email = ref<string>("");
   const password = ref<string>("");
-  const appState = ref<AppState>(AppState.Unconnected);
+  const appState = ref<AppState>(AppState.UnSignedIn);
   const inGame = ref<boolean>(false);
 
   function refreshAppState() {
-    if (!connected.value) {
-      appState.value = AppState.Unconnected;
-    } else if (!signedIn.value) {
+    if (!signedIn.value) {
       appState.value = AppState.UnSignedIn;
     } else if (!inGame.value) {
       appState.value = AppState.InLobby;
