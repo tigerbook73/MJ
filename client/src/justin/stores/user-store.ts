@@ -15,9 +15,7 @@ export const useUserStore = defineStore("user", () => {
   const inGame = ref<boolean>(false);
 
   function refreshAppState() {
-    if (!connected.value) {
-      appState.value = AppState.Unconnected;
-    } else if (!signedIn.value) {
+    if (!signedIn.value) {
       appState.value = AppState.UnSignedIn;
     } else if (!inGame.value) {
       appState.value = AppState.InLobby;

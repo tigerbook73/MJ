@@ -5,7 +5,8 @@ const justinRoutes: RouteRecordRaw[] = [
     path: "/justin",
     component: () => import("src/justin/layouts/MainLayout.vue"),
     children: [
-      { path: "", redirect: "/justin/login" },
+      { path: "", redirect: "/justin/connecting" },
+      { path: "connecting", component: () => import("src/justin/pages/ConnectingPage.vue") },
       { path: "login", component: () => import("src/justin/pages/LoginPage.vue") },
       {
         path: "game",

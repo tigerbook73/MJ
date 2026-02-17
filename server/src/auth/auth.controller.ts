@@ -81,6 +81,25 @@ export class AuthController {
     return result;
   }
 
+  @Post("login-or-register")
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: "Login or register user" })
+  @ApiBody({ type: LoginDto })
+  @ApiResponse({
+    status: 200,
+    description: "Login or registration successful",
+    type: AuthResponseDto,
+  })
+  async loginOrRegister(
+    @Body() loginDto: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.loginOrRegister(loginDto);
+    const token = this.authService.generateToken(result.userId, result.email);
+    res.cookie("auth_token", token, COOKIE_OPTIONS);
+    return result;
+  }
+
   @Get("me")
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)

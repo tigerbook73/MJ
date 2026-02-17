@@ -68,7 +68,7 @@ import { useExampleStore } from "../stores/example-store";
 import type { RoomModel } from "@mj/shared";
 import { RoomStatus, Position, UserType } from "@mj/shared";
 import { computed, ref } from "vue";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 
 const exampleStore = useExampleStore();
@@ -91,7 +91,7 @@ async function handlePlayerClick(player: GameSeatProp) {
   // already at the position
   if (exampleStore.currentRoom?.name == props.room.name && exampleStore.currentPosition === player.position) {
     try {
-      await clientApi.leaveRoom(props.room.name);
+      await socketClient.leaveRoom(props.room.name);
     } catch (error) {
       $q.notify({
         type: "negative",
@@ -115,7 +115,7 @@ async function handlePlayerClick(player: GameSeatProp) {
     if (exampleStore.currentPosition !== null) {
       // if the player is currently in a room, leave it
       try {
-        await clientApi.leaveRoom(exampleStore.currentRoom!.name);
+        await socketClient.leaveRoom(exampleStore.currentRoom!.name);
       } catch (error) {
         $q.notify({
           type: "negative",
@@ -127,7 +127,7 @@ async function handlePlayerClick(player: GameSeatProp) {
 
     // join the new room
     try {
-      await clientApi.joinRoom(props.room.name, player.position);
+      await socketClient.joinRoom(props.room.name, player.position);
     } catch (error) {
       $q.notify({
         type: "negative",
@@ -149,7 +149,7 @@ async function handleEnterGame() {
   }
   try {
     loading.value = true;
-    await clientApi.enterGame(props.room.name);
+    await socketClient.enterGame(props.room.name);
   } catch (error) {
     $q.notify({
       type: "negative",

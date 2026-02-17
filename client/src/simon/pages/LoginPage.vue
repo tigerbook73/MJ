@@ -16,10 +16,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-import { clientApi } from "src/client/client-api";
-import { UserModel } from "@mj/shared";
 import { userStore } from "src/simon/stores/user-store";
 import { useQuasar } from "quasar";
+import { authService } from "src/client/auth-service";
 
 defineOptions({ name: "LoginPage" });
 
@@ -46,18 +45,11 @@ async function login() {
   loading.value = true;
 
   try {
-    const response = await clientApi.signIn(email.value, password.value);
+    const response = await authService.loginOrRegister(email.value, password.value);
 
     if (response) {
       if (!store.user) {
-        store.user = new UserModel(
-          response.name,
-          response.firstName || "",
-          response.lastName || "",
-          response.email,
-          response.password,
-          response.type,
-        );
+        store.user = { email: "", name: "", password: "" };
       }
       store.user.email = email.value;
       store.user.password = password.value;

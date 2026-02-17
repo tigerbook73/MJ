@@ -47,9 +47,9 @@
 import { AppState, useExampleStore } from "src/example/stores/example-store";
 import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { clientApi } from "src/client/client-api";
-import type { GameEvent } from "@mj/shared";
-import { getFakeEvent } from "@mj/shared";
+import { authService } from "src/client/auth-service";
+import { socketClient } from "src/client/socket-client";
+import { type GameEvent, getFakeEvent } from "@mj/shared";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -84,11 +84,9 @@ watch(
 // sign out
 async function signOut() {
   try {
-    await clientApi.signOut();
-    exampleStore.user.password = "";
-    exampleStore.setSignedIn(false);
+    await authService.logout();
   } catch (e) {
-    console.error(e);
+    console.error("Logout error:", e);
   }
 }
 
@@ -99,38 +97,37 @@ async function quitGame() {
   }
 
   try {
-    await clientApi.quitGame(exampleStore.currentRoom.name);
+    await socketClient.quitGame(exampleStore.currentRoom.name);
   } catch (e) {
     console.error(e);
   }
 }
 
-// connection status
-clientApi.gameSocket.onConnect(() => {
-  exampleStore.setConnected(true);
-});
-clientApi.gameSocket.onDisconnect(() => {
-  exampleStore.setConnected(false);
-});
+// Setup auth service callbacks
+authService.onAuthStateChanged = (signedInUser) => {
+  exampleStore.user.email = signedInUser?.email || "";
+  exampleStore.user.password = "";
+  exampleStore.setSignedIn(!!signedInUser);
+};
 
-// game event
-clientApi.gameSocket.onReceive((event: GameEvent) => {
-  event = clientApi.parseEvent(event);
+// socket event listener
+socketClient.onReceive((event: GameEvent) => {
+  event = socketClient.parseEvent(event);
 
   exampleStore.roomList = event.data.rooms;
-  exampleStore.currentRoom = clientApi.findMyRoom(event);
-  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
-  exampleStore.setCurrentGame(clientApi.findMyGame(event));
+  exampleStore.currentRoom = socketClient.findMyRoom(event);
+  exampleStore.currentPosition = socketClient.findMyPlayerModel(event)?.position ?? null;
+  exampleStore.setCurrentGame(socketClient.findMyGame(event));
 });
 
 function fakeData() {
   const fakeEvent = getFakeEvent();
-  fakeEvent.data.clients[0].id = clientApi?.gameSocket?.socket?.id || "";
-  const event = clientApi.parseEvent(fakeEvent);
+  fakeEvent.data.clients[0].id = socketClient.getClientId() || "";
+  const event = socketClient.parseEvent(fakeEvent);
 
   exampleStore.roomList = event.data.rooms;
-  exampleStore.currentRoom = clientApi.findMyRoom(event);
-  exampleStore.currentPosition = clientApi.findMyPlayerModel(event)?.position ?? null;
-  exampleStore.setCurrentGame(clientApi.findMyGame(event));
+  exampleStore.currentRoom = socketClient.findMyRoom(event);
+  exampleStore.currentPosition = socketClient.findMyPlayerModel(event)?.position ?? null;
+  exampleStore.setCurrentGame(socketClient.findMyGame(event));
 }
 </script>

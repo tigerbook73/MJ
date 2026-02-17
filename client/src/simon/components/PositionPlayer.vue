@@ -16,11 +16,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, ref } from "vue";
+import { computed, ref } from "vue";
 import { UserType } from "@mj/shared";
 import { userStore } from "src/simon/stores/user-store";
 import type { PlayerModel } from "@mj/shared";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 
 const props = defineProps<{
   player: PlayerModel;
@@ -37,7 +37,7 @@ async function joinRoom() {
     await leaveRoom();
 
     // Make the socket request to join the room
-    const response = await clientApi.joinRoom(props.player.roomName, props.player.position);
+    const response = await socketClient.joinRoom(props.player.roomName, props.player.position);
 
     if (response) {
       userStore().myPosition = props.player.position;
@@ -54,7 +54,7 @@ async function joinRoom() {
 async function leaveRoom() {
   try {
     // Example API call to leave the room
-    await clientApi.leaveRoom(props.player.roomName);
+    await socketClient.leaveRoom(props.player.roomName);
   } catch (error) {
     console.error("Error leaving room:", error);
     alert("An error occurred while trying to leave the room.");

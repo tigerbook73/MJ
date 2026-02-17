@@ -11,16 +11,17 @@ defineOptions({
   name: "GameAreaA",
 });
 
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useUserStore } from "../stores/user-store";
+import { authService } from "src/client/auth-service";
 
 const userStore = useUserStore();
 const mjStore = useMjStore();
 
 async function signOut() {
   try {
-    await clientApi.signOut();
+    await authService.logout();
     userStore.setSignedIn(false);
   } catch (e) {
     console.error(e);
@@ -33,7 +34,7 @@ async function quitGame() {
   }
 
   try {
-    await clientApi.quitGame(mjStore.room.name);
+    await socketClient.quitGame(mjStore.room.name);
     userStore.setInGame(false);
   } catch (e) {
     console.error(e);

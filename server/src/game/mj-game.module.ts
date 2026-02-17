@@ -1,9 +1,7 @@
 import { Module } from "@nestjs/common";
 import { MjGameGateway } from "./mj-game.gateway";
 import { GameService } from "./game.service";
-import { AuthService } from "./auth.service";
 import { ClientService } from "./client.service";
-import { UserService } from "./user.service";
 import { RoomService } from "./room.service";
 import { WsJwtGuard } from "./ws-jwt.guard";
 import { AuthModule } from "src/auth/auth.module";
@@ -14,12 +12,10 @@ import { UserModule } from "src/user/user.module";
   providers: [
     MjGameGateway,
     GameService,
-    AuthService,
     ClientService,
-    UserService,
     RoomService,
     WsJwtGuard,
   ],
-  exports: [UserService, RoomService, GameService, AuthService, ClientService],
+  exports: [RoomService, GameService, ClientService],
 })
 export class MjGameModule {}

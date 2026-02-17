@@ -12,14 +12,16 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { authService } from "src/client/auth-service";
-import { useExampleStore } from "src/example/stores/example-store";
+import { useUserStore } from "src/justin/stores/user-store";
 
-const exampleStore = useExampleStore();
+const userStore = useUserStore();
 
 onMounted(async () => {
   const restored = await authService.restoreSession();
-  if (!restored) {
-    exampleStore.setSignedIn(false);
+  if (restored) {
+    userStore.setSignedIn(true);
+  } else {
+    userStore.setSignedIn(false);
   }
 });
 </script>

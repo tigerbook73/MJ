@@ -44,7 +44,7 @@ import PlayerAreaBottom from "src/simon/components/PlayerAreaBottom.vue";
 import PlayerAreaLeft from "src/simon/components/PlayerAreaLeft.vue";
 import PlayerAreaRight from "src/simon/components/PlayerAreaRight.vue";
 import PlayerAreaTop from "src/simon/components/PlayerAreaTop.vue";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { mjGame } from "src/simon/core/mjGame";
 import { useMjStore } from "src/simon/stores/mj-store";
 
@@ -57,7 +57,7 @@ import type { TileId } from "@mj/shared";
 
 async function start() {
   try {
-    const response = await clientApi.startGame();
+    const response = await socketClient.startGame();
 
     if (response) {
       // Game started successfully
@@ -71,7 +71,7 @@ async function start() {
 
 async function reset() {
   try {
-    const response = await clientApi.resetGame();
+    const response = await socketClient.resetGame();
 
     if (response) {
       // Game started successfully
@@ -100,7 +100,7 @@ async function dropTile(tileId?: TileId) {
       return;
     }
 
-    const response = await clientApi.actionDrop(tileId);
+    const response = await socketClient.actionDrop(tileId);
     if (response) {
       // Update game state
     } else {
@@ -123,7 +123,7 @@ async function passTurn() {
       return;
     }
 
-    const response = await clientApi.actionPass();
+    const response = await socketClient.actionPass();
     if (response) {
       mjGame.pass(mjGame.current);
     } else {
@@ -136,7 +136,7 @@ async function passTurn() {
 
 async function handleChi(tileIds: [TileId, TileId]) {
   try {
-    const response = await clientApi.actionChi(tileIds);
+    const response = await socketClient.actionChi(tileIds);
     if (response) {
       // Update game state
     } else {
@@ -149,7 +149,7 @@ async function handleChi(tileIds: [TileId, TileId]) {
 
 async function handlePeng(tileIds: [TileId, TileId]) {
   try {
-    const response = await clientApi.actionPeng(tileIds);
+    const response = await socketClient.actionPeng(tileIds);
     if (response) {
       // Update game state
     } else {
@@ -162,7 +162,7 @@ async function handlePeng(tileIds: [TileId, TileId]) {
 
 async function handleGang(tileIds: [TileId, TileId, TileId]) {
   try {
-    const response = await clientApi.actionGang(tileIds);
+    const response = await socketClient.actionGang(tileIds);
     if (response) {
       // Update game state
     } else {
@@ -175,7 +175,7 @@ async function handleGang(tileIds: [TileId, TileId, TileId]) {
 
 async function Hu() {
   try {
-    const response = await clientApi.actionHu();
+    const response = await socketClient.actionHu();
     if (response) {
       // Update game state
     } else {
@@ -187,7 +187,7 @@ async function Hu() {
 }
 async function Zimo() {
   try {
-    const response = await clientApi.actionZimo();
+    const response = await socketClient.actionZimo();
     if (response) {
       // Update game state
     } else {
@@ -198,7 +198,7 @@ async function Zimo() {
   }
 }
 
-// clientApi.gameSocket.onReceive((event: GameEvent) => {
+// clientApi.onReceive((event: GameEvent) => {
 //   event = clientApi.parseEvent(event);
 //   const game = clientApi.findMyGame(event);
 

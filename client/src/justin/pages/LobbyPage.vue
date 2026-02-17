@@ -74,10 +74,11 @@
 import type { RoomProp } from "src/justin/components/LobbyDiv.vue";
 import { computed, ref } from "vue";
 import { Position } from "@mj/shared";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useMjStore } from "src/justin/stores/mj-store";
 import type { RoomModel } from "@mj/shared";
 import { useUserStore } from "../stores/user-store";
+import { authService } from "src/client/auth-service";
 
 const mjStore = useMjStore();
 const userStore = useUserStore();
@@ -189,7 +190,7 @@ async function joinRoom() {
       window.alert("Please select a room and position first");
       return;
     }
-    const room = await clientApi.joinRoom(selectedRoom.value.name, selectedPos.value);
+    const room = await socketClient.joinRoom(selectedRoom.value.name, selectedPos.value);
     currentRoom.value = room;
     currentRoom.value.players = room.players;
     currentPos.value = selectedPos.value;
@@ -203,7 +204,7 @@ async function leaveRoom() {
     if (!currentRoom.value) {
       return;
     }
-    await clientApi.leaveRoom(currentRoom.value.name);
+    await socketClient.leaveRoom(currentRoom.value.name);
     currentRoom.value = null;
     currentPos.value = Position.None;
   } catch {
@@ -217,7 +218,7 @@ async function enterGame() {
       window.alert("Please select a room first");
       return;
     }
-    await clientApi.enterGame(currentRoom.value.name);
+    await socketClient.enterGame(currentRoom.value.name);
     userStore.refreshAppState();
   } catch (error: any) {
     window.alert(error.message);
@@ -226,7 +227,7 @@ async function enterGame() {
 
 async function signOut() {
   try {
-    await clientApi.signOut();
+    await authService.logout();
     userStore.setSignedIn(false);
   } catch (error: any) {
     window.alert(error.message);

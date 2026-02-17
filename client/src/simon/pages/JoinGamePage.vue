@@ -4,8 +4,15 @@
     <div class="hero">
       <h1 class="hero__title">Join a Game Room</h1>
       <p class="hero__subtitle">Pick a room and start a match with bots or friends.</p>
-      <q-btn class="hero__refresh q-mt-md" color="primary" unelevated :loading="loading" icon="refresh"
-        label="Refresh Rooms" @click="refreshRooms" />
+      <q-btn
+        class="hero__refresh q-mt-md"
+        color="primary"
+        unelevated
+        :loading="loading"
+        icon="refresh"
+        label="Refresh Rooms"
+        @click="refreshRooms"
+      />
     </div>
 
     <!-- 这里放你原本的房间内容（保持你原有结构，不受网格/卡片限制） -->
@@ -23,7 +30,7 @@ import GameRoom from "src/simon/components/GameRoom.vue";
 // import { useRouter } from "vue-router";
 import { computed, ref } from "vue";
 // import { PlayerModel } from "@/common/models/player.model";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { roomStore } from "src/simon/stores/room-store";
 
 defineOptions({
@@ -57,7 +64,7 @@ async function refreshRooms() {
   loading.value = true;
 
   try {
-    const response = await clientApi.listRoom();
+    const response = await socketClient.listRoom();
 
     if (response && response.length > 0) {
       // rooms = response.map((room) => ({
@@ -100,7 +107,8 @@ refreshRooms();
 .page-join {
   min-height: 100%;
   /* 柔和渐变背景 + 轻微网格噪点感 */
-  background: radial-gradient(1200px 600px at 50% -10%, var(--c-bg-1), transparent 60%),
+  background:
+    radial-gradient(1200px 600px at 50% -10%, var(--c-bg-1), transparent 60%),
     radial-gradient(900px 500px at 120% 0%, var(--c-bg-2), transparent 55%),
     linear-gradient(180deg, #fff, #f8fafc 40%, #f1f5f9);
   display: flex;
@@ -153,14 +161,17 @@ refreshRooms();
   background: var(--c-card);
   border-radius: 16px;
   box-shadow: var(--shadow);
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    border-color 0.18s ease;
   border: 1px solid rgba(2, 6, 23, 0.06);
   overflow: hidden;
 }
 
 .room-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.10);
+  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.1);
   border-color: rgba(2, 6, 23, 0.12);
 }
 

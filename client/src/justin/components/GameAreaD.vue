@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 import { useMjStore } from "../stores/mj-store";
 
@@ -19,7 +19,7 @@ const mjStore = useMjStore();
 function discard() {
   try {
     if (mjStore.selectedList.length === 1) {
-      clientApi.actionDrop(mjStore.selectedList[0]);
+      socketClient.actionDrop(mjStore.selectedList[0]);
       mjStore.clearSelected();
     }
   } catch (e) {
@@ -30,7 +30,7 @@ function discard() {
 
 function pass() {
   try {
-    clientApi.actionPass();
+    socketClient.actionPass();
     mjStore.clearSelected();
   } catch (e) {
     $q.notify({ message: "pass failed", color: "negative", icon: "warning" });

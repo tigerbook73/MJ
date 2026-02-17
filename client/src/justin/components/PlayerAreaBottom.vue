@@ -51,7 +51,7 @@ import type { TileId } from "@mj/shared";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { computed } from "vue";
 import { findDirectionForPostiion, IDtoName } from "../common/common";
-import { clientApi } from "src/client/client-api";
+import { socketClient } from "src/client/socket-client";
 import { useQuasar } from "quasar";
 
 const $q = useQuasar();
@@ -72,7 +72,7 @@ function onClick(tile: TileId) {
 function discard() {
   try {
     if (mjStore.selectedList.length === 1) {
-      clientApi.actionDrop(mjStore.selectedList[0]);
+      socketClient.actionDrop(mjStore.selectedList[0]);
       mjStore.clearSelected();
     }
   } catch (e) {

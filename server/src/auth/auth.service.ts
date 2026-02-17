@@ -61,6 +61,19 @@ export class AuthService {
     };
   }
 
+  async loginOrRegister(loginDto: LoginDto): Promise<AuthResponseDto> {
+    // Try to find user by email
+    const user = await this.userService.findAuthByEmail(loginDto.email);
+    if (user) {
+      return this.login(loginDto);
+    }
+    return this.register({
+      email: loginDto.email,
+      name: loginDto.email.split("@")[0], // Use email prefix as name
+      password: loginDto.password,
+    });
+  }
+
   async validateUser(payload: { sub: number; email: string }) {
     const user = await this.userService.findById(payload.sub);
     if (!user) {

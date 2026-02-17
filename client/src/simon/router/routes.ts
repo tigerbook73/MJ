@@ -5,7 +5,8 @@ const simonRoutes: RouteRecordRaw[] = [
     path: "/simon",
     component: () => import("src/simon/layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("src/simon/pages/ConnectedPage.vue") },
+      { path: "", redirect: "/simon/connecting" },
+      { path: "connecting", component: () => import("src/simon/pages/ConnectingPage.vue") },
       { path: "sign-in", component: () => import("src/simon/pages/LoginPage.vue") },
       { path: "join-game", component: () => import("src/simon/pages/JoinGamePage.vue"), meta: { requiresAuth: true } },
       { path: "game-page", component: () => import("src/simon/pages/GamePage.vue") },

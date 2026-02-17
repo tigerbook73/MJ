@@ -9,8 +9,8 @@ import {
   UserType,
   Game,
   Position,
+  getPositionName,
 } from "@mj/shared";
-import { UserService } from "./user.service";
 import { Interval } from "@nestjs/schedule";
 import { ClientService } from "./client.service";
 
@@ -18,44 +18,76 @@ import { ClientService } from "./client.service";
 export class RoomService {
   public rooms: RoomModel[] = [];
   public userDropList: { user: UserModel; expiresAt: EpochTimeStamp }[] = [];
+  private bots: UserModel[] = [];
 
   private readonly logger = new Logger(RoomService.name);
 
-  constructor(
-    private userService: UserService,
-    private clientService: ClientService,
-  ) {
+  constructor(private clientService: ClientService) {
+    // create default BOT users
+    this.bots = [
+      this.createBot(Position.East),
+      this.createBot(Position.South),
+      this.createBot(Position.West),
+      this.createBot(Position.North),
+    ];
+
     // default room
     this.create({ name: "room-1" });
     this.create({ name: "room-2" });
+  }
+
+  createBot(position: Position): UserModel {
+    if (this.findBot(position)) {
+      throw new Error(`Bot with position ${position} already exists.`);
+    }
+
+    const bot = new UserModel(
+      `bot-${position}`,
+      "bot",
+      getPositionName(position),
+      `${position}@mj-game.com`,
+      UserType.Bot,
+    );
+    this.bots.push(bot);
+    return bot;
+  }
+
+  findBot(position: Position): UserModel | null {
+    return (
+      this.bots.find(
+        (user) =>
+          user.type === UserType.Bot &&
+          user.lastName === getPositionName(position),
+      ) ?? null
+    );
   }
 
   resetRoom(room: RoomModel): void {
     room.state = RoomStatus.Open;
     room.players = [
       new PlayerModel(
-        (this.userService.findBot(Position.East) as UserModel).name,
+        (this.findBot(Position.East) as UserModel).name,
         room.name,
         PlayerRole.Player,
         UserType.Bot,
         Position.East,
       ),
       new PlayerModel(
-        (this.userService.findBot(Position.South) as UserModel).name,
+        (this.findBot(Position.South) as UserModel).name,
         room.name,
         PlayerRole.Player,
         UserType.Bot,
         Position.South,
       ),
       new PlayerModel(
-        (this.userService.findBot(Position.West) as UserModel).name,
+        (this.findBot(Position.West) as UserModel).name,
         room.name,
         PlayerRole.Player,
         UserType.Bot,
         Position.West,
       ),
       new PlayerModel(
-        (this.userService.findBot(Position.North) as UserModel).name,
+        (this.findBot(Position.North) as UserModel).name,
         room.name,
         PlayerRole.Player,
         UserType.Bot,
@@ -174,7 +206,7 @@ export class RoomService {
     room.players = room.players.filter((p) => p.userName !== player.userName);
     room.players.push(
       new PlayerModel(
-        (this.userService.findBot(player.position) as UserModel).name,
+        (this.findBot(player.position) as UserModel).name,
         room.name,
         PlayerRole.Observer,
         UserType.Bot,

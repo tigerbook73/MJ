@@ -1,12 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { ClientCreateDto, ClientModel } from "@mj/shared";
-import { UserService } from "./user.service";
 
 @Injectable()
 export class ClientService {
   public clients: ClientModel[] = [];
 
-  constructor(private userService: UserService) {
+  constructor() {
     //
   }
 
