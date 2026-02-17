@@ -65,17 +65,6 @@ async function quitGame() {
     console.error("Error quitting game:", error);
   }
 }
-socketClient.onConnect(() => {
-  useAppStore.setConnected(true);
-});
-
-socketClient.onDisconnect(() => {
-  useAppStore.setConnected(false);
-  // useRoomStore.roomList = [];
-  // useRoomStore.currentRoom = null;
-  // useRoomStore.currentPosition = null;
-  // useGameStore.setCurrentGame(null);
-});
 
 // 👂 Game event handler
 // clientApi.onReceive((event: GameEvent) => {

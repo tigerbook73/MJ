@@ -45,7 +45,7 @@ async function login() {
   loading.value = true;
 
   try {
-    const response = await authService.login(email.value, password.value);
+    const response = await authService.loginOrRegister(email.value, password.value);
 
     if (response) {
       if (!store.user) {

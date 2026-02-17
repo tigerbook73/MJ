@@ -110,7 +110,7 @@ authService.onAuthStateChanged = (signedInUser) => {
   exampleStore.setSignedIn(!!signedInUser);
 };
 
-// game event - listen for game state updates
+// socket event listener
 socketClient.onReceive((event: GameEvent) => {
   event = socketClient.parseEvent(event);
 
