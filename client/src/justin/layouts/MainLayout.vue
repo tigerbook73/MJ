@@ -28,7 +28,7 @@ watch(
   () => [userStore.appState, route.fullPath],
   () => {
     const stateToPath = {
-      [AppState.Unconnected]: "/justin/login",
+      [AppState.Unconnected]: "/justin/connecting",
       [AppState.UnSignedIn]: "/justin/login",
       [AppState.InLobby]: "/justin/lobby",
       [AppState.InGame]: "/justin/game",

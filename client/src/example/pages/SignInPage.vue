@@ -36,7 +36,7 @@ async function signIn() {
 
   try {
     loading.value = true;
-    await authService.login(exampleStore.user.email, password.value);
+    await authService.loginOrRegister(exampleStore.user.email, password.value);
 
     $q.notify({
       type: "positive",

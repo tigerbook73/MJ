@@ -11,7 +11,7 @@ export const useUserStore = defineStore("user", () => {
   const user = ref<UserModel | null>(null);
   const email = ref<string>("");
   const password = ref<string>("");
-  const appState = ref<AppState>(AppState.UnSignedIn);
+  const appState = ref<AppState>(AppState.Unconnected);
   const inGame = ref<boolean>(false);
 
   function refreshAppState() {

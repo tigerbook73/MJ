@@ -120,7 +120,7 @@ watch(
   (state) => {
     switch (state) {
       case AppState.NotConnected:
-        router.push("/simon/");
+        router.push("/simon/connecting");
         break;
       case AppState.NotLoggedIn:
         router.push("/simon/sign-in");

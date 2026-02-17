@@ -16,7 +16,7 @@ const mjStore = useMjStore();
 const useUserStore = userStore();
 export const appStore = defineStore("app", () => {
   // app state
-  const appState = ref<AppState>(AppState.NotLoggedIn);
+  const appState = ref<AppState>(AppState.NotConnected);
   function refreshAppState() {
     if (!useUserStore.signedIn) {
       appState.value = AppState.NotLoggedIn;
