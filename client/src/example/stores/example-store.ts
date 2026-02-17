@@ -13,7 +13,7 @@ export type AppState = (typeof AppState)[keyof typeof AppState];
 
 export const useExampleStore = defineStore("example-store", () => {
   // app state
-  const appState = ref<AppState>(AppState.UnSignedIn);
+  const appState = ref<AppState>(AppState.Unconnected);
   function refreshAppState() {
     if (!signedIn.value) {
       appState.value = AppState.UnSignedIn;

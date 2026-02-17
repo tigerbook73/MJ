@@ -16,27 +16,14 @@
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import { authService } from "src/client/auth-service";
-import { AppState, useExampleStore } from "src/example/stores/example-store";
-import { onBeforeMount, ref } from "vue";
+import { useExampleStore } from "src/example/stores/example-store";
+import { ref } from "vue";
 
 const exampleStore = useExampleStore();
 const $q = useQuasar();
 
 const password = ref("password");
 const loading = ref(false);
-
-onBeforeMount(async () => {
-  // Try to restore session from existing JWT cookie
-  if (exampleStore.appState === AppState.Unconnected) {
-    loading.value = true;
-    const restored = await authService.restoreSession();
-    loading.value = false;
-
-    if (restored) {
-      console.log("Session restored successfully");
-    }
-  }
-});
 
 async function signIn() {
   if (!exampleStore.user.email || !password.value) {
