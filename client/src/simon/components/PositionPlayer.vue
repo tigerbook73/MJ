@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineProps, ref } from "vue";
+import { computed, ref } from "vue";
 import { UserType } from "@mj/shared";
 import { userStore } from "src/simon/stores/user-store";
 import type { PlayerModel } from "@mj/shared";
