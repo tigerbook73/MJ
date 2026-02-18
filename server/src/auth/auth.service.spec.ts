@@ -4,12 +4,16 @@ import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { ConflictException, UnauthorizedException } from "@nestjs/common";
 import * as argon2 from "argon2";
+import { ClientService } from "../game/client.service";
+import { RoomService } from "../game/room.service";
 
 jest.mock("argon2");
 
 describe("AuthService", () => {
   let service: AuthService;
   let userService: UserService;
+  let clientService: ClientService;
+  let roomService: RoomService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,11 +34,25 @@ describe("AuthService", () => {
             sign: jest.fn().mockReturnValue("mock-token"),
           },
         },
+        {
+          provide: ClientService,
+          useValue: {
+            findByUser: jest.fn(),
+          },
+        },
+        {
+          provide: RoomService,
+          useValue: {
+            dropUser: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
+    clientService = module.get<ClientService>(ClientService);
+    roomService = module.get<RoomService>(RoomService);
   });
 
   describe("register", () => {
@@ -165,6 +183,40 @@ describe("AuthService", () => {
     it("should generate a WS JWT token", () => {
       const token = service.generateWsToken(1);
       expect(token).toBe("mock-token");
+    });
+  });
+
+  describe("logout", () => {
+    it("should drop the user from their room if in-game", async () => {
+      const mockUser = {
+        id: 1,
+        email: "test@example.com",
+        name: "TestUser",
+        password: "hashed",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const mockGameUser = { name: "TestUser" } as any;
+
+      jest.spyOn(userService, "findById").mockResolvedValue(mockUser);
+      jest
+        .spyOn(clientService, "findByUser")
+        .mockReturnValue({ user: mockGameUser } as any);
+      jest.spyOn(roomService, "dropUser").mockImplementation(() => {});
+
+      await service.logout(1);
+
+      expect(userService.findById).toHaveBeenCalledWith(1);
+      expect(clientService.findByUser).toHaveBeenCalledWith("TestUser");
+      expect(roomService.dropUser).toHaveBeenCalledWith(mockGameUser);
+    });
+
+    it("should do nothing if user not found", async () => {
+      jest.spyOn(userService, "findById").mockResolvedValue(null as any);
+
+      await service.logout(99);
+
+      expect(clientService.findByUser).not.toHaveBeenCalled();
     });
   });
 });

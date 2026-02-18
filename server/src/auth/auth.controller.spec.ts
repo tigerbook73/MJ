@@ -20,6 +20,7 @@ describe("AuthController", () => {
           useValue: {
             register: jest.fn(),
             login: jest.fn(),
+            logout: jest.fn().mockResolvedValue(undefined),
             generateToken: jest.fn().mockReturnValue("mock-token"),
             generateWsToken: jest.fn().mockReturnValue("mock-ws-token"),
           },
@@ -116,9 +117,10 @@ describe("AuthController", () => {
   });
 
   describe("logout", () => {
-    it("should clear the auth cookie", () => {
-      const result = controller.logout(mockResponse);
+    it("should clear the auth cookie", async () => {
+      const result = await controller.logout(1, mockResponse);
 
+      expect(service.logout).toHaveBeenCalledWith(1);
       expect(mockResponse.clearCookie).toHaveBeenCalledWith("auth_token", {
         path: "/",
       });
