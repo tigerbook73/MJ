@@ -74,6 +74,10 @@ export class AuthService {
     });
   }
 
+  async logout() {
+    // No server-side action needed for JWT logout
+  }
+
   async validateUser(payload: { sub: number; email: string }) {
     const user = await this.userService.findById(payload.sub);
     if (!user) {

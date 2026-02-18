@@ -136,7 +136,8 @@ export class AuthController {
     status: 200,
     description: "Logged out successfully",
   })
-  logout(@Res({ passthrough: true }) res: Response) {
+  async logout(@Res({ passthrough: true }) res: Response) {
+    await this.authService.logout();
     res.clearCookie("auth_token", { path: "/" });
     return { message: "Logged out successfully" };
   }
