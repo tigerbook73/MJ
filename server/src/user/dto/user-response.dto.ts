@@ -13,9 +13,8 @@ export class UserResponseDto {
   @ApiProperty({
     description: "User full name",
     example: "John Doe",
-    nullable: true,
   })
-  name: string | null;
+  name: string;
 
   @ApiProperty({
     description: "User creation timestamp",
