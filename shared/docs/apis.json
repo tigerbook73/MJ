@@ -585,8 +585,7 @@
           "name": {
             "type": "string",
             "description": "User full name",
-            "example": "John Doe",
-            "nullable": true
+            "example": "John Doe"
           },
           "createdAt": {
             "format": "date-time",

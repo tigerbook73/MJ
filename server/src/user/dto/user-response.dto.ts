@@ -13,7 +13,6 @@ export class UserResponseDto {
   @ApiProperty({
     description: "User full name",
     example: "John Doe",
-    nullable: true,
   })
   name: string;
 
