@@ -2,17 +2,25 @@ import {
   Injectable,
   UnauthorizedException,
   ConflictException,
+  Inject,
+  forwardRef,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as argon2 from "argon2";
 import { UserService } from "../user/user.service";
 import { LoginDto, RegisterDto, AuthResponseDto } from "./dto";
+import { ClientService } from "../game/client.service";
+import { RoomService } from "../game/room.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    @Inject(forwardRef(() => ClientService))
+    private readonly clientService: ClientService,
+    @Inject(forwardRef(() => RoomService))
+    private readonly roomService: RoomService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
@@ -72,6 +80,15 @@ export class AuthService {
       name: loginDto.email.split("@")[0], // Use email prefix as name
       password: loginDto.password,
     });
+  }
+
+  async logout(userId: number): Promise<void> {
+    const user = await this.userService.findById(userId);
+    if (!user) return;
+    const client = this.clientService.findByUser(user.name);
+    if (client?.user) {
+      this.roomService.dropUser(client.user);
+    }
   }
 
   async validateUser(payload: { sub: number; email: string }) {

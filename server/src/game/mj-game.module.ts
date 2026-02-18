@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 import { MjGameGateway } from "./mj-game.gateway";
 import { GameService } from "./game.service";
 import { ClientService } from "./client.service";
@@ -8,7 +8,7 @@ import { AuthModule } from "src/auth/auth.module";
 import { UserModule } from "src/user/user.module";
 
 @Module({
-  imports: [AuthModule, UserModule],
+  imports: [forwardRef(() => AuthModule), UserModule],
   providers: [
     MjGameGateway,
     GameService,

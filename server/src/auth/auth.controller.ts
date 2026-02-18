@@ -130,13 +130,19 @@ export class AuthController {
   }
 
   @Post("logout")
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiCookieAuth()
   @ApiOperation({ summary: "Logout user" })
   @ApiResponse({
     status: 200,
     description: "Logged out successfully",
   })
-  logout(@Res({ passthrough: true }) res: Response) {
+  async logout(
+    @User("id") userId: number,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.authService.logout(userId);
     res.clearCookie("auth_token", { path: "/" });
     return { message: "Logged out successfully" };
   }
