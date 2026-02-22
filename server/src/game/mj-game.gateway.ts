@@ -56,7 +56,7 @@ import { ClientService } from "./client.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
 import { UserService } from "../user/user.service";
-import { ClientModel, Game, Player } from "@mj/shared";
+import { ClientModel, Game, GameHistoryRecord, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
 import { WsJwtGuard } from "./ws-jwt.guard";
 
@@ -378,6 +378,14 @@ export class MjGameGateway
     }
 
     this.roomService.enterGame(room);
+
+    room.game!.onAction = (record: GameHistoryRecord) => {
+      this.server.emit("mj:game", {
+        type: GameEventType.ACTION,
+        data: { roomName: room.name, record },
+      });
+    };
+
     return {
       type: request.type,
       status: "success",
