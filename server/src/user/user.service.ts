@@ -132,8 +132,12 @@ export class UserService {
 
     // Prepare update data
     const updateData: any = {};
-    if (updateUserDto.email) updateData.email = updateUserDto.email;
-    if (updateUserDto.name !== undefined) updateData.name = updateUserDto.name;
+    if (updateUserDto.email) {
+      updateData.email = updateUserDto.email;
+    }
+    if (updateUserDto.name !== undefined) {
+      updateData.name = updateUserDto.name;
+    }
 
     // Hash password if provided
     if (updateUserDto.password) {

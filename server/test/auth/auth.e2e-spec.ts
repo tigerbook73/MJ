@@ -44,7 +44,9 @@ describe("AuthController (e2e)", () => {
 
   function extractAuthCookie(res: request.Response): string {
     const cookies = res.headers["set-cookie"];
-    if (!cookies) return "";
+    if (!cookies) {
+      return "";
+    }
     const cookieArray = Array.isArray(cookies) ? cookies : [cookies];
     const authCookieStr = cookieArray.find((c: string) =>
       c.startsWith("auth_token="),
