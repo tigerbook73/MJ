@@ -1,5 +1,5 @@
 import type { Player, Position } from "../core/mj.game";
-import { Game } from "../core/mj.game";
+import { Game, GameHistoryRecord } from "../core/mj.game";
 import { type TileId } from "../core/mj.tile-core";
 import { ClientModel } from "../models/client.model";
 import type { PlayerModel } from "../models/player.model";
@@ -268,6 +268,7 @@ export interface ActionHuResponse extends GameResponse {
 
 export const GameEventType = {
   GAME_UPDATED: "gameUpdated",
+  ACTION: "action",
 } as const;
 
 export type GameEventType = (typeof GameEventType)[keyof typeof GameEventType];
@@ -277,6 +278,14 @@ export interface GameEvent {
   data: {
     clients: ClientModel[];
     rooms: RoomModel[];
+  };
+}
+
+export interface GameActionEvent {
+  type: typeof GameEventType.ACTION;
+  data: {
+    roomName: string;
+    record: GameHistoryRecord;
   };
 }
 

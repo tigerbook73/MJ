@@ -189,6 +189,7 @@ export class Game {
   public passedPlayers: Player[] = []; // 已经过的玩家，该属性仅用于client side
   public queuedActions: ActionDetail[] = []; // 等待处理的动作，该属性不用于Client Side
   public history: GameHistoryRecord[] = []; // 游戏历史记录
+  public onAction?: (record: GameHistoryRecord) => void; // callback fired after each executed action
 
   // logger
   static logger = console;
@@ -564,6 +565,7 @@ export class Game {
    */
   private recordAction(record: GameHistoryRecord): void {
     this.history.push(record);
+    this.onAction?.(record);
   }
 
   /**
