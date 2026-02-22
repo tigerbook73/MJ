@@ -1109,7 +1109,6 @@ export class Game {
       reversePickPosition: this.reversePickPosition,
       reversePickIndex: this.reversePickIndex,
       passedPlayers: passedPlayers.map((player) => player.position),
-      history: this.history,
     };
   }
 
