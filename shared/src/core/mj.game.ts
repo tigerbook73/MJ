@@ -149,7 +149,7 @@ export class Game {
   public walls: Wall[] = []; // 牌墙
   public discards: Discard[] = []; // 打出的牌
   public state: GameState = GameState.Init; // 游戏状态
-  public latestTile: TileId = TileCore.voidId; // 最后一张打出的牌
+  public latestTile: TileId = TileCore.voidId; // 最近一张打出的牌 (only reset on new game)
   public current: Player | null = null; // 当前玩家
   public dealer: Player | null = null; // 庄家
   public pickPosition: Position = Position.East; // 摸牌位置（东南西北）
@@ -310,7 +310,6 @@ export class Game {
       ),
     );
 
-    this.setLatestTile(TileCore.voidId);
     this.setState(GameState.WaitingPass);
 
     this.pickReverse();
@@ -675,7 +674,6 @@ export class Game {
     if (this.queuedActions.length === 0) {
       this.setCurrentPlayer(this.getNextPlayer());
       this.pick();
-      this.setLatestTile(TileCore.voidId);
       this.setState(GameState.WaitingAction);
       return this;
     }
@@ -717,9 +715,8 @@ export class Game {
           ),
         );
 
-        // clear queued actions and the latest tile
+        // clear queued actions
         this.queuedActions = [];
-        this.setLatestTile(TileCore.voidId);
 
         // update the current player
         this.setCurrentPlayer(action.player);
@@ -744,9 +741,8 @@ export class Game {
           ),
         );
 
-        // clear queued actions and the latest tile
+        // clear queued actions
         this.queuedActions = [];
-        this.setLatestTile(TileCore.voidId);
 
         // update the current player and pick a tile from the reverse side
         this.setCurrentPlayer(action.player);
@@ -759,13 +755,11 @@ export class Game {
       if (action.type === ActionType.Hu) {
         action.status = ActionResult.Accepted;
 
-        // clear queued actions and the latest tile
+        // clear queued actions
         this.queuedActions = [];
 
         // move this to pickLatestTile()
         action.player.picked = this.latestTile;
-
-        this.setLatestTile(TileCore.voidId);
 
         // update the current player
         this.setCurrentPlayer(action.player);
@@ -777,9 +771,8 @@ export class Game {
 
     // no actions queued or all passed
 
-    // clear queued actions and the latest tile
+    // clear queued actions
     this.queuedActions = [];
-    this.setLatestTile(TileCore.voidId);
 
     this.setCurrentPlayer(this.getNextPlayer());
     this.pick();
