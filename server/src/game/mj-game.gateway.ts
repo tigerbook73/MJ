@@ -199,6 +199,11 @@ export class MjGameGateway
 
       clientModel.user = user;
 
+      const room = this.roomService.findByUser(user);
+      if (room?.game) {
+        client.join(room.name);
+      }
+
       this.logger.log(`Client connected: ${client.id} (User: ${user.name})`);
 
       // Notify connection
@@ -378,8 +383,15 @@ export class MjGameGateway
 
     this.roomService.enterGame(room);
 
+    for (const player of room.players) {
+      const playerClient = this.clientService.findByUser(player.userName);
+      if (playerClient?.socket) {
+        playerClient.socket.join(room.name);
+      }
+    }
+
     room.game!.onAction = (record: GameHistoryRecord) => {
-      this.server.emit(GAME_EVENT_TYPE, {
+      this.server.to(room.name).emit(GAME_EVENT_TYPE, {
         type: GameEventType.ACTION,
         data: { roomName: room.name, record },
       });
@@ -409,6 +421,14 @@ export class MjGameGateway
     }
 
     this.roomService.quitGame(room);
+
+    for (const player of room.players) {
+      const playerClient = this.clientService.findByUser(player.userName);
+      if (playerClient?.socket) {
+        playerClient.socket.leave(room.name);
+      }
+    }
+
     return {
       type: request.type,
       status: "success",
