@@ -49,6 +49,7 @@ import {
   ActionGangResponse,
   ActionHuRequest,
   ActionHuResponse,
+  GAME_EVENT_TYPE,
   UserModel,
   UserType,
 } from "@mj/shared";
@@ -74,8 +75,6 @@ type RequestHandler = {
 export class MjGameGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
-  public readonly eventType = "mj:game";
-
   private readonly logger = new Logger(MjGameGateway.name);
 
   @WebSocketServer()
@@ -203,7 +202,7 @@ export class MjGameGateway
       this.logger.log(`Client connected: ${client.id} (User: ${user.name})`);
 
       // Notify connection
-      this.server.emit("mj:game", {
+      this.server.emit(GAME_EVENT_TYPE, {
         type: GameEventType.GAME_UPDATED,
         data: {
           clients: this.clientService.findAll(),
@@ -239,7 +238,7 @@ export class MjGameGateway
     }
   }
 
-  @SubscribeMessage("mj:game")
+  @SubscribeMessage(GAME_EVENT_TYPE)
   handleMessage(
     @MessageBody() data: GameRequest,
     @ConnectedSocket() client: Socket,
@@ -258,7 +257,7 @@ export class MjGameGateway
       const response = handler.handler.call(this, data, clientModel);
 
       if (handler.update) {
-        this.server.emit("mj:game", {
+        this.server.emit(GAME_EVENT_TYPE, {
           type: GameEventType.GAME_UPDATED,
           data: {
             clients: this.clientService.findAll(),
@@ -380,7 +379,7 @@ export class MjGameGateway
     this.roomService.enterGame(room);
 
     room.game!.onAction = (record: GameHistoryRecord) => {
-      this.server.emit("mj:game", {
+      this.server.emit(GAME_EVENT_TYPE, {
         type: GameEventType.ACTION,
         data: { roomName: room.name, record },
       });
@@ -569,7 +568,7 @@ export class MjGameGateway
     }
 
     if (action) {
-      this.server.emit("mj:game", {
+      this.server.emit(GAME_EVENT_TYPE, {
         type: GameEventType.GAME_UPDATED,
         data: {
           clients: this.clientService.findAll(),
