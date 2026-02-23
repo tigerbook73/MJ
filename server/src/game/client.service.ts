@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { ClientCreateDto, ClientModel } from "@mj/shared";
+import { ClientCreateDto, ClientModel, GAME_EVENT_TYPE } from "@mj/shared";
 
 @Injectable()
 export class ClientService {
@@ -38,6 +38,6 @@ export class ClientService {
   }
 
   sendToClient(client: ClientModel, data: any): void {
-    client.socket?.emit("mj:game", data);
+    client.socket?.emit(GAME_EVENT_TYPE, data);
   }
 }
