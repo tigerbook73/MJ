@@ -20,4 +20,8 @@
       "database": "./server/prisma/db/sqlite.db"
     }
   ],
+  "git.branchProtection": [
+    "main"
+  ],
+  "git.branchProtectionPrompt": "alwaysCommitToNewBranch",
 }
