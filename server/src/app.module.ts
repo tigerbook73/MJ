@@ -4,6 +4,7 @@ import { AppService } from "./app.service";
 import { MjGameModule } from "./game/mj-game.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { ConfigModule } from "@nestjs/config";
+import { EventEmitterModule } from "@nestjs/event-emitter";
 import { PrismaModule } from "./prisma/prisma.module";
 import { UserModule } from "./user/user.module";
 import { AuthModule } from "./auth/auth.module";
@@ -12,6 +13,7 @@ import { AuthModule } from "./auth/auth.module";
   imports: [
     //
     ConfigModule.forRoot(),
+    EventEmitterModule.forRoot(),
     PrismaModule,
     ScheduleModule.forRoot(),
     MjGameModule,
