@@ -59,6 +59,7 @@ import { GameService } from "./game.service";
 import { UserService } from "../user/user.service";
 import { ClientModel, Game, GameHistoryRecord, Player } from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
+import { OnEvent } from "@nestjs/event-emitter";
 import { WsJwtGuard } from "./ws-jwt.guard";
 
 type RequestHandler = {
@@ -588,6 +589,25 @@ export class MjGameGateway
     }
 
     if (action) {
+      this.server.emit(GAME_EVENT_TYPE, {
+        type: GameEventType.GAME_UPDATED,
+        data: {
+          clients: this.clientService.findAll(),
+          rooms: this.roomService.findAll(),
+        },
+      });
+    }
+  }
+
+  @OnEvent("user.signedOut")
+  handleUserSignedOut(payload: { userName: string }): void {
+    const clientModel = this.clientService.findByUser(payload.userName);
+    if (clientModel?.user) {
+      const room = this.roomService.findByUser(clientModel.user);
+      if (room) {
+        this.roomService.dropUser(clientModel.user);
+        clientModel.socket?.leave(room.name);
+      }
       this.server.emit(GAME_EVENT_TYPE, {
         type: GameEventType.GAME_UPDATED,
         data: {

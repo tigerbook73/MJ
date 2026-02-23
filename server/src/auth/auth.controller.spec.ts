@@ -1,6 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { UserService } from "../user/user.service";
 
 describe("AuthController", () => {
   let controller: AuthController;
@@ -23,6 +25,18 @@ describe("AuthController", () => {
             generateToken: jest.fn().mockReturnValue("mock-token"),
             generateWsToken: jest.fn().mockReturnValue("mock-ws-token"),
           },
+        },
+        {
+          provide: UserService,
+          useValue: {
+            findById: jest
+            .fn()
+            .mockResolvedValue({ name: "Test User", email: "test@example.com" }),
+          },
+        },
+        {
+          provide: EventEmitter2,
+          useValue: { emit: jest.fn() },
         },
       ],
     }).compile();
@@ -116,8 +130,8 @@ describe("AuthController", () => {
   });
 
   describe("logout", () => {
-    it("should clear the auth cookie", () => {
-      const result = controller.logout(mockResponse);
+    it("should clear the auth cookie and emit signedOut event", async () => {
+      const result = await controller.logout(1, mockResponse);
 
       expect(mockResponse.clearCookie).toHaveBeenCalledWith("auth_token", {
         path: "/",

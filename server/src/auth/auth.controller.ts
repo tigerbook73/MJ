@@ -16,6 +16,7 @@ import {
   ApiCookieAuth,
 } from "@nestjs/swagger";
 import { Response } from "express";
+import { EventEmitter2 } from "@nestjs/event-emitter";
 import { AuthService } from "./auth.service";
 import {
   LoginDto,
@@ -26,6 +27,7 @@ import {
 import { JwtAuthGuard } from "../libs/guards/jwt.guard";
 import { User } from "../libs/decorators/user.decorator";
 import { UserResponseDto } from "../user/dto";
+import { UserService } from "../user/user.service";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -38,7 +40,11 @@ const COOKIE_OPTIONS = {
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
   @Post("register")
   @HttpCode(HttpStatus.CREATED)
@@ -130,13 +136,21 @@ export class AuthController {
   }
 
   @Post("logout")
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @ApiCookieAuth()
   @ApiOperation({ summary: "Logout user" })
   @ApiResponse({
     status: 200,
     description: "Logged out successfully",
   })
-  logout(@Res({ passthrough: true }) res: Response) {
+  async logout(
+    @User("id") userId: number,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const dbUser = await this.userService.findById(userId);
+    const userName = dbUser.name || dbUser.email.split("@")[0];
+    this.eventEmitter.emit("user.signedOut", { userName });
     res.clearCookie("auth_token", { path: "/" });
     return { message: "Logged out successfully" };
   }
