@@ -299,6 +299,7 @@ export class Game {
     }
 
     this.discards[this.current.position].tiles.push(tile);
+    this.recordAction(new GameHistoryRecord(GameHistoryActionType.Drop, this.current.position, [tile]));
 
     this.setLatestTile(tile);
     this.setState(GameState.WaitingPass);
@@ -307,7 +308,6 @@ export class Game {
     // need a timeout
     this.handleQueuedActions();
 
-    this.recordAction(new GameHistoryRecord(GameHistoryActionType.Drop, this.current.position, [tile]));
     Game.logger.log(`Game "${this.name}": Player ${this.current.position}: dropped "${TileCore.fromId(tile).name}".`);
     return this;
   }
