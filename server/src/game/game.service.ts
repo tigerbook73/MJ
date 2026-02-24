@@ -88,7 +88,7 @@ export class GameService {
       throw new Error("Player is not the next player of the current player");
     }
 
-    game.chi(tileIds);
+    game.chi(player, tileIds);
     return game;
   }
 
@@ -213,7 +213,7 @@ export class GameService {
           game.peng(robot, action.tiles as [TileId, TileId]);
           someActions = true;
         } else if (action?.action === ActionType.Chi) {
-          game.chi(action.tiles as [TileId, TileId]);
+          game.chi(robot, action.action.tiles as [TileId, TileId]);
           someActions = true;
         } else if (action?.action === ActionType.Hu) {
           game.hu(robot);
