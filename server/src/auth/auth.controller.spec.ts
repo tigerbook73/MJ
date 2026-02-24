@@ -29,9 +29,10 @@ describe("AuthController", () => {
         {
           provide: UserService,
           useValue: {
-            findById: jest
-            .fn()
-            .mockResolvedValue({ name: "Test User", email: "test@example.com" }),
+            findById: jest.fn().mockResolvedValue({
+              name: "Test User",
+              email: "test@example.com",
+            }),
           },
         },
         {

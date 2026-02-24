@@ -213,7 +213,7 @@ export class GameService {
           game.peng(robot, action.tiles as [TileId, TileId]);
           someActions = true;
         } else if (action?.action === ActionType.Chi) {
-          game.chi(robot, action.action.tiles as [TileId, TileId]);
+          game.chi(robot, action.tiles as [TileId, TileId]);
           someActions = true;
         } else if (action?.action === ActionType.Hu) {
           game.hu(robot);
