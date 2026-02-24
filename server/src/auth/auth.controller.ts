@@ -149,7 +149,7 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const dbUser = await this.userService.findById(userId);
-    const userName = dbUser.name || dbUser.email.split("@")[0];
+    const userName = dbUser.name;
     this.eventEmitter.emit("user.signedOut", { userName });
     res.clearCookie("auth_token", { path: "/" });
     return { message: "Logged out successfully" };

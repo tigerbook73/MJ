@@ -191,9 +191,9 @@ export class MjGameGateway
       // Look up user from database by userId (sub)
       const dbUser = await this.userService.findById(userPayload.sub);
       const user = new UserModel(
-        dbUser.name || dbUser.email.split("@")[0],
-        dbUser.name?.split(" ")[0] || dbUser.email.split("@")[0],
-        dbUser.name?.split(" ")[1] || dbUser.email.split("@")[1],
+        dbUser.name,
+        dbUser.name.split(" ")[0] || "",
+        dbUser.name.split(" ")[1] || "",
         dbUser.email,
         UserType.Human,
       );
