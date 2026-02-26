@@ -13,6 +13,7 @@
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/server/src/main.js",
+    "start:render": "node dist/server/src/main.render.js",
     "api:gen": "node -r ts-node/register -r tsconfig-paths/register ./script/generate-api-spec.ts",
     "db:seed": "prisma db seed",
     "db:reset": "prisma migrate reset",
