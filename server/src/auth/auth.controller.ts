@@ -7,6 +7,7 @@ import {
   HttpStatus,
   UseGuards,
   Res,
+  Req,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -15,7 +16,7 @@ import {
   ApiBody,
   ApiCookieAuth,
 } from "@nestjs/swagger";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { AuthService } from "./auth.service";
 import {
@@ -136,21 +137,28 @@ export class AuthController {
   }
 
   @Post("logout")
-  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
-  @ApiCookieAuth()
   @ApiOperation({ summary: "Logout user" })
   @ApiResponse({
     status: 200,
     description: "Logged out successfully",
   })
-  async logout(
-    @User("id") userId: number,
-    @Res({ passthrough: true }) res: Response,
-  ) {
-    const dbUser = await this.userService.findById(userId);
-    const userName = dbUser.name;
-    this.eventEmitter.emit("user.signedOut", { userName });
+  async logout(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    try {
+      const token = (req as Request & { cookies: Record<string, string> })
+        .cookies?.["auth_token"];
+      if (token) {
+        const payload = this.authService.decodeToken(token);
+        if (payload?.sub) {
+          const dbUser = await this.userService.findById(payload.sub);
+          if (dbUser) {
+            this.eventEmitter.emit("user.signedOut", { userName: dbUser.name });
+          }
+        }
+      }
+    } catch {
+      // ignore — always clear the cookie
+    }
     res.clearCookie("auth_token", { path: "/" });
     return { message: "Logged out successfully" };
   }

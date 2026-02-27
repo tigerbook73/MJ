@@ -24,6 +24,9 @@ describe("AuthController", () => {
             login: jest.fn(),
             generateToken: jest.fn().mockReturnValue("mock-token"),
             generateWsToken: jest.fn().mockReturnValue("mock-ws-token"),
+            decodeToken: jest
+              .fn()
+              .mockReturnValue({ sub: 1, email: "test@example.com" }),
           },
         },
         {
@@ -132,7 +135,22 @@ describe("AuthController", () => {
 
   describe("logout", () => {
     it("should clear the auth cookie and emit signedOut event", async () => {
-      const result = await controller.logout(1, mockResponse);
+      const mockRequest = {
+        cookies: { auth_token: "mock-token" },
+      } as any;
+
+      const result = await controller.logout(mockRequest, mockResponse);
+
+      expect(mockResponse.clearCookie).toHaveBeenCalledWith("auth_token", {
+        path: "/",
+      });
+      expect(result).toEqual({ message: "Logged out successfully" });
+    });
+
+    it("should clear the cookie even when no token is present", async () => {
+      const mockRequest = { cookies: {} } as any;
+
+      const result = await controller.logout(mockRequest, mockResponse);
 
       expect(mockResponse.clearCookie).toHaveBeenCalledWith("auth_token", {
         path: "/",
