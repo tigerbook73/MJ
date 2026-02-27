@@ -103,4 +103,11 @@ export class AuthService {
       expiresIn: "10m",
     });
   }
+
+  decodeToken(token: string): {
+    sub: number;
+    email: string;
+  } | null {
+    return this.jwtService.decode(token);
+  }
 }
