@@ -28,10 +28,10 @@ game.start()
 Dispatching: "dispatching",  // 发牌中，后续可以拆分成更小的状态
 ```
 
-**实现方向：纯前端动画**（不修改后端和 shared）
-- 前端检测游戏状态从 `Init` → `WaitingAction` 的变化
-- 在动画期间逐步"揭示"手牌，模拟发牌节奏
-- 使用项目已有的 **Framer Motion** 库驱动动画
+**实现方向：后端暴露分步发牌事件，前端逐张动画**
+
+- 后端：在 `dispatch()` 过程中广播多次中间状态（`GAME_DISPATCHING` 事件），每次携带新增的一张牌
+- 前端：监听 `GAME_DISPATCHING` 事件，利用现有的 **Framer Motion** 动画基础设施（`tile-flight-store` + `TileFlightOverlay`）逐张触发飞牌动画
 
 ---
 
@@ -41,34 +41,35 @@ Dispatching: "dispatching",  // 发牌中，后续可以拆分成更小的状态
 
 ---
 
-**第 1 步：建立上下文**
+### ▌后端部分
+
+---
+
+**后端第 1 步：建立后端上下文**
 
 ```
 请阅读以下文件，理解当前发牌流程，不要修改任何代码：
 1. shared/src/core/mj.game.ts 中的 dispatch() 方法和 GameState 定义
-2. mj-next/src/store/game-store.ts
-3. mj-next/src/lib/app-service.ts 中处理 GAME_UPDATED 事件的部分
-4. mj-next/src/components/HandTilesBottom.tsx（或 PlayerTilesBottom）
-5. mj-next/src/store/ui-store.ts
+2. shared/src/protocols/ 目录下的事件类型定义（GameEventType 等）
+3. server/src/game/mj-game.gateway.ts 中处理 START_GAME 的 handler 和广播逻辑
 
-阅读完成后，用中文描述：游戏开始后数据从后端到前端渲染的完整链路。
+阅读完成后，用中文描述：从客户端发送 START_GAME 指令到后端广播 GAME_UPDATED 的完整链路。
 ```
 
 ---
 
-**第 2 步：制定实现方案**
+**后端第 2 步：制定后端实现方案**
 
 ```
-基于你对代码的理解，我希望在游戏开始时展示发牌动画：
-- 游戏状态从 Init 变为 WaitingAction 时触发
-- 四位玩家的手牌（每人13张）按照真实发牌顺序（庄家优先，每轮4张×3轮+1张）逐张出现
-- 使用 Framer Motion 实现每张牌的飞入动画
-- 动画期间不影响游戏逻辑，动画结束后正常进入游戏
+基于你对代码的理解，我希望后端在发牌过程中逐步广播中间状态：
+- 在 shared/src/protocols/ 中新增 GAME_DISPATCHING 事件类型
+- 修改 dispatch() 或在 gateway 中包装，使其每发一张牌就广播一次当前状态
+- 发牌顺序按真实规则：庄家优先，每轮4张×3轮，再每人1张，最后庄家多1张
 
 要求：
-1. 不修改 shared/ 和 server/ 的任何代码
-2. 尽量只在 mj-next/ 中修改
-3. 动画状态用 React state 管理，不污染 Zustand game-store
+1. 尽量最小化对 shared/src/core/mj.game.ts 的改动
+2. 保持 GAME_UPDATED 在发牌完成后仍然广播（兼容现有逻辑）
+3. 新事件只在发牌期间发出
 
 请分析可行性，给出具体实现计划（涉及哪些文件、每个文件改什么），
 不要写代码，先等我确认方案。
@@ -76,10 +77,60 @@ Dispatching: "dispatching",  // 发牌中，后续可以拆分成更小的状态
 
 ---
 
-**第 3 步：确认方案后执行**
+**后端第 3 步：实现后端**
 
 ```
-方案看起来不错，请按计划实现。
+方案看起来不错，请按计划实现后端部分。
+注意：
+- 每次修改一个文件后说明做了什么
+- 如果遇到类型错误，先修复再继续
+- 完成后说明如何用 WebSocket 工具或日志验证 GAME_DISPATCHING 事件确实在发出
+```
+
+---
+
+### ▌前端部分
+
+---
+
+**前端第 1 步：建立前端上下文**
+
+```
+请阅读以下文件，理解前端动画基础设施，不要修改任何代码：
+1. mj-next/src/lib/app-service.ts 中处理 GAME_UPDATED 和 ACTION 事件的部分
+2. mj-next/src/store/tile-flight-store.ts
+3. mj-next/src/components/TileFlightOverlay.tsx
+4. mj-next/src/components/HandTilesBottom.tsx（或 HandTiles.tsx）中触发飞牌动画的 useLayoutEffect
+
+阅读完成后，用中文描述：一张牌从"手牌区飞向弃牌区"的完整动画触发链路。
+```
+
+---
+
+**前端第 2 步：制定前端实现方案**
+
+```
+基于你对代码的理解，我希望前端在收到 GAME_DISPATCHING 事件时展示发牌动画：
+- 在 app-service.ts 中新增 GAME_DISPATCHING 事件的处理逻辑
+- 每收到一张新牌，用现有的 tile-flight-store.startFlight() 触发从牌墙到手牌区的飞牌动画
+- 使用现有的 TileFlightOverlay 渲染飞牌，无需新建 overlay 组件
+- 动画期间游戏逻辑正常，动画结束后进入 WaitingAction
+
+要求：
+1. 只修改 mj-next/ 中的文件
+2. 复用现有 tile-flight-store 和 TileFlightOverlay，不重复造轮子
+3. 底部玩家（自己）的牌正面朝上，其他玩家牌背面
+
+请分析可行性，给出具体实现计划（涉及哪些文件、每个文件改什么），
+不要写代码，先等我确认方案。
+```
+
+---
+
+**前端第 3 步：实现前端**
+
+```
+方案看起来不错，请按计划实现前端部分。
 注意：
 - 每次修改一个文件后说明做了什么
 - 如果遇到类型错误，先修复再继续
@@ -88,7 +139,7 @@ Dispatching: "dispatching",  // 发牌中，后续可以拆分成更小的状态
 
 ---
 
-**第 4 步（可选）：调整动画参数**
+**前端第 4 步（可选）：调整动画参数**
 
 ```
 发牌动画速度太快/太慢，请调整：
