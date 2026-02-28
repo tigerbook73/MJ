@@ -225,11 +225,6 @@
             "description": "Logged out successfully"
           }
         },
-        "security": [
-          {
-            "cookie": []
-          }
-        ],
         "summary": "Logout user",
         "tags": [
           "Auth"
