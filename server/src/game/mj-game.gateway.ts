@@ -602,20 +602,23 @@ export class MjGameGateway
   @OnEvent("user.signedOut")
   handleUserSignedOut(payload: { userName: string }): void {
     const clientModel = this.clientService.findByUser(payload.userName);
-    if (clientModel?.user) {
-      const room = this.roomService.findByUser(clientModel.user);
-      if (room) {
-        this.roomService.dropUser(clientModel.user);
-        clientModel.socket?.leave(room.name);
-      }
-      this.server.emit(GAME_EVENT_TYPE, {
-        type: GameEventType.GAME_UPDATED,
-        data: {
-          clients: this.clientService.findAll(),
-          rooms: this.roomService.findAll(),
-        },
-      });
+    if (!clientModel?.user) {
+      return;
     }
+
+    const room = this.roomService.findByUser(clientModel.user);
+    if (room) {
+      this.roomService.dropUser(clientModel.user);
+      clientModel.socket?.leave(room.name);
+    }
+
+    this.server.emit(GAME_EVENT_TYPE, {
+      type: GameEventType.GAME_UPDATED,
+      data: {
+        clients: this.clientService.findAll(),
+        rooms: this.roomService.findAll(),
+      },
+    });
   }
 
   validateGamePlayer(client: ClientModel): { game: Game; player: Player } {
