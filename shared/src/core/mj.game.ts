@@ -190,7 +190,7 @@ export class Game {
   public winner: Position | null = null; // 赢家的位置，null 表示游戏未结束
   public passedPlayers: Player[] = []; // 已经过的玩家，该属性仅用于client side
   public queuedActions: ActionDetail[] = []; // 等待处理的动作，该属性不用于Client Side
-  private dispatchQueue: { position: Position; tiles: TileId[] }[] = []; // 发牌队列
+  private dispatchQueue: { position: Position; count: number }[] = []; // 发牌队列
   public history: GameHistoryRecord[] = []; // 游戏历史记录
   public onAction?: (record: GameHistoryRecord) => void; // callback fired after each executed action
 
@@ -1008,10 +1008,7 @@ export class Game {
         const player = this.players[position];
         position = (position - 1 + 4) % 4;
         if (player) {
-          this.dispatchQueue.push({
-            position: player.position,
-            tiles: [this.pickTile(), this.pickTile(), this.pickTile(), this.pickTile()],
-          });
+          this.dispatchQueue.push({ position: player.position, count: 4 });
         }
       }
     }
@@ -1023,13 +1020,13 @@ export class Game {
         const player = this.players[position];
         position = (position - 1 + 4) % 4;
         if (player) {
-          this.dispatchQueue.push({ position: player.position, tiles: [this.pickTile()] });
+          this.dispatchQueue.push({ position: player.position, count: 1 });
         }
       }
     }
 
     // dealer gets 1 extra tile
-    this.dispatchQueue.push({ position: this.dealer.position, tiles: [this.pickTile()] });
+    this.dispatchQueue.push({ position: this.dealer.position, count: 1 });
   }
 
   /**
@@ -1043,10 +1040,16 @@ export class Game {
     }
 
     const batch = this.dispatchQueue.shift()!;
+    const tiles: TileId[] = [];
+    for (let i = 0; i < batch.count; i++) {
+      tiles.push(this.pickTile());
+    }
     const player = this.players[batch.position];
     if (player) {
-      player.handTiles.push(...batch.tiles);
+      player.handTiles.push(...tiles);
     }
+
+    this.history.push(new GameHistoryRecord(GameHistoryActionType.Dispatching, batch.position, tiles));
 
     const hasMore = this.dispatchQueue.length > 0;
 
@@ -1060,7 +1063,7 @@ export class Game {
       this.setState(GameState.WaitingAction);
     }
 
-    return { position: batch.position, tiles: batch.tiles, hasMore };
+    return { position: batch.position, tiles, hasMore };
   }
 
   pick(): this {

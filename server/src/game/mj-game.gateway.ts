@@ -588,7 +588,7 @@ export class MjGameGateway
     };
   }
 
-  @Interval(100)
+  @Interval(500)
   dispatchTiles(): void {
     for (const room of this.roomService.findAll()) {
       if (room.game?.state !== GameState.Dispatching) continue;
