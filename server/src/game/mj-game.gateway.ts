@@ -57,7 +57,14 @@ import { ClientService } from "./client.service";
 import { RoomService } from "./room.service";
 import { GameService } from "./game.service";
 import { UserService } from "../user/user.service";
-import { ClientModel, Game, GameHistoryRecord, Player } from "@mj/shared";
+import {
+  ClientModel,
+  Game,
+  GameHistoryActionType,
+  GameHistoryRecord,
+  GameState,
+  Player,
+} from "@mj/shared";
 import { Interval } from "@nestjs/schedule";
 import { OnEvent } from "@nestjs/event-emitter";
 import { WsJwtGuard } from "./ws-jwt.guard";
@@ -579,6 +586,35 @@ export class MjGameGateway
       status: "success",
       data: game,
     };
+  }
+
+  @Interval(500)
+  dispatchTiles(): void {
+    for (const room of this.roomService.findAll()) {
+      if (room.game?.state !== GameState.Dispatching) continue;
+
+      const result = room.game.doDispatch();
+
+      this.server.to(room.name).emit(GAME_EVENT_TYPE, {
+        type: GameEventType.ACTION,
+        data: {
+          roomName: room.name,
+          record: new GameHistoryRecord(
+            GameHistoryActionType.Dispatching,
+            result.position,
+            result.tiles,
+          ),
+        },
+      });
+
+      this.server.emit(GAME_EVENT_TYPE, {
+        type: GameEventType.GAME_UPDATED,
+        data: {
+          clients: this.clientService.findAll(),
+          rooms: this.roomService.findAll(),
+        },
+      });
+    }
   }
 
   @Interval(1500)
