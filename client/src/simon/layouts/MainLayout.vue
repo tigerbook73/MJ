@@ -30,7 +30,7 @@ import { socketClient } from "src/client/socket-client";
 import { appStore, AppState } from "src/simon/stores/app-store";
 import { roomStore } from "src/simon/stores/room-store";
 import { updateDiscards, useMjStore } from "src/simon/stores/mj-store";
-import type { GameEvent } from "@mj/shared";
+import { type GameActionEvent, GameEventType, type GameEvent } from "@mj/shared";
 import { userStore } from "../stores/user-store";
 import { setGame } from "../core/mjGame";
 import { authService } from "src/client/auth-service";
@@ -84,7 +84,10 @@ async function quitGame() {
 //   }
 // });
 
-socketClient.onReceive((raw: GameEvent) => {
+socketClient.onReceive((raw: GameEvent | GameActionEvent) => {
+  if (raw.type !== GameEventType.GAME_UPDATED) {
+    return;
+  }
   const parsed = socketClient.parseEvent(raw);
 
   // ---- Room state（统一用 parsed）----

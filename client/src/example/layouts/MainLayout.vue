@@ -49,7 +49,7 @@ import { ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { authService } from "src/client/auth-service";
 import { socketClient } from "src/client/socket-client";
-import { type GameEvent, getFakeEvent } from "@mj/shared";
+import { type GameActionEvent, type GameEvent, GameEventType, getFakeEvent } from "@mj/shared";
 
 // test drawer
 const leftDrawerOpen = ref(false);
@@ -111,7 +111,10 @@ authService.onAuthStateChanged = (signedInUser) => {
 };
 
 // socket event listener
-socketClient.onReceive((event: GameEvent) => {
+socketClient.onReceive((event: GameEvent | GameActionEvent) => {
+  if (event.type !== GameEventType.GAME_UPDATED) {
+    return;
+  }
   event = socketClient.parseEvent(event);
 
   exampleStore.roomList = event.data.rooms;
