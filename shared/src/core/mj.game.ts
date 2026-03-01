@@ -309,9 +309,6 @@ export class Game {
     this.setState(GameState.WaitingPass);
     this.prepareQueueActions();
 
-    // need a timeout
-    this.handleQueuedActions();
-
     Game.logger.log(`Game "${this.name}": Player ${this.current.position}: dropped "${TileCore.fromId(tile).name}".`);
     return this;
   }
@@ -617,6 +614,11 @@ export class Game {
       }
     }
 
+    // pick: no other actions possible — advance to next player after autoPlay delay
+    if (this.queuedActions.length === 0) {
+      this.queuedActions.push(new ActionDetail(ActionType.Pick, this.getNextPlayer(), [], ActionResult.Accepting));
+    }
+
     return this;
   }
 
@@ -628,11 +630,7 @@ export class Game {
    * - Sets the latest tile to a void ID.
    * - Updates the game state to `WaitingAction`.
    */
-  private handleQueuedActions(): this {
-    if (this.queuedActions.length === 0) {
-      return this.advanceToNextPlayer();
-    }
-
+  public handleQueuedActions(): this {
     if (!([GameState.WaitingPass] as GameState[]).includes(this.state)) {
       throw new Error("Queued actions can only be handled in WaitingPass state");
     }
@@ -646,6 +644,9 @@ export class Game {
         return this;
       }
 
+      if (action.type === ActionType.Pick) {
+        return this.executePick(action);
+      }
       if (action.type === ActionType.Chi || action.type === ActionType.Peng) {
         return this.executeChiOrPeng(action);
       }
@@ -713,6 +714,11 @@ export class Game {
     this.pick();
     this.setState(GameState.WaitingAction);
     return this;
+  }
+
+  public executePick(action: ActionDetail): this {
+    action.status = ActionResult.Accepting;
+    return this.advanceToNextPlayer();
   }
 
   /**

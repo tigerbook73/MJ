@@ -179,6 +179,14 @@ export class GameService {
      * if state === GameState.WaitingPass, find the right actions for robots
      */
     if (game.state === GameState.WaitingPass) {
+      // If a "pick" sentinel is in the queue, no player decision is needed — advance to next player
+      if (
+        game.queuedActions.some((action) => action.type === ActionType.Pick)
+      ) {
+        game.handleQueuedActions();
+        return true;
+      }
+
       const candidateRobots = new Set(
         game.queuedActions
           .filter(
