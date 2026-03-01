@@ -30,7 +30,7 @@ Dispatching: "dispatching",  // 发牌中，后续可以拆分成更小的状态
 
 **实现方向：后端暴露分步发牌事件，前端逐张动画**
 
-- 后端：在 `dispatch()` 过程中广播多次中间状态（`GAME_DISPATCHING` 事件），每次携带新增的一张牌
+- 后端：在 `dispatch()` 过程中广播多次中间状态（`GAME_DISPATCHING` 事件），每次携带新增的一批牌（1、4张等）
 - 前端：监听 `GAME_DISPATCHING` 事件，利用现有的 **Framer Motion** 动画基础设施（`tile-flight-store` + `TileFlightOverlay`）逐张触发飞牌动画
 
 ---
