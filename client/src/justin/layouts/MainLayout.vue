@@ -9,10 +9,10 @@
 <script setup lang="ts">
 import { watch } from "vue";
 import { socketClient } from "src/client/socket-client";
-import type { GameEvent } from "@mj/shared";
+import type { GameActionEvent, GameEvent } from "@mj/shared";
 import { useMjStore } from "src/justin/stores/mj-store";
 import { useRoute, useRouter } from "vue-router";
-import { Position } from "@mj/shared";
+import { GameEventType, Position } from "@mj/shared";
 import { AppState } from "../common/common";
 import { useUserStore } from "../stores/user-store";
 defineOptions({
@@ -50,7 +50,10 @@ socketClient.onDisconnect(() => {
   userStore.setConnected(false);
 });
 
-socketClient.onReceive((event: GameEvent) => {
+socketClient.onReceive((event: GameEvent | GameActionEvent) => {
+  if (event.type !== GameEventType.GAME_UPDATED) {
+    return;
+  }
   event = socketClient.parseEvent(event);
   const game = socketClient.findMyGame(event);
   if (game) {
